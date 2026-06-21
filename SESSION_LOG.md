@@ -4,6 +4,43 @@
 
 ---
 
+## 2026-06-21 — Session 7 · 零成本上线 + 安全加固
+
+### 做了什么
+- **Railway 后端部署**：Express 服务部署到 `next-star-production.up.railway.app`，36 名球员加载成功，DeepSeek 已连接
+- **GitHub Pages 部署**（已废弃）：SSH key 生成、base path 配置、gh-pages 分支
+- **Cloudflare Pages 前端部署**：最终域名 `https://next-star-5s9.pages.dev`，`base: '/'`，不暴露 GitHub 账号
+- **环境变量**：Cloudflare Pages 配 `VITE_API_URL` 指向 Railway
+- **GitHub Pages 清理**：删除 gh-pages 分支、GitHub Actions 工作流、Settings → None
+- **API 安全**：新增限流中间件——每 IP 每分钟 10 次 AI 搜索，超限返回 429。零依赖纯内存实现
+- **Ball Profile 修复**：Hero 区域恢复身高/臂展/体重横排展示
+- **球探台移动端修复**：工具栏换行、AI 分析按钮全宽 + ⚡ 图标
+- **文件清理**：删除 DEPLOY.md、QQ 截屏、.github/workflows、Procfile、nixpacks.toml
+
+### 最终架构
+```
+用户 → Cloudflare Pages (前端) → Railway (后端) → DeepSeek API
+       next-star-5s9.pages.dev    :8080             api.deepseek.com
+       (免费, 自动部署)           (免费额度)         (~¥10/月)
+```
+
+### 部署流程
+改代码 → `git push` → Cloudflare + Railway 自动部署，1-3 分钟生效。
+
+### 改动文件
+- `server/index.js` — DB 路径修复 + 限流中间件
+- `vite.config.ts` — base 路径：`/NEXT-STAR/` → `/` → Cloudflare
+- `src/app/components/PlayerProfile.tsx` — Hero 恢复体测数据
+- `src/app/components/ScoutPage.tsx` — 移动端工具栏换行
+- 删除：`.github/workflows/`、`DEPLOY.md`、`QQ*.png`、`Procfile`、`nixpacks.toml`
+
+### 待办
+- [ ] 配 Cloudflare 自定义域名（需先购买）
+- [ ] Railway 免费额度监控（500h/月）
+- [ ] 球员对比功能（V2）
+
+---
+
 ## 2026-06-21 — Session 6 · 设计系统 + 响应式 + 图片全删 + UI 重构
 
 ### 做了什么
