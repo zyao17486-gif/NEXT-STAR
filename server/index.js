@@ -12,6 +12,30 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
+// ── Rate limiter — 10 AI searches per minute per IP ─────────────────────
+const rateLimit = new Map(); // IP → { count, resetAt }
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimit) {
+    if (entry.resetAt < now) rateLimit.delete(ip);
+  }
+}, 60_000);
+
+function checkRate(req, res, next) {
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.ip;
+  const now = Date.now();
+  const entry = rateLimit.get(ip);
+  if (entry && entry.resetAt > now) {
+    if (entry.count >= 10) {
+      return res.status(429).json({ error: "请求过于频繁，请稍后再试" });
+    }
+    entry.count++;
+  } else {
+    rateLimit.set(ip, { count: 1, resetAt: now + 60_000 });
+  }
+  next();
+}
+
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
 const PORT = process.env.PORT || 3001;
@@ -157,7 +181,7 @@ The ranking is already determined by statistical cosine similarity — you just 
 - All text in Chinese except player English names`;
 
 // ── POST /api/scout (V2) ──────────────────────────────────────────────────
-app.post("/api/scout", async (req, res) => {
+app.post("/api/scout", checkRate, async (req, res) => {
   const { query, dnaVector } = req.body;
 
   if (!query || typeof query !== "string" || query.trim().length === 0) {
@@ -286,7 +310,7 @@ Generate explanations for why each prospect matches the query.`,
 });
 
 // ── POST /api/scout/quick (fast mode — vector only, no explanation) ───────
-app.post("/api/scout/quick", async (req, res) => {
+app.post("/api/scout/quick", checkRate, async (req, res) => {
   const { query, dnaVector } = req.body;
   if (!query) return res.status(400).json({ error: "请提供搜索问题" });
   if (PLAYER_DB.length === 0) return res.status(500).json({ error: "球员数据库未加载" });
