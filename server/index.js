@@ -17,9 +17,7 @@ const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
 const PORT = process.env.PORT || 3001;
 
 // ── Load 20-player 2026 draft database ────────────────────────────────────
-const DB_PATH = existsSync(join(__dirname, "..", "src", "data", "2026-draft-database.json"))
-  ? join(__dirname, "..", "src", "data", "2026-draft-database.json")
-  : join(__dirname, "data", "2026-draft-database.json");
+const DB_PATH = join(__dirname, "data", "2026-draft-database.json");
 
 /** @type {Array<{id:number,name:string,position:string,team:string,profile_text:string,attributes:{finishing:number,shooting:number,playmaking:number,defense:number,athleticism:number},tags:string[],combine:object,embedding:number[]}>} */
 let PLAYER_DB = [];
