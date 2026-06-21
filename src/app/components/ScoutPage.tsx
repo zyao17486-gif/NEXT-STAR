@@ -262,10 +262,10 @@ export function ScoutPage({ onSelectPlayer }: ScoutPageProps) {
       </div>
 
       {/* Search bar + AI toggle */}
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex flex-wrap gap-3 mb-5">
         {/* Search input */}
         <div
-          className="flex items-center gap-3 px-5 py-3.5 rounded-2xl flex-1"
+          className="flex items-center gap-3 px-5 py-3.5 rounded-2xl flex-1 min-w-[200px]"
           style={{ background: BG.card, border: aiMode ? "1px solid rgba(255,215,0,0.3)" : B.subtle, transition: "border-color 0.3s" }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -324,10 +324,10 @@ export function ScoutPage({ onSelectPlayer }: ScoutPageProps) {
           <button
             onClick={() => runAISearch(query)}
             disabled={isSearching}
-            className="shrink-0 px-5 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-40"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-40"
             style={{ background: T.accent, color: BG.page }}
           >
-            {isSearching ? "分析中…" : "分析"}
+            {isSearching ? "分析中…" : "⚡ AI 分析"}
           </button>
         )}
       </div>
