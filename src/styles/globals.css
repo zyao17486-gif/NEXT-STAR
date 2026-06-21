@@ -1,0 +1,30 @@
+/* Hide scrollbars by default, show on scroll */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Text selection */
+::selection {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Remove focus outlines on Recharts SVG elements (mobile tap) */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-surface,
+.recharts-surface:focus,
+.recharts-pie:focus,
+.recharts-sector:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
