@@ -721,6 +721,20 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
         {player.en !== player.name && (
           <p style={{ color: T.label, fontSize: FONT.lg }}>{player.en}</p>
         )}
+
+        {/* Measurements */}
+        <div className="flex gap-6 mt-4 pt-4" style={{ borderTop: B.divider }}>
+          {[
+            ["身高", player.heightMetric],
+            ["臂展", player.wingspanMetric],
+            ["体重", player.weightMetric],
+          ].map(([label, value]) => (
+            <div key={label}>
+              <span style={{ color: T.dim, fontSize: FONT.xs }}>{label}</span>
+              <div style={{ color: T.white, fontSize: FONT.md, fontWeight: 500, marginTop: "2px" }}>{value}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ── Tabs ── */}
