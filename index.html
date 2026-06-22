@@ -16,6 +16,11 @@
       
       <div id="root"></div>
       <script type="module" src="/src/main.tsx"></script>
+      <!-- Global page view counter — no PII, just a count -->
+      <script async>
+        fetch('https://api.countapi.xyz/hit/next-star-app/visits')
+          .catch(() => {});
+      </script>
       
     </body>
   </html>
