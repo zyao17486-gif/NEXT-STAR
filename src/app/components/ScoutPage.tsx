@@ -242,6 +242,12 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
     if (!searchQuery.trim()) return;
     setAiError(null);
     setAiSearchQuery(searchQuery.trim());
+    // GA: AI 搜索
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "ai_search", {
+        query: searchQuery.trim(),
+      });
+    }
   }, []);
 
   // Sync TanStack Query error to local error display

@@ -89,6 +89,14 @@ export default function App() {
     store.setDNA(dna, matches);
     store.setOnboardingComplete();
 
+    // GA: DNA 生成完成
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "dna_generated", {
+        position: data.selectedPosition,
+        polished_type: data.polishedType,
+      });
+    }
+
     setScreen({ id: "dna" });
   }, [store]);
 
@@ -140,6 +148,13 @@ export default function App() {
     }
     if (screen.id === "player") {
       const ps = screen as { id: "player"; name?: string; from: string };
+      // GA: 球员详情浏览
+      if (typeof window !== "undefined" && (window as any).gtag) {
+        (window as any).gtag("event", "player_profile_view", {
+          player_name: ps.name,
+          from: ps.from,
+        });
+      }
       return (
         <PlayerProfile
           playerName={ps.name}

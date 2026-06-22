@@ -48,6 +48,12 @@ export const useAppStore = create<AppState>()(
           // Follow — only add if the name resolves to a DB player
           if (!isValidFollowName(name)) return;
           set({ followed: [...current, name] });
+          // GA: 关注球员
+          if (typeof window !== "undefined" && (window as any).gtag) {
+            (window as any).gtag("event", "player_followed", {
+              player_name: name,
+            });
+          }
         }
       },
       isFollowed: (name: string) => get().followed.includes(name),
