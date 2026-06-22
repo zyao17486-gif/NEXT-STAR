@@ -4,6 +4,57 @@
 
 ---
 
+## 2026-06-22 — Session 8 · 关注同步修复 + 重置功能 + 引导 Tour + 访客计数器
+
+### 做了什么
+- **关注全链路同步修复**：
+  - ScoutPage 新增关注/取消关注按钮（本地搜索 & AI 结果），接收 `followed`/`onToggleFollow` props
+  - FollowingPage `lookupPlayerCard` 改为 draft DB 中英文双匹配，卡片按英文名去重
+  - HomePage 位置标签中文化（POS_CN），关注球员卡片去重
+  - PlayerProfile 球员不在 DB 时禁用关注按钮（防止误关注 DEFAULT 球员）
+  - app-store `toggleFollow` 加 `isValidFollowName` 校验；新增 v1→v2 migration 自动清理旧中文名称
+  - App.tsx 启动时 `cleanStaleFollows()` 强制扫 localStorage 清理残留
+- **重置全部功能**：
+  - Sidebar 新增「重置全部」按钮 + 确认弹窗（红色 T.danger 确认按钮）
+  - app-store 新增 `fullReset()`：清 localStorage + 重置所有字段 + tourStep
+- **移动端 AI 搜索框溢出修复**：placeholder 从 23 字缩为 10 字 + `text-ellipsis` 截断
+- **首次使用引导 Tour**：
+  - 新组件 `TourGuide.tsx`：遮罩 + 聚光灯 + 定位提示卡片（三步：☰→球探→AI 球探）
+  - app-store 新增 `tourStep` 状态机（idle→step1→step2→step3→done）
+  - 桌面端自动跳过 step1（侧边栏常显）；DNA 生成后进入主页自动触发
+- **首页刷新黑屏修复**：Zustand 异步 hydration 改为同步读 localStorage 决定初始 screen
+- **跳过引导修复**：`handleOnboardingSkip` 现在也标记 `hasCompletedOnboarding = true`
+- **全局访客计数器**：
+  - 新建 `functions/api/visitor.js`（Cloudflare Pages Function），用 Cache API 持久化
+  - `index.html` 每页访问自动 POST `/api/visitor`
+  - 终端查询：`curl -s https://next-star-5s9.pages.dev/api/visitor`
+
+### 改动文件
+- `src/app/components/ScoutPage.tsx` — 关注按钮 + AI placeholder 修复 + data-tour
+- `src/app/components/FollowingPage.tsx` — lookupPlayerCard 双匹配 + 去重
+- `src/app/components/HomePage.tsx` — 位置中文化 + 去重
+- `src/app/components/PlayerProfile.tsx` — dbPlayer null 安全防护
+- `src/app/components/Sidebar.tsx` — 重置按钮 + 确认弹窗 + data-tour
+- `src/app/components/TourGuide.tsx` — **新建**，引导覆盖层组件
+- `src/app/App.tsx` — cleanStaleFollows + 同步读 localStorage + handleReset + Tour 触发 + 跳过修复
+- `src/store/app-store.ts` — isValidFollowName + v2 migration + fullReset + tourStep + advanceTour/dismissTour
+- `index.html` — 访客计数器 script
+- `functions/api/visitor.js` — **新建**，Cloudflare Pages Function 持久化计数器
+
+### 关键决策
+- 关注系统统一用 English name 存储，所有页面中英文双匹配查找
+- 旧版硬编码中文名（迪伦·哈珀等）通过 migration + cleanStaleFollows 双保险清理
+- 重置功能放在 Sidebar 底部弱色小字，不抢主导航
+- 引导 Tour 用全屏遮罩 + CSS 定位箭头，不引入第三方库
+- 访客计数器用 Cloudflare Cache API 持久化（免费、无需外部服务、自动跨边缘节点）
+
+### 待办
+- [ ] 配 Cloudflare 自定义域名
+- [ ] 球员对比功能（V2）
+- [ ] 计数器迁移到 KV 以获得更高持久性
+
+---
+
 ## 2026-06-21 — Session 7 · 零成本上线 + 安全加固
 
 ### 做了什么
