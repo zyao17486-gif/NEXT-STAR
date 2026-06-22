@@ -59,21 +59,19 @@ export default function App() {
   // One-time cleanup of stale follows from localStorage (e.g. old "迪伦·哈珀")
   useEffect(() => { cleanStaleFollows(); }, []);
 
-  // ── Wait for Zustand persist hydration before choosing initial screen ──
-  // Without this, store.hasCompletedOnboarding is always `false` on first render
-  // (the default), so returning users would briefly see onboarding on refresh.
-  const hydrated = useAppStore.persist.hasHydrated();
-
-  const [screen, setScreen] = useState<Screen | null>(null);
-
-  // Once hydrated, decide the initial screen
-  useEffect(() => {
-    if (hydrated && !screen) {
-      setScreen(
-        store.hasCompletedOnboarding ? { id: "home" } : { id: "onboarding" }
-      );
-    }
-  }, [hydrated, screen, store.hasCompletedOnboarding]);
+  // Sync read from localStorage — avoids Zustand async hydration race condition
+  const [screen, setScreen] = useState<Screen>(() => {
+    try {
+      const raw = localStorage.getItem("basketball-app-store");
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (data?.state?.hasCompletedOnboarding) {
+          return { id: "home" };
+        }
+      }
+    } catch {}
+    return { id: "onboarding" };
+  });
 
   const handleOnboardingComplete = useCallback((data: {
     selectedPosition: string;
@@ -128,13 +126,6 @@ export default function App() {
       setScreen({ id: page as Screen["id"] } as Screen);
     }
   };
-
-  // ── Show nothing until Zustand persist finishes hydrating ──
-  if (!screen) {
-    return (
-      <div style={{ minHeight: "100dvh", background: "#000" }} />
-    );
-  }
 
   const isMain = MAIN_SCREENS.includes(screen.id);
 
