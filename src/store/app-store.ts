@@ -27,6 +27,11 @@ interface AppState {
   // ── Onboarding state (so returning users skip it) ──
   hasCompletedOnboarding: boolean;
   setOnboardingComplete: () => void;
+
+  // ── First-use guided tour ──
+  tourStep: "idle" | "step1-hamburger" | "step2-scout" | "step3-ai" | "done";
+  advanceTour: () => void;
+  dismissTour: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -65,12 +70,28 @@ export const useAppStore = create<AppState>()(
           dnaVector: null,
           recommendations: [],
           hasCompletedOnboarding: false,
+          tourStep: "idle",
         });
       },
 
       // ── Onboarding ──
       hasCompletedOnboarding: false,
       setOnboardingComplete: () => set({ hasCompletedOnboarding: true }),
+
+      // ── Tour ──
+      tourStep: "idle",
+      advanceTour: () => {
+        const step = get().tourStep;
+        const next: Record<string, AppState["tourStep"]> = {
+          idle: "step1-hamburger",
+          "step1-hamburger": "step2-scout",
+          "step2-scout": "step3-ai",
+          "step3-ai": "done",
+          done: "done",
+        };
+        set({ tourStep: next[step] || "done" });
+      },
+      dismissTour: () => set({ tourStep: "done" }),
     }),
     {
       name: "basketball-app-store",
@@ -91,6 +112,7 @@ export const useAppStore = create<AppState>()(
         dnaVector: state.dnaVector,
         recommendations: state.recommendations,
         hasCompletedOnboarding: state.hasCompletedOnboarding,
+        tourStep: state.tourStep,
       }),
     }
   )

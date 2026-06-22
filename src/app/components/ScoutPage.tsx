@@ -313,10 +313,10 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
             onKeyDown={handleKeyDown}
             placeholder={
               aiMode
-                ? "例如：谁最像 Jaylen Brown？找一个防守型大锁…"
+                ? "描述你想要的球员类型…"
                 : "搜索球员姓名、球队..."
             }
-            className="flex-1 bg-transparent outline-none"
+            className="flex-1 bg-transparent outline-none overflow-hidden text-ellipsis whitespace-nowrap"
             style={{ color: T.white, fontSize: FONT.lg }}
           />
           {query && (
@@ -328,6 +328,7 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
 
         {/* AI mode toggle */}
         <button
+          data-tour="ai-toggle"
           onClick={toggleAiMode}
           className="shrink-0 flex items-center gap-2 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200"
           style={{

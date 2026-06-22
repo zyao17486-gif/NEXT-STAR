@@ -28,7 +28,7 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 py-3"
         style={{ background: BG.page, borderBottom: B.card }}>
         <span style={{ color: T.white, fontSize: FONT.md, fontWeight: 700, letterSpacing: "0.15em" }}>NEXT STAR</span>
-        <button onClick={() => setMobileOpen(!mobileOpen)} style={{ color: T.white, fontSize: "20px", lineHeight: 1 }}>
+        <button data-tour="hamburger" onClick={() => setMobileOpen(!mobileOpen)} style={{ color: T.white, fontSize: "20px", lineHeight: 1 }}>
           {mobileOpen ? "✕" : "☰"}
         </button>
       </div>
@@ -59,6 +59,7 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
         <nav className="flex flex-col gap-1 flex-1">
           {NAV.map(n => (
             <button key={n.id} onClick={() => handleNav(n.id)}
+              data-tour={n.id === "scout" ? "scout-nav" : undefined}
               className="text-left px-3 py-2.5 rounded-xl transition-all duration-200"
               style={{
                 color: active === n.id ? T.white : T.dim,

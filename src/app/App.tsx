@@ -9,6 +9,7 @@ import { ScoutPage } from "./components/ScoutPage";
 import { FollowingPage } from "./components/FollowingPage";
 import { Sidebar } from "./components/Sidebar";
 import { ArticlePage } from "./components/ArticlePage";
+import { TourGuide } from "./components/TourGuide";
 import { generateDNA, findTopMatches } from "../utils/dna-engine";
 import { useAppStore } from "../store/app-store";
 
@@ -89,6 +90,17 @@ export default function App() {
     store.fullReset();
     setScreen({ id: "onboarding" });
   }, [store]);
+
+  // Auto-start guided tour when landing on Home page after DNA generation
+  useEffect(() => {
+    if (
+      screen.id === "home" &&
+      store.dnaData &&
+      store.tourStep === "idle"
+    ) {
+      store.advanceTour(); // idle → step1-hamburger
+    }
+  }, [screen.id, store.dnaData, store.tourStep]);
 
   const navigate = (page: string, data?: Record<string, string>) => {
     const currentMain =
@@ -216,6 +228,16 @@ export default function App() {
             </div>
           </main>
         </div>
+      )}
+
+      {/* ── Guided tour overlay (fixed, renders above everything) ── */}
+      {isMain && store.tourStep !== "done" && store.tourStep !== "idle" && (
+        <TourGuide
+          step={store.tourStep as "step1-hamburger" | "step2-scout" | "step3-ai"}
+          onAdvance={store.advanceTour}
+          onDismiss={store.dismissTour}
+          onNavigate={navigate}
+        />
       )}
     </div>
   );
