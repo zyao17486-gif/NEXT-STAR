@@ -1,13 +1,14 @@
-// Cloudflare Pages Function — visitor counter
-// GET  → returns current count
-// POST → bumps count + returns new count
+// Cloudflare Pages Function — persistent visitor counter via Cache API
+// GET  → returns { count, method: "GET" }
+// POST → bumps count, returns { count, method: "POST" }
+// Uses Cache API to persist across requests; resets only on full cache purge.
 
-let count = 0;
+const CACHE_KEY = "https://nextstar-visitor-counter.local/count";
 
 export async function onRequest(context) {
   const { request } = context;
+  const cache = caches.default; // Cloudflare's default cache
 
-  // CORS headers for cross-origin access
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -18,11 +19,23 @@ export async function onRequest(context) {
     return new Response(null, { headers, status: 204 });
   }
 
-  if (request.method === "POST") {
-    count++;
-    return new Response(JSON.stringify({ count, method: "POST" }), { headers });
+  // Read current count from cache
+  let response = await cache.match(CACHE_KEY);
+  let count = 0;
+  if (response) {
+    const text = await response.text();
+    count = parseInt(text, 10) || 0;
   }
 
-  // GET
-  return new Response(JSON.stringify({ count, method: "GET" }), { headers });
+  if (request.method === "POST") {
+    count++;
+    // Persist to cache (24h TTL — count stays alive as long as site has traffic)
+    const cached = new Response(String(count), {
+      headers: { "Cache-Control": "public, max-age=86400" },
+    });
+    // Cloudflare Pages Functions can use waitUntil for background writes
+    context.waitUntil(cache.put(CACHE_KEY, cached.clone()));
+  }
+
+  return new Response(JSON.stringify({ count, method: request.method }), { headers });
 }
