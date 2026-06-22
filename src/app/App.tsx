@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Onboarding } from "./components/Onboarding";
 import { DNAResult } from "./components/DNAResult";
@@ -13,6 +13,30 @@ import { generateDNA, findTopMatches } from "../utils/dna-engine";
 import { useAppStore } from "../store/app-store";
 
 import draftDB from "../data/2026-draft-database.json";
+
+/** Force-clean stale followed names that can't resolve in the 2026 draft DB */
+function cleanStaleFollows() {
+  const raw = localStorage.getItem("basketball-app-store");
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    const followed: string[] = data?.state?.followed;
+    if (!followed || followed.length === 0) return;
+    const valid = followed.filter((name: string) =>
+      (draftDB as any[]).some(
+        (p: any) => p.name === name || (p as any).nameCn === name
+      )
+    );
+    if (valid.length !== followed.length) {
+      console.log(
+        `🧹 Cleaned ${followed.length - valid.length} stale follows:`,
+        followed.filter((n: string) => !valid.includes(n))
+      );
+      data.state.followed = valid;
+      localStorage.setItem("basketball-app-store", JSON.stringify(data));
+    }
+  } catch { /* ignore parse errors */ }
+}
 
 type Screen =
   | { id: "onboarding" }
@@ -30,6 +54,9 @@ export default function App() {
   const store = useAppStore();
   // Derive Set for components that expect it
   const followedSet = useMemo(() => new Set(store.followed), [store.followed]);
+
+  // One-time cleanup of stale follows from localStorage (e.g. old "迪伦·哈珀")
+  useEffect(() => { cleanStaleFollows(); }, []);
 
   const [screen, setScreen] = useState<Screen>(
     store.hasCompletedOnboarding ? { id: "home" } : { id: "onboarding" }
@@ -57,6 +84,11 @@ export default function App() {
   const handleOnboardingSkip = useCallback(() => {
     setScreen({ id: "home" });
   }, []);
+
+  const handleReset = useCallback(() => {
+    store.fullReset();
+    setScreen({ id: "onboarding" });
+  }, [store]);
 
   const navigate = (page: string, data?: Record<string, string>) => {
     const currentMain =
@@ -98,6 +130,8 @@ export default function App() {
       return (
         <ScoutPage
           onSelectPlayer={(name) => setScreen({ id: "player", name, from: "scout" })}
+          followed={followedSet}
+          onToggleFollow={store.toggleFollow}
         />
       );
     }
@@ -165,7 +199,7 @@ export default function App() {
 
       {isMain && (
         <div className="flex" style={{ minHeight: "100dvh" }}>
-          <Sidebar active={activeNav} onNavigate={navigate} />
+          <Sidebar active={activeNav} onNavigate={navigate} onReset={handleReset} />
           <main className="flex-1 overflow-y-auto" style={{ minHeight: "100dvh" }}>
             <div className="px-5 lg:pl-[232px] lg:pr-16 pt-16 lg:pt-14 pb-14 max-w-6xl">
               <AnimatePresence mode="wait">

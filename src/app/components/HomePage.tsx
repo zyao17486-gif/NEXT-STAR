@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from "motion/react";
 import draftDB from "../../data/2026-draft-database.json";
 import { T, BG, B, FONT, PIE, SCORE } from "../../styles/design-tokens";
 
+const POS_CN: Record<string, string> = {
+  PG: "控卫", SG: "得分后卫", SF: "小前锋", PF: "大前锋", C: "中锋",
+};
+
 // ── Real-time date & draft countdown ──────────────────────────────────
 function useRealtimeDate() {
   return useMemo(() => {
@@ -16,16 +20,6 @@ function useRealtimeDate() {
     return { dateStr, daysLeft };
   }, []);
 }
-
-// All prospect card data keyed by Chinese name — single source of truth for the carousel
-const ALL_PROSPECT_CARDS: Record<string, { pos: string; rank: number; isNew: boolean; img: string }> = {
-  "迪伦·哈珀":  { pos: "PG", rank: 2,  isNew: true,  img: "https://images.unsplash.com/photo-1590227632180-80a3bf110871?w=400&h=500&fit=crop&auto=format&q=85" },
-  "艾斯·贝利":  { pos: "SF", rank: 4,  isNew: false, img: "https://images.unsplash.com/photo-1569731683228-5e7850ae0034?w=400&h=500&fit=crop&auto=format&q=85" },
-  "诺亚·埃森格": { pos: "SF", rank: 13, isNew: true,  img: "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?w=400&h=500&fit=crop&auto=format&q=85" },
-  "布吉·弗兰德": { pos: "PG", rank: 9,  isNew: false, img: "https://images.unsplash.com/photo-1519432473078-0151c4f90335?w=400&h=500&fit=crop&auto=format&q=85" },
-  "VJ 埃吉科姆": { pos: "SG", rank: 3,  isNew: true,  img: "https://images.unsplash.com/photo-1551330299-5b92e951b570?w=400&h=500&fit=crop&auto=format&q=85" },
-  "卡斯帕拉斯·雅库奇奥尼斯": { pos: "PG", rank: 17, isNew: false, img: "https://images.unsplash.com/photo-1587296101198-67dcc4fe72f8?w=400&h=500&fit=crop&auto=format&q=85" },
-};
 
 // Hardcoded real draft news — subtitle shown on card, full content in article page
 const FEED = [
@@ -81,17 +75,17 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
   const [liked, setLiked] = useState<Set<number>>(new Set());
   const { dateStr, daysLeft } = useRealtimeDate();
 
-  // Only show prospects the user has actually followed (old DB + 2026 draft DB)
+  // Only show prospects the user has actually followed (2026 draft DB)
   const followedProspects = [...followed]
     .map(name => {
-      // Old mock data
-      if (ALL_PROSPECT_CARDS[name]) return { name, nameCn: name, ...ALL_PROSPECT_CARDS[name] };
-      // 2026 Draft DB
-      const dbp = (draftDB as typeof draftDB).find((p) => p.name === name);
-      if (dbp) return { name: dbp.name, nameCn: (dbp as any).nameCn || dbp.name, pos: dbp.position, rank: dbp.id, isNew: true, img: dbp.img };
+      // 2026 Draft DB — match by English name or Chinese nameCn
+      const dbp = (draftDB as typeof draftDB).find((p) => p.name === name || (p as any).nameCn === name);
+      if (dbp) return { name: dbp.name, nameCn: (dbp as any).nameCn || dbp.name, pos: POS_CN[dbp.position] ?? dbp.position, rank: dbp.id, isNew: true, img: dbp.img };
       return null;
     })
-    .filter((p): p is NonNullable<typeof p> => p !== null);
+    .filter((p): p is NonNullable<typeof p> => p !== null)
+    // Deduplicate by English name
+    .filter((p, i, arr) => arr.findIndex(x => x.name === p.name) === i);
 
   return (
     <div style={{ fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>

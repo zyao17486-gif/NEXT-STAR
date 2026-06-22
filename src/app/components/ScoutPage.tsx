@@ -13,10 +13,17 @@ const POS_CN: Record<string, string> = {
 };
 const ALL_PLAYERS = (draftDB as DraftPlayer[]).map(p => ({
   name: p.name,
+  nameCn: (p as any).nameCn as string | undefined,
   pos: POS_CN[p.position] ?? p.position,
   school: p.team,
   projection: "2026 NBA Draft",
 }));
+
+/** Resolve all name variants for a player and return the correct toggle key */
+function resolvePlayerNames(english: string, chinese?: string) {
+  const names = [english, chinese].filter(Boolean) as string[];
+  return names;
+}
 
 // ── AI result types ────────────────────────────────────────────────────────
 interface AIRecommendation {
@@ -36,6 +43,8 @@ interface AIResult {
 // ── Props ──────────────────────────────────────────────────────────────────
 interface ScoutPageProps {
   onSelectPlayer: (name: string) => void;
+  followed: Set<string>;
+  onToggleFollow: (name: string) => void;
 }
 
 // ── Score badge colour ─────────────────────────────────────────────────────
@@ -71,13 +80,20 @@ function AIResultCard({
   rec,
   index,
   onSelectPlayer,
+  followed,
+  onToggleFollow,
 }: {
   rec: AIRecommendation;
   index: number;
   onSelectPlayer: (name: string) => void;
+  followed: Set<string>;
+  onToggleFollow: (name: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const sc = scoreColor(rec.matchScore);
+  const aiNames = resolvePlayerNames(rec.en, rec.name);
+  const isFollowed = aiNames.some(n => followed.has(n));
+  const toggleKey = aiNames.find(n => followed.has(n)) ?? rec.en;
 
   return (
     <motion.div
@@ -117,6 +133,18 @@ function AIResultCard({
               {rec.matchScore}%
             </div>
             <div style={{ color: T.ghost, fontSize: FONT.xs, marginTop: "3px" }}>匹配度</div>
+            {/* Follow button for AI results */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleFollow(toggleKey); }}
+              className="mt-2 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
+              style={{
+                background: isFollowed ? BG.overlay : T.white,
+                border: isFollowed ? B.visible : "1px solid transparent",
+                color: isFollowed ? T.body : BG.page,
+              }}
+            >
+              {isFollowed ? "已关注" : "关注"}
+            </button>
           </div>
         </div>
 
@@ -190,7 +218,7 @@ function AIResultCard({
 }
 
 // ── Main ScoutPage ─────────────────────────────────────────────────────────
-export function ScoutPage({ onSelectPlayer }: ScoutPageProps) {
+export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPageProps) {
   const [query, setQuery] = useState("");
   const [aiMode, setAiMode] = useState(false);
 
@@ -398,6 +426,8 @@ export function ScoutPage({ onSelectPlayer }: ScoutPageProps) {
                   rec={rec}
                   index={i}
                   onSelectPlayer={onSelectPlayer}
+                  followed={followed}
+                  onToggleFollow={onToggleFollow}
                 />
               ))}
             </div>
@@ -422,31 +452,52 @@ export function ScoutPage({ onSelectPlayer }: ScoutPageProps) {
               </div>
             ) : (
               <div className="space-y-px rounded-2xl overflow-hidden" style={{ border: B.card }}>
-                {localFiltered.map((p, i) => (
-                  <motion.button
-                    key={p.name}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.04 }}
-                    onClick={() => onSelectPlayer(p.name)}
-                    className="w-full flex items-center gap-4 px-6 py-5 transition-colors duration-150 hover:bg-white/[0.04]"
-                    style={{ background: BG.card, borderBottom: i < localFiltered.length - 1 ? B.divider : "none" }}
-                  >
-                    <div className="flex-1 text-left min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600 }}>{p.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span style={{ color: T.dim, fontSize: FONT.base }}>{p.pos}</span>
-                        <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
-                        <span style={{ color: T.dim, fontSize: FONT.base }}>{p.school}</span>
-                      </div>
-                    </div>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ opacity: 0.2, flexShrink: 0 } as React.CSSProperties}>
-                      <path d="M6 4l4 4-4 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </motion.button>
-                ))}
+                {localFiltered.map((p, i) => {
+                  const names = resolvePlayerNames(p.name, p.nameCn);
+                  const isFollowed = names.some(n => followed.has(n));
+                  const toggleKey = names.find(n => followed.has(n)) ?? p.name;
+                  return (
+                    <motion.div
+                      key={p.name}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: i * 0.04 }}
+                      className="w-full flex items-center gap-4 px-6 py-5 transition-colors duration-150 hover:bg-white/[0.04]"
+                      style={{ background: BG.card, borderBottom: i < localFiltered.length - 1 ? B.divider : "none" }}
+                    >
+                      <button
+                        onClick={() => onSelectPlayer(p.name)}
+                        className="flex-1 flex items-center gap-4 text-left min-w-0 bg-transparent border-none outline-none cursor-pointer"
+                        style={{ padding: 0 }}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600 }}>{p.nameCn || p.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span style={{ color: T.dim, fontSize: FONT.base }}>{p.pos}</span>
+                            <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
+                            <span style={{ color: T.dim, fontSize: FONT.base }}>{p.school}</span>
+                          </div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ opacity: 0.2, flexShrink: 0 } as React.CSSProperties}>
+                          <path d="M6 4l4 4-4 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onToggleFollow(toggleKey); }}
+                        className="px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shrink-0"
+                        style={{
+                          background: isFollowed ? BG.overlay : T.white,
+                          border: isFollowed ? B.visible : "1px solid transparent",
+                          color: isFollowed ? T.body : BG.page,
+                        }}
+                      >
+                        {isFollowed ? "已关注" : "关注"}
+                      </button>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </motion.div>

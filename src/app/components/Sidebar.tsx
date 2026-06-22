@@ -4,6 +4,7 @@ import { T, BG, B, FONT } from "../../styles/design-tokens";
 interface SidebarProps {
   active: string;
   onNavigate: (page: string) => void;
+  onReset: () => void;
 }
 
 const NAV = [
@@ -12,8 +13,9 @@ const NAV = [
   { id: "following", label: "关注" },
 ];
 
-export function Sidebar({ active, onNavigate }: SidebarProps) {
+export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const handleNav = (page: string) => {
     onNavigate(page);
@@ -80,6 +82,19 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
           <span style={{ color: T.label, fontSize: FONT.base }}>DNA 测评</span>
         </button>
 
+        {/* Divider + Reset */}
+        <div className="h-px mx-3 my-3" style={{ background: "rgba(255,255,255,0.04)" }} />
+
+        <button onClick={() => setShowResetConfirm(true)}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-white/[0.03] mb-3"
+          style={{ color: T.hint, fontSize: FONT.xs }}>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M1.5 6.5a5 5 0 108.5-4.2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M10 2.3H8v2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          重置全部
+        </button>
+
         {/* Profile */}
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 rounded-full flex items-center justify-center"
@@ -89,6 +104,50 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
           <span style={{ color: T.dim, fontSize: FONT.base }}>我的账户</span>
         </div>
       </div>
+
+      {/* ── Reset confirmation modal ── */}
+      {showResetConfirm && (
+        <>
+          <div
+            className="fixed inset-0 z-[60]"
+            style={{ background: "rgba(0,0,0,0.65)" }}
+            onClick={() => setShowResetConfirm(false)}
+          />
+          <div className="fixed inset-0 z-[70] flex items-center justify-center pointer-events-none">
+            <div
+              className="pointer-events-auto mx-5 p-6 rounded-2xl max-w-[300px] w-full"
+              style={{ background: BG.card, border: B.card }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 style={{ color: T.white, fontSize: FONT.md, fontWeight: 600, marginBottom: "6px" }}>
+                确认重置全部数据？
+              </h3>
+              <p style={{ color: T.dim, fontSize: FONT.sm, lineHeight: 1.6, marginBottom: "20px" }}>
+                这将清除你的 DNA 测评结果、球员关注列表和偏好设置。此操作无法撤销。
+              </p>
+              <div className="flex gap-2.5 justify-end">
+                <button
+                  onClick={() => setShowResetConfirm(false)}
+                  className="px-4 py-2 rounded-lg transition-all duration-200 hover:bg-white/[0.04]"
+                  style={{ color: T.body, fontSize: FONT.sm, border: B.subtle }}
+                >
+                  取消
+                </button>
+                <button
+                  onClick={() => {
+                    setShowResetConfirm(false);
+                    onReset();
+                  }}
+                  className="px-4 py-2 rounded-lg transition-all duration-150"
+                  style={{ background: T.danger, color: T.white, fontSize: FONT.sm, fontWeight: 600, borderRadius: "8px" }}
+                >
+                  确认重置
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

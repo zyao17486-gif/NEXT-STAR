@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { DNAResult, ProspectMatch } from "../utils/dna-engine";
+import draftDB from "../data/2026-draft-database.json";
+
+/** Check if a follow-name can be resolved in the 2026 draft DB */
+function isValidFollowName(name: string): boolean {
+  return (draftDB as any[]).some(
+    (p: any) => p.name === name || (p as any).nameCn === name
+  );
+}
 
 interface AppState {
   // ── Followed players ──
@@ -14,6 +22,7 @@ interface AppState {
   recommendations: ProspectMatch[];
   setDNA: (data: DNAResult, recs: ProspectMatch[]) => void;
   clearDNA: () => void;
+  fullReset: () => void;
 
   // ── Onboarding state (so returning users skip it) ──
   hasCompletedOnboarding: boolean;
@@ -27,10 +36,14 @@ export const useAppStore = create<AppState>()(
       followed: [],
       toggleFollow: (name: string) => {
         const current = get().followed;
-        const next = current.includes(name)
-          ? current.filter(n => n !== name)
-          : [...current, name];
-        set({ followed: next });
+        if (current.includes(name)) {
+          // Unfollow — always allow
+          set({ followed: current.filter(n => n !== name) });
+        } else {
+          // Follow — only add if the name resolves to a DB player
+          if (!isValidFollowName(name)) return;
+          set({ followed: [...current, name] });
+        }
       },
       isFollowed: (name: string) => get().followed.includes(name),
 
@@ -43,12 +56,35 @@ export const useAppStore = create<AppState>()(
       clearDNA: () =>
         set({ dnaData: null, dnaVector: null, recommendations: [] }),
 
+      // ── Full reset — start from scratch ──
+      fullReset: () => {
+        localStorage.removeItem("basketball-app-store");
+        set({
+          followed: [],
+          dnaData: null,
+          dnaVector: null,
+          recommendations: [],
+          hasCompletedOnboarding: false,
+        });
+      },
+
       // ── Onboarding ──
       hasCompletedOnboarding: false,
       setOnboardingComplete: () => set({ hasCompletedOnboarding: true }),
     }),
     {
       name: "basketball-app-store",
+      version: 2,
+      migrate: (persistedState: any, version: number) => {
+        if (version < 2) {
+          // V2 migration: clean up old hardcoded Chinese names (e.g. "迪伦·哈珀")
+          // that no longer exist in the 2026 draft database
+          const oldFollowed: string[] = persistedState.followed || [];
+          const cleaned = oldFollowed.filter(isValidFollowName);
+          return { ...persistedState, followed: cleaned };
+        }
+        return persistedState as any;
+      },
       partialize: (state) => ({
         followed: state.followed,
         dnaData: state.dnaData,

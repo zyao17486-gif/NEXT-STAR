@@ -220,7 +220,7 @@ function extractTemplate(text: string): { overview: string; template: string | n
 }
 
 /** Adapt a 2026 Draft DB player → the shape PlayerProfile expects */
-function adaptDraftPlayer(dp: DraftPlayer): typeof DEFAULT {
+function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
   const pieKeys = ["finishing", "shooting", "playmaking", "defense", "rebounding"] as const;
   const attrs = dp.attributes;
   const wsInches = parseHeightToInches(dp.wingspan);
@@ -346,8 +346,8 @@ type SeasonStat = {
   fg: number; three: number; ft: number; ts: number; per: number;
 };
 
-// ── Player data ────────────────────────────────────────────────────────────
-export const PLAYERS_DATA: Record<string, {
+// ── Player view-model (produced by adaptDraftPlayer) ─────────────────────────
+type PlayerData = {
   name: string; en: string; pos: string;
   school: string; schoolEn: string;
   height: string; heightMetric: string;
@@ -357,121 +357,14 @@ export const PLAYERS_DATA: Record<string, {
   overview: string; strengths: string[]; weaknesses: string[];
   seasonStats: SeasonStat[];
   pie: { key: keyof typeof PIE; value: number }[];
-  athleticism: number; // 0-100, shown as separate white bar
+  athleticism: number;
   bestTemplate: { name: string; desc: string };
   worstTemplate: { name: string; desc: string };
   devPlan: [string, string][];
-}> = {
-  "迪伦·哈珀": {
-    name: "迪伦·哈珀", en: "Dylan Harper", pos: "控卫",
-    school: "罗格斯大学", schoolEn: "Rutgers",
-    height: "6'5\"", heightMetric: "196 cm",
-    wingspan: "6'8\"", wingspanMetric: "203 cm",
-    weight: "205 lbs", weightMetric: "93 kg",
-    birthday: "2006年2月4日", projection: "#2 顺位 — 2025",
-    img: "https://images.unsplash.com/photo-1590227632180-80a3bf110871?w=1200&h=800&fit=crop&auto=format&q=90",
-    overview: "天才级别的进攻创造者，持球能力与大局观远超同龄人。哈珀能在场上任何位置创造出清晰的出手机会，是近年来最令人兴奋的大学选手。",
-    strengths: ["精英控球与进攻创造", "挡拆进攻驾驭能力", "传球视野与组织意识"],
-    weaknesses: ["三分稳定性（33%）", "防守积极性有待提升", "NBA 级别身体对抗"],
-    seasonStats: [
-      { year: "2022-23", level: "高中", team: "AZ Compass Prep", gp: 28, pts: 22.1, reb: 4.2, ast: 5.8, fg: 48.3, three: 36.1, ft: 81.2, ts: 58.4, per: 28.1 },
-      { year: "2023-24", level: "高中", team: "AZ Compass Prep", gp: 30, pts: 26.4, reb: 5.1, ast: 7.2, fg: 50.1, three: 37.8, ft: 84.0, ts: 61.2, per: 31.7 },
-      { year: "2024-25", level: "大学", team: "Rutgers", gp: 33, pts: 21.3, reb: 3.6, ast: 6.8, fg: 47.2, three: 33.1, ft: 78.9, ts: 59.1, per: 26.4 },
-    ],
-    pie: [{ key: "playmaking", value: 45 }, { key: "finishing", value: 35 }, { key: "shooting", value: 20 }],
-    athleticism: 68,
-    bestTemplate: { name: "凯里·欧文", desc: "全明星级别的持球主导者，能在任何局面下自主创造高质量出手，比赛末端掌控力极强，连续多赛季跻身联盟最难防的进攻方之列。" },
-    worstTemplate: { name: "蒙特·莫里斯", desc: "可靠的轮换控卫，能在体系内提供稳定的组织输出，但缺乏主导权与爆炸性，难以成为球队真正的一号得分选项。" },
-    devPlan: [["第一年", "适应 NBA 节奏，专注无球跑动与三分稳定性。"], ["第二年", "确立先发位置，逐步成为主要持球人，场均 18+ 分。"], ["第三年", "全明星轨道。确立挡拆主导权，成为顶级得分手。"]],
-  },
-  "艾斯·贝利": {
-    name: "艾斯·贝利", en: "Ace Bailey", pos: "小前锋",
-    school: "罗格斯大学", schoolEn: "Rutgers",
-    height: "6'10\"", heightMetric: "208 cm",
-    wingspan: "7'2\"", wingspanMetric: "218 cm",
-    weight: "195 lbs", weightMetric: "88 kg",
-    birthday: "2006年12月23日", projection: "前5顺位 — 2026",
-    img: "https://images.unsplash.com/photo-1569731683228-5e7850ae0034?w=1200&h=800&fit=crop&auto=format&q=90",
-    overview: "细腻的得分能力加上 6'10\" 的身高，让贝利在每个级别都像是开了外挂。超长臂展搭配灵动的投篮手感，令人不禁想起年轻时的杜兰特。",
-    strengths: ["超长臂展与身体天赋", "三分区得分", "无球跑动中的投射"],
-    weaknesses: ["身体对抗能力尚待加强", "表现稳定性", "面对紧逼压迫时的持球"],
-    seasonStats: [
-      { year: "2023-24", level: "高中", team: "Gill St. Bernard's", gp: 26, pts: 19.8, reb: 8.4, ast: 2.1, fg: 52.0, three: 38.5, ft: 76.3, ts: 62.1, per: 27.8 },
-      { year: "2024-25", level: "大学", team: "Rutgers", gp: 34, pts: 18.7, reb: 7.2, ast: 1.9, fg: 44.8, three: 35.2, ft: 74.1, ts: 57.3, per: 22.6 },
-    ],
-    pie: [{ key: "shooting", value: 53 }, { key: "finishing", value: 47 }],
-    athleticism: 78,
-    bestTemplate: { name: "凯文·杜兰特", desc: "身高手长的全能型得分怪兽，能以极高的效率在三个得分区域主宰比赛，成为联盟得分榜常客，并凭借防守端的存在感入选全明星阵容。" },
-    worstTemplate: { name: "威利·科利-斯坦", desc: "具备优秀身体条件但进攻创造能力有限的蓝领侧翼，在轮换阵容中担任防守与篮板工人，难以成长为球队进攻核心。" },
-    devPlan: [["第一年", "增重强化对抗，建立体系内无球跑动的可靠性。"], ["第二年", "扩大持球进攻比重，提升三分出手量与稳定性。"], ["第三年", "成为球队第一或第二进攻选项，锁定全明星候选资格。"]],
-  },
-  "诺亚·埃森格": {
-    name: "诺亚·埃森格", en: "Noa Essengue", pos: "小前锋",
-    school: "乌尔姆（德国）", schoolEn: "Ratiopharm Ulm",
-    height: "6'9\"", heightMetric: "206 cm",
-    wingspan: "7'1\"", wingspanMetric: "216 cm",
-    weight: "190 lbs", weightMetric: "86 kg",
-    birthday: "2007年2月23日", projection: "前15顺位 — 2025",
-    img: "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?w=1200&h=800&fit=crop&auto=format&q=90",
-    overview: "卢卡以来最令人期待的国际新秀。埃森格的双向直觉、防守端的阅读球能力，以及稳步提升的进攻维度，让他具备成为球队基石的潜质。",
-    strengths: ["精英防守本能", "超长臂展与身体延伸", "无球移动与跑位"],
-    weaknesses: ["NBA 级别的持球创造能力", "需要积累更多比赛经验", "主导进攻的稳定性"],
-    seasonStats: [
-      { year: "2023-24", level: "欧洲青年联赛", team: "Ratiopharm Ulm U18", gp: 22, pts: 11.4, reb: 5.2, ast: 1.4, fg: 49.1, three: 31.2, ft: 68.4, ts: 54.7, per: 19.3 },
-      { year: "2024-25", level: "欧洲青年联赛", team: "Ratiopharm Ulm", gp: 24, pts: 14.2, reb: 5.8, ast: 1.7, fg: 51.3, three: 34.1, ft: 71.2, ts: 57.8, per: 22.1 },
-    ],
-    pie: [{ key: "defense", value: 48 }, { key: "rebounding", value: 32 }, { key: "shooting", value: 20 }],
-    athleticism: 85,
-    bestTemplate: { name: "卡哇伊·伦纳德", desc: "两端统治力兼备的顶级侧翼，防守端入选最佳防守阵容，进攻端凭借高效的低位与中距离能力成为球队季后赛绝对核心。" },
-    worstTemplate: { name: "德里克·乔内斯", desc: "依靠运动天赋和防守强度在轮换阵容中立足的侧翼，进攻端主要依赖空切和快攻，缺乏独立创造机会的能力。" },
-    devPlan: [["第一年", "专注防守端立足，扩展三分出手稳定性。"], ["第二年", "发展中距离与持球进攻，成为双向侧翼先发。"], ["第三年", "全面成型，争取最佳防守阵容提名。"]],
-  },
-  "布吉·弗兰德": {
-    name: "布吉·弗兰德", en: "Boogie Fland", pos: "控卫",
-    school: "阿肯色大学", schoolEn: "Arkansas",
-    height: "6'3\"", heightMetric: "191 cm",
-    wingspan: "6'6\"", wingspanMetric: "198 cm",
-    weight: "185 lbs", weightMetric: "84 kg",
-    birthday: "2006年2月27日", projection: "前10顺位 — 2025",
-    img: "https://images.unsplash.com/photo-1519432473078-0151c4f90335?w=1200&h=800&fit=crop&auto=format&q=90",
-    overview: "爆炸级启动速度让防守者无所适从。弗兰德的创造性得分与无畏的急停跳投，赋予了他在现代 NBA 中的明星潜力。",
-    strengths: ["第一步爆发力", "擦板挑篮技巧", "急停三分球"],
-    weaknesses: ["身体框架与耐久性", "持球防守端", "快攻中的决策速度"],
-    seasonStats: [
-      { year: "2022-23", level: "高中", team: "IMG Academy", gp: 30, pts: 18.4, reb: 3.1, ast: 5.6, fg: 46.2, three: 38.4, ft: 82.1, ts: 59.8, per: 24.5 },
-      { year: "2023-24", level: "高中", team: "Brewster Academy", gp: 29, pts: 21.7, reb: 3.8, ast: 6.4, fg: 47.9, three: 40.1, ft: 84.3, ts: 62.4, per: 27.3 },
-      { year: "2024-25", level: "大学", team: "Arkansas", gp: 34, pts: 19.4, reb: 3.2, ast: 5.1, fg: 43.9, three: 36.2, ft: 79.8, ts: 56.7, per: 23.8 },
-    ],
-    pie: [{ key: "finishing", value: 47 }, { key: "playmaking", value: 35 }, { key: "shooting", value: 18 }],
-    athleticism: 82,
-    bestTemplate: { name: "贾·莫兰特", desc: "凭借惊人的第一步与高难度终结能力颠覆联盟的爆炸型控卫，能在任何对位中制造进攻机会，且随着视野成长逐渐进化为顶级组织者。" },
-    worstTemplate: { name: "肯特·贝兹摩尔", desc: "在联盟长期立足但始终未能成为球队核心的得分型后卫，球队进攻依赖时表现出色，但缺乏稳定的主导进攻能力。" },
-    devPlan: [["第一年", "展示运动天赋，建立快攻与挡拆中的进攻价值。"], ["第二年", "扩展组织端，提升助攻与失误比。"], ["第三年", "奠定先发主控资格，场均 20/6 冲击。"]],
-  },
-  "VJ 埃吉科姆": {
-    name: "VJ 埃吉科姆", en: "VJ Edgecombe", pos: "得分后卫",
-    school: "贝勒大学", schoolEn: "Baylor",
-    height: "6'5\"", heightMetric: "196 cm",
-    wingspan: "6'8\"", wingspanMetric: "203 cm",
-    weight: "195 lbs", weightMetric: "88 kg",
-    birthday: "2006年3月14日", projection: "前5顺位 — 2025",
-    img: "https://images.unsplash.com/photo-1551330299-5b92e951b570?w=1200&h=800&fit=crop&auto=format&q=90",
-    overview: "爆炸性运动能力搭配精准投篮——埃吉科姆是天生的得分机器，无球时的跑动与空切同样具备威胁。",
-    strengths: ["超强运动天赋", "有球无球均可得分", "空切与跑动能力"],
-    weaknesses: ["组织传球有待提升", "面对夹击的处理", "持球进攻多样性"],
-    seasonStats: [
-      { year: "2023-24", level: "高中", team: "Link Year Prep", gp: 27, pts: 20.3, reb: 5.4, ast: 2.8, fg: 51.2, three: 40.3, ft: 78.9, ts: 63.1, per: 26.7 },
-      { year: "2024-25", level: "大学", team: "Baylor", gp: 35, pts: 17.8, reb: 4.1, ast: 2.4, fg: 46.2, three: 37.8, ft: 75.3, ts: 60.4, per: 21.9 },
-    ],
-    pie: [{ key: "finishing", value: 52 }, { key: "shooting", value: 48 }],
-    athleticism: 91,
-    bestTemplate: { name: "安东尼·爱德华兹", desc: "爆炸性的运动天赋配合持续扩展的持球能力，成长为联盟顶级双能卫，凭借绝对的身体统治力在季后赛中展现领袖气质。" },
-    worstTemplate: { name: "泰伦斯·罗斯", desc: "具备高光时刻但无法保持稳定性的角色型得分手，进攻依赖体系，难以在高强度防守下独立创造出手机会。" },
-    devPlan: [["第一年", "以运动天赋为切入点，专注空切和快攻中的得分。"], ["第二年", "发展持球进攻，提高挡拆使用频率。"], ["第三年", "进化为球队第二进攻选项，实现真正的双能卫蜕变。"]],
-  },
 };
 
-const DEFAULT = PLAYERS_DATA["迪伦·哈珀"];
+// Default fallback — first DB player, so the UI never renders empty
+const DEFAULT: PlayerData = adaptDraftPlayer(draftDB[0] as DraftPlayer);
 
 const TABS = ["概览", "数据", "AI 洞察"];
 
@@ -673,14 +566,20 @@ interface PlayerProfileProps {
 
 export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: PlayerProfileProps) {
   const [tab, setTab] = useState(0);
-  // Look up in old PLAYERS_DATA first, then 2026 draft DB, fallback to DEFAULT
+  // Look up in 2026 draft DB by English or Chinese name, fallback to first DB player
   const dbPlayer: DraftPlayer | null = playerName
-    ? ((draftDB as DraftPlayer[]).find((p) => p.name === playerName) ?? null)
+    ? ((draftDB as DraftPlayer[]).find((p) => p.name === playerName || (p as any).nameCn === playerName) ?? null)
     : null;
-  const player = (playerName && PLAYERS_DATA[playerName])
-    || (dbPlayer ? adaptDraftPlayer(dbPlayer) : null)
-    || DEFAULT;
-  const isFollowed = followed.has(player.name);
+  const playerFound = dbPlayer !== null;
+  const player = dbPlayer ? adaptDraftPlayer(dbPlayer) : DEFAULT;
+
+  // Collect all name variants for this player
+  const playerNames = [player.en, player.name, dbPlayer?.name].filter(Boolean) as string[];
+  const isFollowed = playerNames.some(n => followed.has(n));
+
+  // Find the exact stored name (for correct unfollow), fallback to en for follow
+  const toggleKey = playerNames.find(n => followed.has(n)) ?? player.en;
+
   const { overview: cleanOverview, template: templateRef } = extractTemplate(player.overview);
 
   return (
@@ -700,8 +599,10 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
             <span style={{ color: T.body, fontSize: FONT.md, fontWeight: 500 }}>{player.pos}</span>
             <span style={{ color: T.dim, fontSize: FONT.md }}>/ {player.school}</span>
           </div>
-          <button onClick={() => onToggleFollow(player.name)}
-            className="px-5 py-2 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shrink-0"
+          <button
+            onClick={() => onToggleFollow(toggleKey)}
+            disabled={!playerFound}
+            className="px-5 py-2 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
               background: isFollowed ? BG.overlay : T.white,
               border: isFollowed ? B.visible : "1px solid transparent",

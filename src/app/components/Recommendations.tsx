@@ -79,7 +79,10 @@ export function Recommendations({
       <div className="px-8 lg:px-20 pb-20 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {hasData ? (
           recommendations.map((p, i) => {
-            const isFollowed = followed.has(p.name);
+            // Check both English and Chinese name variants
+            const recNames = [p.name, (p as any).nameCn].filter(Boolean) as string[];
+            const isFollowed = recNames.some(n => followed.has(n));
+            const recToggleKey = recNames.find(n => followed.has(n)) ?? p.name;
             const rankLabels = ["最佳匹配", "高度推荐", "实力新秀"];
             return (
               <motion.div
@@ -157,7 +160,7 @@ export function Recommendations({
 
                 {/* Follow */}
                 <div className="px-6 pb-6">
-                  <button onClick={() => onToggleFollow(p.name)}
+                  <button onClick={() => onToggleFollow(recToggleKey)}
                     className="w-full py-3.5 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
                     style={{
                       background: isFollowed ? BG.overlay : T.white,
