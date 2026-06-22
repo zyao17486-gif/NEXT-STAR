@@ -9,7 +9,9 @@ dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["https://next-star-5s9.pages.dev", "http://localhost:5173"],
+}));
 app.use(express.json({ limit: "1mb" }));
 
 // ── Rate limiter — 10 AI searches per minute per IP ─────────────────────
@@ -359,7 +361,7 @@ Rules:
 - Output ONLY the Chinese translation, no explanations or notes
 - Make it read like a professional Chinese sports article`;
 
-app.post("/api/translate", async (req, res) => {
+app.post("/api/translate", checkRate, async (req, res) => {
   const { text } = req.body;
 
   if (!text || typeof text !== "string" || text.trim().length === 0) {
@@ -416,7 +418,7 @@ app.post("/api/translate", async (req, res) => {
 });
 
 // ── Batch pre-translate all profiles & save to DB ──────────────────────────
-app.post("/api/translate/batch", async (_req, res) => {
+app.post("/api/translate/batch", checkRate, async (_req, res) => {
   if (!DEEPSEEK_API_KEY) {
     return res.status(500).json({ error: "AI 服务未配置" });
   }
