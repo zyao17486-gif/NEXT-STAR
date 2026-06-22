@@ -59,9 +59,21 @@ export default function App() {
   // One-time cleanup of stale follows from localStorage (e.g. old "迪伦·哈珀")
   useEffect(() => { cleanStaleFollows(); }, []);
 
-  const [screen, setScreen] = useState<Screen>(
-    store.hasCompletedOnboarding ? { id: "home" } : { id: "onboarding" }
-  );
+  // ── Wait for Zustand persist hydration before choosing initial screen ──
+  // Without this, store.hasCompletedOnboarding is always `false` on first render
+  // (the default), so returning users would briefly see onboarding on refresh.
+  const hydrated = useAppStore.persist.hasHydrated();
+
+  const [screen, setScreen] = useState<Screen | null>(null);
+
+  // Once hydrated, decide the initial screen
+  useEffect(() => {
+    if (hydrated && !screen) {
+      setScreen(
+        store.hasCompletedOnboarding ? { id: "home" } : { id: "onboarding" }
+      );
+    }
+  }, [hydrated, screen, store.hasCompletedOnboarding]);
 
   const handleOnboardingComplete = useCallback((data: {
     selectedPosition: string;
@@ -83,8 +95,9 @@ export default function App() {
   }, [store]);
 
   const handleOnboardingSkip = useCallback(() => {
+    store.setOnboardingComplete();
     setScreen({ id: "home" });
-  }, []);
+  }, [store]);
 
   const handleReset = useCallback(() => {
     store.fullReset();
@@ -115,6 +128,13 @@ export default function App() {
       setScreen({ id: page as Screen["id"] } as Screen);
     }
   };
+
+  // ── Show nothing until Zustand persist finishes hydrating ──
+  if (!screen) {
+    return (
+      <div style={{ minHeight: "100dvh", background: "#000" }} />
+    );
+  }
 
   const isMain = MAIN_SCREENS.includes(screen.id);
 
