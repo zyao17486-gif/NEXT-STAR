@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { PieChart, Pie, Cell } from "recharts";
+
 // V2: 20-player 2026 draft database for AI Scout result profiles
 import draftDB from "../../data/2026-draft-database.json";
-import { T, BG, B, FONT, PIE } from "../../styles/design-tokens";
+import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 type DraftPlayer = typeof draftDB[number];
 
@@ -221,7 +222,7 @@ function extractTemplate(text: string): { overview: string; template: string | n
 
 /** Adapt a 2026 Draft DB player → the shape PlayerProfile expects */
 function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
-  const pieKeys = ["finishing", "shooting", "playmaking", "defense", "rebounding"] as const;
+  const ATTR_13D_KEYS = ["身体","突破","篮下","背身","中投","三分","传球","控运","内防","外防","抢断","盖帽","篮板"];
   const attrs = dp.attributes;
   const wsInches = parseHeightToInches(dp.wingspan);
   const wtKg = parseWeightToKg(dp.weight);
@@ -244,14 +245,7 @@ function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
     strengths: dp.tags.slice(0, 3).map(t => TAG_CN[t] || t),
     weaknesses: ["NBA 级别对抗适应", "稳定性待验证", "防守端需持续提升"],
     seasonStats: [],
-    pie: [
-      { key: "finishing", value: attrs.finishing },
-      { key: "shooting", value: attrs.shooting },
-      { key: "playmaking", value: attrs.playmaking },
-      { key: "defense", value: attrs.defense },
-      { key: "rebounding", value: attrs.rebounding },
-    ] as { key: keyof typeof PIE; value: number }[],
-    athleticism: attrs.athleticism,
+    pie: ATTR_13D_KEYS.map(k => ({ key: k, value: attrs[k] ?? 50 })),
     bestTemplate: {
       name: "AI 分析中",
       desc: "使用球探台 AI 球探功能，输入\"谁最像" + dp.name + "\"获取详细模板对比。",
@@ -356,8 +350,7 @@ type PlayerData = {
   birthday: string; projection: string; img: string;
   overview: string; strengths: string[]; weaknesses: string[];
   seasonStats: SeasonStat[];
-  pie: { key: keyof typeof PIE; value: number }[];
-  athleticism: number;
+  pie: { key: string; value: number }[];
   bestTemplate: { name: string; desc: string };
   worstTemplate: { name: string; desc: string };
   devPlan: [string, string][];
@@ -380,123 +373,75 @@ function SchoolIcon({ size = "1em" }: { size?: string }) {
   );
 }
 
-// ── 2D refined pie + athleticism bar ──────────────────────────────────────
-// 饼图色块不严格适配数值占比，而是通过非线性放大突出球员最鲜明的风格特征
-function SkillChart({ slices, athleticism }: {
-  slices: { key: string; value: number }[];
-  athleticism: number;
-}) {
-  // 对比度放大指数：>1 时数值差距被放大，主导风格更突出
+// ── 13D → 5-group fused donut pie ──────────────────────────────────────────
+// Fuse 13 Chinese-keyed dimensions into 5 logical groups for the pie chart
+function fuse13Dto5(slices: { key: string; value: number }[]) {
+  const get = (k: string) => slices.find(s => s.key === k)?.value ?? 50;
+  return [
+    { key: "inside",   label: "内线进攻", value: Math.round((get("突破") + get("篮下") + get("背身")) / 3), subKeys: ["突破","篮下","背身"], color: "#ff453a" },
+    { key: "shooting", label: "投射",     value: Math.round((get("中投") + get("三分")) / 2),           subKeys: ["中投","三分"],       color: "#30d158" },
+    { key: "playmake", label: "组织控运", value: Math.round((get("传球") + get("控运")) / 2),           subKeys: ["传球","控运"],       color: "#ffd60a" },
+    { key: "defense",  label: "防守",     value: Math.round((get("内防") + get("外防") + get("抢断") + get("盖帽")) / 4), subKeys: ["内防","外防","抢断","盖帽"], color: "#2997ff" },
+    { key: "physical", label: "身体篮板", value: Math.round((get("身体") + get("篮板")) / 2),           subKeys: ["身体","篮板"],       color: "#bf5af2" },
+  ];
+}
+
+function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
+  const fused = fuse13Dto5(slices);
   const CONTRAST_EXPONENT = 1.8;
 
-  const rawData = slices.map(s => ({
-    key: s.key,
-    originalValue: s.value,
-    // 非线性变换：放大数值差距，让主导能力在视觉上占据更显著的比例
-    amplified: Math.pow(s.value, CONTRAST_EXPONENT),
-    color: PIE[s.key]?.light ?? T.white,
-    label: PIE[s.key]?.label ?? s.key,
+  const pieData = fused.map(g => ({
+    ...g,
+    amplified: Math.pow(g.value, CONTRAST_EXPONENT),
   }));
 
-  // 找到主导能力（原值最大者），用于图例高亮
-  const maxOrig = Math.max(...rawData.map(d => d.originalValue));
-
-  // 饼图用的 data（使用放大后的值）
-  const pieData = rawData.map(d => ({
-    key: d.key,
-    value: d.amplified,
-    color: d.color,
-    originalValue: d.originalValue,
-    label: d.label,
-  }));
+  const maxOrig = Math.max(...fused.map(g => g.value));
 
   return (
     <div>
-      {/* 1. Legend — 显示原始数值，主导项高亮 */}
-      <div className="flex flex-wrap gap-x-5 gap-y-2.5 mb-6">
-        {rawData.map(d => {
-          const isDominant = d.originalValue === maxOrig;
-          return (
-            <div key={d.key} className="flex items-center gap-2">
-              <div
-                className="shrink-0 rounded-full"
-                style={{
-                  width: isDominant ? "10px" : "8px",
-                  height: isDominant ? "10px" : "8px",
-                  background: d.color,
-                  boxShadow: isDominant
-                    ? `0 0 10px ${d.color}cc, 0 0 20px ${d.color}66`
-                    : `0 0 4px ${d.color}66`,
-                  transition: "all 0.3s ease",
-                }}
-              />
-              <span style={{
-                color: isDominant ? T.white : T.label,
-                fontSize: FONT.sm,
-                fontWeight: isDominant ? 600 : 400,
-                transition: "all 0.3s ease",
-              }}>
-                {d.label}
-              </span>
-              <span style={{
-                color: T.body,
-                fontSize: FONT.sm,
-                fontWeight: isDominant ? 500 : 400,
-                transition: "all 0.3s ease",
-              }}>
-                {d.originalValue}
-              </span>
+      {/* 1. 13D detailed bars — compact sub-dimension breakdown */}
+      <div className="grid grid-cols-5 gap-x-2 gap-y-0.5 mb-5">
+        {fused.map(g => (
+          <div key={g.key} className="space-y-0.5">
+            <div className="flex items-center gap-1 mb-1">
+              <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: g.color }} />
+              <span style={{ color: T.label, fontSize: FONT.xs, fontWeight: 500 }}>{g.label}</span>
+              <span style={{ color: T.white, fontSize: FONT.xs, fontWeight: 600, marginLeft: "auto" }}>{g.value}</span>
             </div>
-          );
-        })}
+            {g.subKeys.map(sk => {
+              const sv = slices.find(s => s.key === sk)?.value ?? 50;
+              return (
+                <div key={sk} className="flex justify-between">
+                  <span style={{ color: T.hint, fontSize: "10px" }}>{sk}</span>
+                  <span style={{ color: sv >= 80 ? T.body : T.hint, fontSize: "10px" }}>{sv}</span>
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
-      {/* 2. Pie chart (2D donut, refined) — 使用放大后的值驱动扇区大小 */}
-      <div className="flex justify-center mb-6" style={{ filter: "drop-shadow(0 2px 16px rgba(0,0,0,0.5))", outline: "none", WebkitTapHighlightColor: "transparent" } as React.CSSProperties}>
+      {/* 2. Donut pie chart */}
+      <div className="flex justify-center" style={{ filter: "drop-shadow(0 2px 16px rgba(0,0,0,0.5))", outline: "none" } as React.CSSProperties}>
         <PieChart width={210} height={210} style={{ outline: "none" }}>
           <Pie
-            data={pieData}
-            cx={105} cy={105}
-            outerRadius={92} innerRadius={54}
-            paddingAngle={2}
-            dataKey="value"
-            stroke="rgba(0,0,0,0.25)"
-            strokeWidth={1}
+            data={pieData} dataKey="amplified"
+            cx={105} cy={105} outerRadius={92} innerRadius={54}
+            paddingAngle={2} stroke="rgba(0,0,0,0.25)" strokeWidth={1}
             startAngle={90} endAngle={-270}
-            isAnimationActive
-            animationBegin={80} animationDuration={900}
-            animationEasing="ease-out"
+            isAnimationActive animationBegin={80} animationDuration={900} animationEasing="ease-out"
           >
             {pieData.map((d, i) => {
-              const isDominant = d.originalValue === maxOrig;
+              const isDominant = d.value === maxOrig;
               return (
-                <Cell
-                  key={i}
-                  fill={d.color}
+                <Cell key={i} fill={d.color}
                   stroke={isDominant ? d.color : "rgba(0,0,0,0.25)"}
-                  strokeWidth={isDominant ? 1.5 : 1}
-                  style={isDominant ? { filter: `drop-shadow(0 0 6px ${d.color}88)` } : undefined}
-                />
+                  strokeWidth={isDominant ? 2 : 1}
+                  style={isDominant ? { filter: `drop-shadow(0 0 6px ${d.color}88)` } : undefined} />
               );
             })}
           </Pie>
         </PieChart>
-      </div>
-
-      {/* 3. Athleticism bar (white, separate from pie) */}
-      <div className="px-1">
-        <div className="flex items-center justify-between mb-1.5">
-          <span style={{ color: T.body, fontSize: FONT.sm }}>运动天赋</span>
-          <span style={{ color: T.body, fontSize: FONT.sm, fontFamily: "'Inter', sans-serif" }}>{athleticism} / 100</span>
-        </div>
-        <div style={{ height: "2px", background: BG.overlay, borderRadius: "1px", overflow: "hidden" }}>
-          <motion.div
-            style={{ height: "100%", background: "rgba(255,255,255,0.75)", borderRadius: "1px" }}
-            initial={{ width: 0 }}
-            animate={{ width: `${athleticism}%` }}
-            transition={{ duration: 1.1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-          />
-        </div>
       </div>
     </div>
   );
@@ -663,7 +608,7 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
             {/* 1. 能力特征饼图 — 全宽，先给直觉 */}
             <div className="p-6 rounded-2xl" style={{ background: BG.card, border: B.card }}>
               <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "16px" }}>能力特征</p>
-              <SkillChart slices={player.pie} athleticism={player.athleticism} />
+              <SkillChart slices={player.pie} />
             </div>
 
             {/* 2. 球员综述 + 模板参考 | 优势/待观察 */}

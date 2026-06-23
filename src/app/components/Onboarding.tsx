@@ -7,7 +7,6 @@ interface OnboardingProps {
   onComplete: (data: {
     selectedPosition: string;
     selectedStarPlayers: string[];
-    polishedType: "polished" | "upside";
   }) => void;
   onSkip: () => void;
 }
@@ -25,16 +24,10 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
   const [step, setStep] = useState(0);
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedStarPlayers, setSelectedStarPlayers] = useState<string[]>([]);
-  const [polishedType, setPolishedType] = useState<"polished" | "upside" | "">("");
-
   const canNext = [
     true,                                                       // Step 0: Welcome
-    selectedPosition !== "" && selectedStarPlayers.length > 0,  // Step 1: Position + Stars
-    polishedType !== "",                                        // Step 2: Polished vs Upside
+    selectedPosition !== "" && selectedStarPlayers.length > 0,  // Step 1: Position + Stars → Generate
   ][step];
-
-  // Player already selected at position → show Phase B directly when going back
-  const showPositionPhase = step === 1 && !selectedPosition;
 
   return (
     <div className="min-h-screen flex" style={{ background: BG.page, fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
@@ -56,16 +49,6 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
             </button>
           )}
         </div>
-
-        {/* Progress bar (steps 1-2) */}
-        {step > 0 && (
-          <div className="flex gap-1.5 mb-12 mt-10">
-            {[1, 2].map(i => (
-              <div key={i} className="h-px flex-1 transition-all duration-700"
-                style={{ background: i <= step ? T.white : "rgba(255,255,255,0.15)" }} />
-            ))}
-          </div>
-        )}
 
         {/* Content area */}
         <div className="flex-1 flex flex-col justify-center">
@@ -177,97 +160,23 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                   </div>
                 )}
 
-                {/* ── Step 2 — Polished vs Upside ── */}
-                {step === 2 && (
-                  <div>
-                    <h2 style={{ color: T.white, fontSize: "36px", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: "28px" }}>
-                      你更看重新秀的哪一面？
-                    </h2>
-                    <div className="flex flex-col gap-4">
-                      <button onClick={() => setPolishedType("polished")}
-                        className="text-left p-6 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
-                        style={{
-                          background: polishedType === "polished" ? BG.overlay : BG.subtle,
-                          border: polishedType === "polished" ? B.active : "1px solid rgba(255,255,255,0.07)",
-                        }}>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div style={{ color: polishedType === "polished" ? T.white : T.body, fontSize: "20px", fontWeight: 600, marginBottom: "6px" }}>
-                              即战力 🏀
-                            </div>
-                            <div style={{ color: T.dim, fontSize: FONT.base, marginBottom: "4px" }}>
-                              技术成熟、下限稳健
-                            </div>
-                            <div style={{ color: T.ghost, fontSize: FONT.sm }}>
-                              NCAA 已证明自己 · 即插即用 · 稳定的轮换贡献
-                            </div>
-                          </div>
-                          <div className="w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-200"
-                            style={{
-                              borderColor: polishedType === "polished" ? T.white : T.ghost,
-                              background: polishedType === "polished" ? T.white : "transparent",
-                            }}>
-                            {polishedType === "polished" && <div className="w-2.5 h-2.5 rounded-full bg-black" />}
-                          </div>
-                        </div>
-                      </button>
-
-                      <button onClick={() => setPolishedType("upside")}
-                        className="text-left p-6 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
-                        style={{
-                          background: polishedType === "upside" ? BG.overlay : BG.subtle,
-                          border: polishedType === "upside" ? B.active : "1px solid rgba(255,255,255,0.07)",
-                        }}>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div style={{ color: polishedType === "upside" ? T.white : T.body, fontSize: "20px", fontWeight: 600, marginBottom: "6px" }}>
-                              潜力股 🚀
-                            </div>
-                            <div style={{ color: T.dim, fontSize: FONT.base, marginBottom: "4px" }}>
-                              天赋拉满、上限极高
-                            </div>
-                            <div style={{ color: T.ghost, fontSize: FONT.sm }}>
-                              身体天赋炸裂 · 两年后可能成为全明星 · 高风险高回报
-                            </div>
-                          </div>
-                          <div className="w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-200"
-                            style={{
-                              borderColor: polishedType === "upside" ? T.white : T.ghost,
-                              background: polishedType === "upside" ? T.white : "transparent",
-                            }}>
-                            {polishedType === "upside" && <div className="w-2.5 h-2.5 rounded-full bg-black" />}
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-
-                  </div>
-                )}
-
               </motion.div>
             </AnimatePresence>
 
             {/* Navigation */}
             {step > 0 && (
               <div className="flex items-center justify-between mt-12">
-                <button onClick={() => {
-                  if (step === 2 && selectedPosition) {
-                    setStep(1);
-                  } else {
-                    setStep(s => s - 1);
-                  }
-                }}
+                <button onClick={() => setStep(s => s - 1)}
                   style={{ color: T.dim, fontSize: FONT.md }}
                   className="hover:text-white transition-colors duration-200">
                   ← 返回
                 </button>
                 <button
                   onClick={() => {
-                    if (step < 2) setStep(s => s + 1);
+                    if (step < 1) setStep(s => s + 1);
                     else onComplete({
                       selectedPosition,
                       selectedStarPlayers,
-                      polishedType: polishedType as "polished" | "upside",
                     });
                   }}
                   disabled={!canNext}
@@ -278,7 +187,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                     fontSize: FONT.md,
                     fontWeight: 600,
                   }}>
-                  {step === 2 ? "生成篮球DNA" : "继续"}
+                  {step === 1 ? "生成篮球DNA" : "继续"}
                 </button>
               </div>
             )}

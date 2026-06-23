@@ -4,6 +4,85 @@
 
 ---
 
+## 2026-06-23/24 — Session 10-11 · 13D 数据库重构 + 三层匹配引擎 + Bug 修复
+
+### 做了什么
+- **对照 AI 产品研发六阶段评估**：输出 Next Star 已达/未达评估报告，识别 5 大缺口（指标/数据库/算法/正规部署/安全检测）
+- **球星模板库 36 人 13D 重构**：
+  - 2KOL2 雷达图风格：身体/突破/篮下/背身/中投/三分/传球/控运/内防/外防/抢断/盖帽/篮板
+  - 2K26 官方数据做锚点参考（爬取 2kratings.com），DeepSeek 批量生成
+  - 评分规则：99 天花板，65 及格线
+  - `src/data/star-players-13d.json`（36 人）+ Prompt 可复用
+- **新秀库 36 人 13D 同步重构**：
+  - DeepSeek 读球探报告 + 锚点 Prompt 生成
+  - 新增 `isPolished`/`polishedReason` 标签（即战力/潜力股铆定在新秀库）
+  - 合并回 `2026-draft-database.json`
+- **三层匹配引擎重写**：
+  - 50% 13D 余弦相似度 + 25% 位置匹配 + 25% 身体匹配（身高/臂展/体重）
+  - 新增 Jaccard 标签相似度用于可解释性
+  - 删除 `generateDNA()` 中 `polishedType` 权重调节
+- **Onboarding 精简**：删除 Step 2（即战力/潜力股选择），3 步 → 2 步
+- **UI 适配**：
+  - DNAResult：6D → 13D 柱状图
+  - PlayerProfile：饼图恢复，13D → 5 组融合扇区（内线进攻/投射/组织控运/防守/身体篮板）
+  - Recommendations：5 条 → 13D 紧凑排序柱状图
+  - 设计 Token PIE 6 色 → 5 组融合色
+- **服务端 VECTOR_PROMPT 6D → 13D**
+- **Bug 修复**（Session 11 代码审查）：
+  - 🔴 LLM 输出键名与 `attrsToVector` 不匹配 → scout 查询向量全废
+  - 🔴 embedding 10 维 vs 切片 13 维 → NaN 污染排序
+  - 🔴 positionBonus 声明但从未应用 → 死代码删除
+  - 🟡 Onboarding 死代码/不可达按钮/无效进度条
+  - 🟡 rankLabels 数组越界
+  - 🟡 PIE 未使用导入/else-if 不可达分支
+
+### 关键决策
+- 评分不用社区投票，用 2K26 官方数据
+- 标签 + 向量双轨制（向量排序，标签解释）
+- 即战力/潜力股从 DNA 阶段迁到新秀库标签
+- 位置权重从 15% → 25%，新增身材层 25%
+- 13D 饼图融合成 5 组避免拥挤
+
+### 改动文件
+- `src/data/star-players.ts` — 重写：13D 接口 + body + skills/style，删 polishedType
+- `src/utils/dna-engine.ts` — 重写：三层匹配 (50/25/25) + Jaccard
+- `src/styles/design-tokens.ts` — PIE 5 组融合色
+- `src/app/App.tsx` — 删 polishedType，新增 body ref
+- `src/app/components/Onboarding.tsx` — 删 Step 2，清死代码
+- `src/app/components/DNAResult.tsx` — 13D 渲染
+- `src/app/components/PlayerProfile.tsx` — 饼图 + 13D 融合柱状图
+- `src/app/components/Recommendations.tsx` — 13D 柱状图
+- `server/index.js` — VECTOR_PROMPT 13D + attrsToVector + NaN 修复
+- `src/store/app-store.ts` — 无改动（类型兼容）
+- **新建**：`star-players-13d.json`、`prospects-13d.json`、`star-template-prompt.md`、`prospect-13d-prompt.md`、生成脚本 ×2
+
+### 架构
+
+```
+匹配引擎 (V3):
+  用户选球星 → 13D 向量平均 → DNA
+       │
+       ├── 50% 13D 余弦相似度 vs 36 新秀
+       ├── 25% 位置匹配（同位置 1.0 / 相邻 0.7 / 远 0.0）
+       └── 25% 身体匹配（身高 ±3cm=1.0 / ±8cm=0.7 / ±15cm=0.3）
+       │
+       ▼
+  综合排名 + Jaccard 标签差异说明
+
+饼图融合:
+  13D → 5 组扇区
+  🔴 内线进攻 (突破+篮下+背身) / 🟢 投射 (中投+三分)
+  🟡 组织控运 (传球+控运) / 🔵 防守 (内防+外防+抢断+盖帽)
+  🟣 身体篮板 (身体+篮板)
+```
+
+### 待办
+- [ ] 端到端实测（`npm run dev:all`，输入「亚历山大」验证匹配结果）
+- [ ] VECTOR_PROMPT 调优（首次使用 2K26 锚点，需验证输出质量）
+- [ ] 属性数据库质量审计（Session 9 遗留）
+
+---
+
 ## 2026-06-22 — Session 9 · 产品策略会议
 
 ### 做了什么

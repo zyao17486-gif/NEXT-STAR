@@ -11,12 +11,19 @@
     "standingReach": "8'10\"",
     "profile_text": "AJ Dybantsa is a dynamic three-level scoring wing with elite physical tools. At 6'9 with a near 7-foot wingspan, he combines guard-like fluidity with forward strength. Led NCAA in scoring as a freshman at BYU, dominating via self-created midrange jumpers and relentless rim pressure. Drew more fouls than any player in the nation with advanced footwork and body control. Excels in pick-and-roll and post-up situations (87th and 94th percentile per Synergy). Only 23% of his rim attempts were assisted — a true go-to scorer. Defensively flashes plus potential with length and lateral mobility but effort wavers off-ball. Three-point shot has a flat arc (33-34%) and is the primary swing skill. Highest ceiling in the class — compares to Tracy McGrady or Jayson Tatum when fully engaged. Projects as a heliocentric high-usage NBA wing if handle tightens and shot arc improves.",
     "attributes": {
-      "finishing": 90,
-      "shooting": 70,
-      "playmaking": 65,
-      "defense": 60,
-      "athleticism": 92,
-      "rebounding": 48
+      "身体": 90,
+      "突破": 88,
+      "篮下": 92,
+      "背身": 82,
+      "中投": 90,
+      "三分": 72,
+      "传球": 65,
+      "控运": 80,
+      "内防": 60,
+      "外防": 72,
+      "抢断": 65,
+      "盖帽": 60,
+      "篮板": 55
     },
     "tags": [
       "three-level scorer",
@@ -65,7 +72,21 @@
     "age": 19,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "AJ·迪班萨"
+    "nameCn": "AJ·迪班萨",
+    "skills_13d": [
+      "Mid-range",
+      "Finishing",
+      "Isolation",
+      "Off-ball",
+      "Passing Vision",
+      "POA Defense"
+    ],
+    "style": [
+      "ISO",
+      "Dunk Finisher",
+      "Two-Way"
+    ],
+    "polishedReason": "19岁毛胚天赋待打磨"
   },
   {
     "id": 2,
@@ -79,12 +100,19 @@
     "standingReach": "8'3\"",
     "profile_text": "Darryn Peterson is the most polished three-level scoring guard in the 2026 class. At Kansas, he averaged 20+ PPG on elite efficiency (47% FG, 38-41% 3PT, 83% FT) with picture-perfect shot mechanics. Thrives both on and off the ball — lethal catch-and-shoot player who can also create pull-up separation with a tight handle. Devastating in transition and makes consistently good decisions in the open floor. Flashed real defensive impact with blocks and steals when engaged (4 blocks vs St. John's). Has prototypical two-guard dimensions at 6'5 with near 6'10 wingspan. The health file is the single biggest red flag — played only 17-20 games at Kansas due to injuries, illness, and a pre-season hospitalization. Hamstring issues have lingered since high school. Motor and body language can appear nonchalant at times. Post-injury explosiveness is still being evaluated by scouts. Compares stylistically to Devin Booker or Shai Gilgeous-Alexander if health permits.",
     "attributes": {
-      "finishing": 85,
-      "shooting": 90,
-      "playmaking": 65,
-      "defense": 70,
-      "athleticism": 78,
-      "rebounding": 38
+      "身体": 78,
+      "突破": 82,
+      "篮下": 85,
+      "背身": 60,
+      "中投": 88,
+      "三分": 90,
+      "传球": 70,
+      "控运": 85,
+      "内防": 55,
+      "外防": 75,
+      "抢断": 70,
+      "盖帽": 60,
+      "篮板": 50
     },
     "tags": [
       "polished scorer",
@@ -133,7 +161,21 @@
     "age": 19,
     "productionScore": 56,
     "isPolished": true,
-    "nameCn": "达林·彼得森"
+    "nameCn": "达林·彼得森",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Finishing",
+      "Handle",
+      "Off-ball",
+      "Passing Vision"
+    ],
+    "style": [
+      "Shooter",
+      "ISO",
+      "Primary Creator"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 3,
@@ -147,12 +189,19 @@
     "standingReach": "8'9\"",
     "profile_text": "Cameron Boozer is the most decorated and college-ready prospect in the 2026 class — National Player of the Year as a Duke freshman. A fundamentally sound two-way forward with the polish of a 10-year pro, he blends old-school interior scoring with modern stretch ability (39-40% from three). Elite basketball IQ is his calling card — processes double teams instantly, delivers pinpoint passes out of the post and short roll, and was Duke's go-to offensive hub (4.1 APG). High-end positional rebounder using strength and positioning rather than pure vertical athleticism. Son of former NBA All-Star Carlos Boozer, he has won at every level (4 state titles, 2 USA gold medals, 3 Peach Jam titles). The primary concern is athletic ceiling — not explosive, a below-the-rim finisher who struggles early against length before adjusting his approach. Between positions at 6'9 — undersized for a full-time center, lacking elite verticality as a rim protector. Compares to Bam Adebayo or Al Horford: safe, high-floor starter with All-Star upside if the athletic limitations are overstated.",
     "attributes": {
-      "finishing": 85,
-      "shooting": 82,
-      "playmaking": 85,
-      "defense": 65,
-      "athleticism": 60,
-      "rebounding": 58
+      "身体": 75,
+      "突破": 65,
+      "篮下": 88,
+      "背身": 85,
+      "中投": 80,
+      "三分": 82,
+      "传球": 88,
+      "控运": 70,
+      "内防": 72,
+      "外防": 60,
+      "抢断": 65,
+      "盖帽": 65,
+      "篮板": 82
     },
     "tags": [
       "high IQ",
@@ -201,7 +250,20 @@
     "age": 19,
     "productionScore": 56,
     "isPolished": true,
-    "nameCn": "卡梅隆·布泽尔"
+    "nameCn": "卡梅隆·布泽尔",
+    "skills_13d": [
+      "Three Point",
+      "Post",
+      "Passing Vision",
+      "Rebounding",
+      "Rim Protection"
+    ],
+    "style": [
+      "Playmaking Big",
+      "Two-Way",
+      "Glue Guy"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 4,
@@ -215,12 +277,19 @@
     "standingReach": "8'10\"",
     "profile_text": "Caleb Wilson is an explosive, high-motor two-way forward with outlier athleticism at 6'9. Averaged 19.8 PPG and 9.4 RPG as a UNC freshman while generating elite stocks (top-10 in both Block% and Steal% among freshmen). Relentless on the glass with a 22.2% defensive rebound rate. Draws fouls at a high rate and finishes with authority in transition. Midrange flashes and free-throw rate suggest shooting upside that could unlock a dynamic face-up game. Defensive technique is the major work in progress — struggles switching onto the perimeter, loses focus off-ball, and is often late on closeouts. UNC's team defense suffered because of his inconsistencies. Lateral quickness needs development. Consensus top-4 pick with the highest two-way ceiling behind Dybantsa — if the defensive IQ catches up to the tools, he has genuine star potential. Compares to a young Pascal Siakam or Chris Bosh.",
     "attributes": {
-      "finishing": 82,
-      "shooting": 60,
-      "playmaking": 55,
-      "defense": 65,
-      "athleticism": 88,
-      "rebounding": 68
+      "身体": 88,
+      "突破": 72,
+      "篮下": 85,
+      "背身": 60,
+      "中投": 65,
+      "三分": 60,
+      "传球": 55,
+      "控运": 65,
+      "内防": 70,
+      "外防": 55,
+      "抢断": 75,
+      "盖帽": 78,
+      "篮板": 82
     },
     "tags": [
       "explosive athlete",
@@ -269,7 +338,19 @@
     "age": 19,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "凯莱布·威尔逊"
+    "nameCn": "凯莱布·威尔逊",
+    "skills_13d": [
+      "Finishing",
+      "Rebounding",
+      "Rim Protection",
+      "POA Defense"
+    ],
+    "style": [
+      "Dunk Finisher",
+      "Two-Way",
+      "Defensive Anchor"
+    ],
+    "polishedReason": "19岁毛胚天赋待打磨"
   },
   {
     "id": 5,
@@ -283,12 +364,19 @@
     "standingReach": "9'1.5\"",
     "profile_text": "Nate Ament is the ultimate boom-or-bust prospect — a 6'10 forward with rare wing-like mobility and legitimate three-level scoring upside. Fluid athlete with smooth touch around the basket and defensive versatility to guard multiple positions. Averaged 17.7 PPG and 6.4 RPG as a Tennessee freshman. High basketball IQ and plus positional size make him an intriguing modern forward. However, he is extremely raw physically — needs significant strength gain to handle NBA physicality. Lacks an explosive first step, leading to too many contested midrange jumpers. Shot just 33% from three and struggled in big moments (2-of-12 vs Michigan in the NCAA Tournament). Opposite of Boozer — physically underdeveloped but tools-rich. Comparisons to a young Kevin Durant are premature but hint at the ceiling if everything clicks. Likely requires 2-3 years of development before contributing at an NBA level but could be a top-5 player in a redraft.",
     "attributes": {
-      "finishing": 65,
-      "shooting": 65,
-      "playmaking": 60,
-      "defense": 70,
-      "athleticism": 75,
-      "rebounding": 48
+      "身体": 85,
+      "突破": 65,
+      "篮下": 70,
+      "背身": 55,
+      "中投": 68,
+      "三分": 65,
+      "传球": 60,
+      "控运": 70,
+      "内防": 65,
+      "外防": 72,
+      "抢断": 65,
+      "盖帽": 60,
+      "篮板": 55
     },
     "tags": [
       "boom-or-bust",
@@ -337,7 +425,19 @@
     "age": 19,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "内特·阿门特"
+    "nameCn": "内特·阿门特",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Off-ball",
+      "POA Defense"
+    ],
+    "style": [
+      "Shooter",
+      "3&D",
+      "Two-Way"
+    ],
+    "polishedReason": "19岁毛胚天赋待打磨"
   },
   {
     "id": 6,
@@ -351,12 +451,19 @@
     "standingReach": "8'1\"",
     "profile_text": "Mikel Brown Jr. is a crafty lead guard who blends scoring and playmaking at a high level. One of the shiftiest ball-handlers in the class with a deep bag of dribble moves to create separation. At Louisville he ran the offense with poise, making advanced reads in pick-and-roll and finding shooters on the move. Good but not elite athlete — compensates with change of pace, deceleration, and body control rather than pure burst. Three-point shooting is solid (36-38%) and projects well to the NBA line with clean mechanics. Defensively competes but lacks elite length to consistently disrupt. Compares stylistically to a Mike Conley or Malcolm Brogdon type — steady, intelligent, reliable. Projected as a lottery pick who could start for a decade without being a superstar. Plus intangibles and leadership qualities separate him from pure scorers at the position.",
     "attributes": {
-      "finishing": 72,
-      "shooting": 78,
-      "playmaking": 82,
-      "defense": 70,
-      "athleticism": 80,
-      "rebounding": 33
+      "身体": 70,
+      "突破": 78,
+      "篮下": 72,
+      "背身": 50,
+      "中投": 78,
+      "三分": 78,
+      "传球": 85,
+      "控运": 88,
+      "内防": 50,
+      "外防": 65,
+      "抢断": 65,
+      "盖帽": 40,
+      "篮板": 45
     },
     "tags": [
       "crafty handler",
@@ -404,7 +511,18 @@
     "age": 20,
     "productionScore": 42,
     "isPolished": true,
-    "nameCn": "迈克·布朗二世"
+    "nameCn": "迈克·布朗二世",
+    "skills_13d": [
+      "Three Point",
+      "Handle",
+      "Passing Vision",
+      "Tempo Control"
+    ],
+    "style": [
+      "Primary Creator",
+      "Glue Guy"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 7,
@@ -418,12 +536,19 @@
     "standingReach": "7'10\"",
     "profile_text": "Darius Acuff is an explosive point guard who combines elite end-to-end speed with an aggressive scoring mentality. Posted the fastest 3/4 sprint time at the combine (3.06s, tied for 1st) and uses that burst to pressure defenses in transition and blow by defenders in the halfcourt. At Arkansas he was a high-volume offensive engine who can get into the paint at will. Solid shooter off the dribble with deep range, though shot selection can be questionable. The major red flag is defense — Acuff himself has made concerning comments about his defensive engagement, and film shows frequent lapses in effort and fundamentals. Teams drafting him are betting the offensive dynamism outweighs the defensive indifference. Ceiling is a high-scoring lead guard in the Darius Garland mold; floor is a spark-plug sixth man who gets hunted on defense.",
     "attributes": {
-      "finishing": 70,
-      "shooting": 75,
-      "playmaking": 80,
-      "defense": 50,
-      "athleticism": 78,
-      "rebounding": 33
+      "身体": 78,
+      "突破": 85,
+      "篮下": 75,
+      "背身": 50,
+      "中投": 72,
+      "三分": 75,
+      "传球": 80,
+      "控运": 82,
+      "内防": 45,
+      "外防": 45,
+      "抢断": 55,
+      "盖帽": 35,
+      "篮板": 45
     },
     "tags": [
       "speed demon",
@@ -471,7 +596,17 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "达柳斯·阿库夫"
+    "nameCn": "达柳斯·阿库夫",
+    "skills_13d": [
+      "Handle",
+      "Passing Vision",
+      "Tempo Control"
+    ],
+    "style": [
+      "Primary Creator",
+      "Sixth Man"
+    ],
+    "polishedReason": "19岁毛胚天赋待打磨"
   },
   {
     "id": 8,
@@ -485,12 +620,19 @@
     "standingReach": "7'9\"",
     "profile_text": "Kingston Flemings is an elite two-way athlete at the point guard position with freakish explosive testing numbers. Despite a modest 6'2.5 frame and below-average wingspan, he posted a 40.5-inch max vertical (3rd among guards), a 2.69s shuttle run (2nd overall), and a 10.61s lane agility (4th overall) at the 2026 combine. At Houston he was a disruptive on-ball defender who pressures full-court and generates turnovers with quick hands and elite lateral movement. Offensively more of a slasher than a pure point guard — attacks the rim fearlessly and finishes through contact despite his size. Playmaking is functional but not elite; projects more as a secondary ball-handler next to a larger creator. Jump shot is the swing skill — mechanics are workable but inconsistent. Compares to a young Kyle Lowry or Jevon Carter defensively with more vertical pop. Top-10 projection on the strength of athleticism and defensive floor.",
     "attributes": {
-      "finishing": 68,
-      "shooting": 72,
-      "playmaking": 75,
-      "defense": 75,
-      "athleticism": 88,
-      "rebounding": 33
+      "身体": 88,
+      "突破": 78,
+      "篮下": 72,
+      "背身": 50,
+      "中投": 65,
+      "三分": 68,
+      "传球": 75,
+      "控运": 75,
+      "内防": 55,
+      "外防": 82,
+      "抢断": 78,
+      "盖帽": 45,
+      "篮板": 50
     },
     "tags": [
       "freak athlete",
@@ -537,7 +679,17 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "金斯顿·弗莱明斯"
+    "nameCn": "金斯顿·弗莱明斯",
+    "skills_13d": [
+      "Handle",
+      "Passing Vision",
+      "POA Defense"
+    ],
+    "style": [
+      "Two-Way",
+      "Glue Guy"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 9,
@@ -551,12 +703,19 @@
     "standingReach": "8'2\"",
     "profile_text": "Keaton Wagler is a sharpshooting off-guard who profiles as an elite NBA floor spacer. At Illinois he showcased one of the purest shooting strokes in the class — quick release, high arc, comfortable firing off movement, and dangerous from well beyond the NBA line. Projects as a 40%+ three-point shooter at the next level. Off the dribble he's functional but not dynamic; his game is built around relocation, screens, and catch-and-shoot gravity rather than self-creation. Solid positional defender who competes and stays in front but lacks elite physical tools to be a true stopper. Playmaking is limited — not a secondary creator, purely a finisher. The shooting is so elite that he projects as a lottery pick in a league desperate for premium floor spacing. Compares to a taller Sam Merrill or a poor-man's Klay Thompson in offensive role. Safe pick with a defined role who raises any team's offensive ceiling immediately.",
     "attributes": {
-      "finishing": 72,
-      "shooting": 85,
-      "playmaking": 65,
-      "defense": 70,
-      "athleticism": 68,
-      "rebounding": 38
+      "身体": 68,
+      "突破": 65,
+      "篮下": 72,
+      "背身": 50,
+      "中投": 82,
+      "三分": 90,
+      "传球": 60,
+      "控运": 70,
+      "内防": 50,
+      "外防": 70,
+      "抢断": 60,
+      "盖帽": 45,
+      "篮板": 50
     },
     "tags": [
       "elite shooter",
@@ -604,7 +763,17 @@
     "age": 20,
     "productionScore": 42,
     "isPolished": true,
-    "nameCn": "基顿·瓦格勒"
+    "nameCn": "基顿·瓦格勒",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Off-ball"
+    ],
+    "style": [
+      "Shooter",
+      "3&D"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 10,
@@ -618,12 +787,19 @@
     "standingReach": "8'8\"",
     "profile_text": "Koa Peat is a powerfully built bully-ball forward who overwhelms opponents with strength and physicality. At Arizona he averaged 22.8 PPG and 9.9 RPG playing mostly as an undersized power forward, using his 235-pound frame to carve out deep position and finish through contact. Excellent rebounder who pursues the ball with violence on both ends. Solid playmaker for his position (4.0 APG), showing willingness to kick out of double teams. The concerns are modern NBA fit — at 6'7 he's a classic tweener. Perimeter shooting is streaky and unreliable, making it hard to play him at the three. Defensively, the 3.39s shuttle run (slowest at the combine) raises serious lateral mobility questions for guarding wings. Needs to either develop a reliable three-point shot to play the four in small-ball lineups or slim down to guard wings. Comparisons to a more athletic David West or a stronger Grant Williams. Productive college player whose NBA translation depends entirely on skill development.",
     "attributes": {
-      "finishing": 85,
-      "shooting": 55,
-      "playmaking": 70,
-      "defense": 62,
-      "athleticism": 65,
-      "rebounding": 68
+      "身体": 80,
+      "突破": 55,
+      "篮下": 85,
+      "背身": 70,
+      "中投": 50,
+      "三分": 45,
+      "传球": 70,
+      "控运": 55,
+      "内防": 60,
+      "外防": 50,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 85
     },
     "tags": [
       "bully ball",
@@ -672,7 +848,18 @@
     "age": 20,
     "productionScore": 42,
     "isPolished": true,
-    "nameCn": "科阿·皮特"
+    "nameCn": "科阿·皮特",
+    "skills_13d": [
+      "Finishing",
+      "Post",
+      "Passing Vision",
+      "Rebounding"
+    ],
+    "style": [
+      "Playmaking Big",
+      "Glue Guy"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 11,
@@ -686,12 +873,19 @@
     "standingReach": "9'0.5\"",
     "profile_text": "Chris Cenac Jr. possesses the most mouthwatering physical tools among center prospects in the 2026 class — a near-7'5 wingspan on a mobile 6'10 frame with 9.25-inch hands. At Houston he thrived as a lob threat, transition rim-runner, and elite offensive rebounder, leading all qualifying freshmen in defensive rebound rate (26.8 DREB%). Flashed three-point potential (33.3%) that could transform him into a modern stretch-five if it develops. Most agile center prospect in the class — moves like a wing in the open floor. The red flag is rim protection — averaged only 0.5 blocks per game despite the enormous wingspan, suggesting poor timing or defensive instincts. Offensive game is almost entirely derived from putbacks, lobs, and rim runs with limited post skill. Houston's defensive system should translate well to NBA principles. Compares physically to a DeAndre Jordan-type athlete with more shooting upside. Mid-to-late first round pick who could massively outperform draft slot if the tools coalesce.",
     "attributes": {
-      "finishing": 72,
-      "shooting": 55,
-      "playmaking": 40,
-      "defense": 75,
-      "athleticism": 82,
-      "rebounding": 75
+      "身体": 85,
+      "突破": 40,
+      "篮下": 72,
+      "背身": 50,
+      "中投": 50,
+      "三分": 55,
+      "传球": 40,
+      "控运": 40,
+      "内防": 75,
+      "外防": 40,
+      "抢断": 40,
+      "盖帽": 50,
+      "篮板": 75
     },
     "tags": [
       "freak length",
@@ -740,7 +934,17 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "克里斯·塞纳克二世"
+    "nameCn": "克里斯·塞纳克二世",
+    "skills_13d": [
+      "Finishing",
+      "Three Point",
+      "Rebounding"
+    ],
+    "style": [
+      "Dunk Finisher",
+      "Small-Ball Center"
+    ],
+    "polishedReason": "毛胚天赋待打磨"
   },
   {
     "id": 12,
@@ -754,12 +958,19 @@
     "standingReach": "8'0\"",
     "profile_text": "Brayden Burries is a powerfully built combo guard with a strong, NFL-running-back frame at 215 pounds. Uses his strength to bully smaller guards on drives and finish through contact at the rim. At Arizona he was a tough shot-maker who embraces physicality on both ends. Explosive leaper — posted a 35-inch standing vertical (top-5 at the combine) and 10.59s lane agility time, demonstrating the rare combination of power and quickness. Defensively he competes hard and can guard up a position thanks to his strength. The question is NBA offensive role — he's a score-first guard who doesn't project as a primary creator and hasn't shown elite playmaking vision. Shooting is solid but not elite. Projects as a high-energy two-way rotation guard in the Marcus Smart mold — someone who impacts winning through physicality, defense, and timely scoring rather than high-usage creation.",
     "attributes": {
-      "finishing": 75,
-      "shooting": 78,
-      "playmaking": 65,
-      "defense": 72,
-      "athleticism": 82,
-      "rebounding": 38
+      "身体": 85,
+      "突破": 75,
+      "篮下": 75,
+      "背身": 50,
+      "中投": 78,
+      "三分": 78,
+      "传球": 65,
+      "控运": 70,
+      "内防": 50,
+      "外防": 72,
+      "抢断": 50,
+      "盖帽": 30,
+      "篮板": 38
     },
     "tags": [
       "power guard",
@@ -807,7 +1018,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "布雷登·伯里斯"
+    "nameCn": "布雷登·伯里斯",
+    "skills_13d": [
+      "Mid-range",
+      "Finishing",
+      "Three Point",
+      "POA Defense"
+    ],
+    "style": [
+      "Two-Way",
+      "ISO"
+    ],
+    "polishedReason": "即战力双能卫"
   },
   {
     "id": 13,
@@ -821,12 +1043,19 @@
     "standingReach": "8'4\"",
     "profile_text": "Cameron Carr is the biggest combine riser of the 2026 draft cycle, posting historic athletic testing numbers that boosted his stock from fringe first round to potential lottery. Measured with a staggering +8 inch wingspan differential (6'4.5 barefoot with a 7'0.75 wingspan), then backed it up with a 42.5-inch max vertical (T-2nd), 38-inch standing vertical (2nd), and 10.46s lane agility (2nd overall). At Baylor he was an inconsistent but tantalizing two-way wing — flashes of elite shot-making and defensive disruption mixed with long stretches of passivity. The tools are undeniably first-round caliber; the production hasn't consistently matched. Shooting mechanics are clean and project well. Defensively the length and athleticism combination is elite — can realistically guard 1-3. The ultimate traits bet — if the feel and consistency catch up to the body, he's a top-10 talent in this class. If not, he's a toolsy rotation project. Compares to a raw Mikal Bridges or a smaller Herb Jones with more offensive upside.",
     "attributes": {
-      "finishing": 78,
-      "shooting": 80,
-      "playmaking": 60,
-      "defense": 72,
-      "athleticism": 92,
-      "rebounding": 38
+      "身体": 92,
+      "突破": 60,
+      "篮下": 78,
+      "背身": 50,
+      "中投": 80,
+      "三分": 80,
+      "传球": 60,
+      "控运": 65,
+      "内防": 50,
+      "外防": 72,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 38
     },
     "tags": [
       "combine riser",
@@ -875,7 +1104,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "卡梅隆·卡尔"
+    "nameCn": "卡梅隆·卡尔",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Finishing",
+      "POA Defense"
+    ],
+    "style": [
+      "3&D",
+      "Two-Way"
+    ],
+    "polishedReason": "毛胚天赋待打磨"
   },
   {
     "id": 14,
@@ -889,12 +1129,19 @@
     "standingReach": "8'6\"",
     "profile_text": "Billy Richmond III is arguably the best pure athlete in the 2026 draft class — a 6'6 wing who posted the fastest lane agility time (10.23s, 1st), tied for fastest 3/4 sprint (3.06s), recorded a 41-inch max vertical, and had an elite 2.82s shuttle run at the combine. No other prospect matched his combination of speed, quickness, and leaping ability. At Arkansas he was a transition terror and disruptive defender who generates chaos with his physical tools. Offensively raw — scoring comes mostly in transition, on cuts, and off offensive rebounds. Half-court creation and shooting are major works in progress. The defensive upside is tantalizing — can credibly guard 1-4 with his combination of strength, length, and lateral quickness. Projects as a defensive specialist and transition weapon who needs significant offensive skill development. If the shot comes around, he's an All-Defense candidate. Compares to a young Andre Roberson with more athletic pop or a raw Herb Jones.",
     "attributes": {
-      "finishing": 78,
-      "shooting": 62,
-      "playmaking": 60,
-      "defense": 80,
-      "athleticism": 90,
-      "rebounding": 48
+      "身体": 90,
+      "突破": 60,
+      "篮下": 78,
+      "背身": 50,
+      "中投": 50,
+      "三分": 45,
+      "传球": 60,
+      "控运": 55,
+      "内防": 50,
+      "外防": 80,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 48
     },
     "tags": [
       "freak athlete",
@@ -942,7 +1189,17 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": false,
-    "nameCn": "比利·里士满三世"
+    "nameCn": "比利·里士满三世",
+    "skills_13d": [
+      "Finishing",
+      "POA Defense",
+      "Off-ball"
+    ],
+    "style": [
+      "Dunk Finisher",
+      "Defensive Anchor"
+    ],
+    "polishedReason": "毛胚天赋待打磨"
   },
   {
     "id": 15,
@@ -956,12 +1213,19 @@
     "standingReach": "8'11\"",
     "profile_text": "Morez Johnson Jr. was the biggest winner of the 2026 combine, vaulting from fringe first round to potential lottery off the strength of his athletic testing and shooting display. A 6'9 power forward with a 7'3.5 wingspan and 251-pound frame, he moved like a guard in drills — 10.59s lane agility (2nd among forwards) and a 39-inch max vertical. Then he went out and hit 17-of-25 from the three-point star drill, showcasing shooting potential that wasn't evident in college. Won a national championship at Michigan as a key rotation piece. The college production (modest counting stats) undersells the impact — elite screen setter, physical defender, and high-energy rebounder who does dirty-work intangibles. Offensive game is basic — rolls hard to the rim, crashes the glass, finishes dump-offs. If the shooting is real, he becomes a starting-caliber stretch four with plus defense. If not, he's an energy big off the bench. Rising stock makes him a likely lottery pick.",
     "attributes": {
-      "finishing": 75,
-      "shooting": 60,
-      "playmaking": 50,
-      "defense": 78,
-      "athleticism": 80,
-      "rebounding": 58
+      "身体": 85,
+      "突破": 40,
+      "篮下": 75,
+      "背身": 50,
+      "中投": 50,
+      "三分": 60,
+      "传球": 50,
+      "控运": 40,
+      "内防": 78,
+      "外防": 50,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 58
     },
     "tags": [
       "combine winner",
@@ -1010,7 +1274,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "莫雷兹·约翰逊二世"
+    "nameCn": "莫雷兹·约翰逊二世",
+    "skills_13d": [
+      "Finishing",
+      "Three Point",
+      "Rim Protection",
+      "Rebounding"
+    ],
+    "style": [
+      "Defensive Anchor",
+      "Glue Guy"
+    ],
+    "polishedReason": "即战力冠军拼图"
   },
   {
     "id": 16,
@@ -1024,12 +1299,19 @@
     "standingReach": "8'9\"",
     "profile_text": "Karim Lopez is the premier international prospect in the 2026 class — a 6'8 forward with guard skills developed in the NBL's Next Stars program with the New Zealand Breakers. Born in 2007, he's one of the youngest players in the draft with significant professional experience against grown men. Polished offensive game with a smooth shooting stroke, advanced footwork, and the ability to create his own shot off the dribble. Plays with a European-style feel — patient, reads defenses, makes the extra pass. Physically he's solid with a 222-pound frame that should hold up in the NBA. Defensively he's competitive but not elite — adequate lateral quickness but not a lockdown stopper. The NBL production was solid but not dominant, typical for a teenager playing against professionals. Compares to a young Danilo Gallinari or a less explosive Franz Wagner. High-floor international pick who could contribute immediately as a secondary creator and floor spacer.",
     "attributes": {
-      "finishing": 72,
-      "shooting": 75,
-      "playmaking": 68,
-      "defense": 65,
-      "athleticism": 72,
-      "rebounding": 48
+      "身体": 72,
+      "突破": 68,
+      "篮下": 72,
+      "背身": 50,
+      "中投": 85,
+      "三分": 75,
+      "传球": 68,
+      "控运": 72,
+      "内防": 50,
+      "外防": 65,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 48
     },
     "tags": [
       "international prospect",
@@ -1077,7 +1359,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "卡里姆·洛佩斯"
+    "nameCn": "卡里姆·洛佩斯",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Handle",
+      "Passing Vision"
+    ],
+    "style": [
+      "Point Forward",
+      "Shooter"
+    ],
+    "polishedReason": "即战力国际侧翼"
   },
   {
     "id": 17,
@@ -1091,12 +1384,19 @@
     "standingReach": "8'6\"",
     "profile_text": "Tounde Yessoufou is a powerfully built defensive-minded wing who brings elite energy and toughness to every possession. At St. John's he established himself as one of the best perimeter defenders in college basketball — capable of guarding 1-4 with a strong 210-pound frame, plus wingspan, and outstanding lateral movement (2.75s shuttle, top-5 at combine). Offensively he's limited — a straight-line driver who scores mostly in transition and on cuts. Three-point shot is below average and will determine his NBA role. The motor never stops — relentless offensive rebounder from the wing position, always the first to dive for loose balls. Comparisons to a young PJ Tucker or a less skilled Jimmy Butler defensively. If the corner three becomes reliable, he's a coveted 3-and-D rotation wing who brings physicality and attitude. If not, he's a specialist defender whose offensive limitations cap his ceiling. Late first to early second round grade with a clear path to NBA rotation.",
     "attributes": {
-      "finishing": 70,
-      "shooting": 60,
-      "playmaking": 55,
-      "defense": 78,
-      "athleticism": 82,
-      "rebounding": 48
+      "身体": 85,
+      "突破": 55,
+      "篮下": 70,
+      "背身": 50,
+      "中投": 50,
+      "三分": 50,
+      "传球": 55,
+      "控运": 50,
+      "内防": 50,
+      "外防": 78,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 48
     },
     "tags": [
       "defensive stopper",
@@ -1143,7 +1443,17 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "通德·耶苏福"
+    "nameCn": "通德·耶苏福",
+    "skills_13d": [
+      "POA Defense",
+      "Off-ball",
+      "Rebounding"
+    ],
+    "style": [
+      "3&D",
+      "Glue Guy"
+    ],
+    "polishedReason": "即战力防守悍将"
   },
   {
     "id": 18,
@@ -1157,12 +1467,19 @@
     "standingReach": "9'9\"",
     "profile_text": "Aday Mara is a genetic outlier — a 7'3 center with the second-longest standing reach in NBA Draft Combine history at 9'9 (behind only Tacko Fall). The measurements are cartoonish and he leverages them effectively as a rim protector and lob finisher. Won a national championship at Michigan as a key defensive anchor. Excellent positional passer out of the post and short roll — sees over the defense and makes reads that smaller bigs can't. The athletic testing was historically bad — 24-inch standing vertical (worst), 28-inch max vertical (worst), 3.61s 3/4 sprint (worst). These are legitimate red flags for NBA mobility, particularly in pick-and-roll defense where he'll be targeted in space. The Enes Freedom/ Boban Marjanovic archetype is his likely outcome — a situational big who dominates in certain matchups but gets played off the floor in others. In an era where centers must defend in space, Mara's viability depends entirely on scheme fit and surrounding personnel. Late first round flier for a team betting the unicorn size outweighs the athletic limitations.",
     "attributes": {
-      "finishing": 70,
-      "shooting": 45,
-      "playmaking": 45,
-      "defense": 75,
-      "athleticism": 30,
-      "rebounding": 65
+      "身体": 30,
+      "突破": 20,
+      "篮下": 70,
+      "背身": 50,
+      "中投": 50,
+      "三分": 45,
+      "传球": 45,
+      "控运": 20,
+      "内防": 75,
+      "外防": 20,
+      "抢断": 20,
+      "盖帽": 85,
+      "篮板": 65
     },
     "tags": [
       "genetic outlier",
@@ -1210,7 +1527,17 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "阿代·马拉"
+    "nameCn": "阿代·马拉",
+    "skills_13d": [
+      "Rim Protection",
+      "Finishing",
+      "Passing Vision"
+    ],
+    "style": [
+      "Defensive Anchor",
+      "Small-Ball Center"
+    ],
+    "polishedReason": "即战力护框巨塔"
   },
   {
     "id": 19,
@@ -1224,12 +1551,19 @@
     "standingReach": "9'2\"",
     "profile_text": "Jayden Quaintance is a physically imposing center prospect with elite length — his 7'5.25 wingspan is the longest among all top prospects in the 2026 class. At Kentucky he was a dominant rebounder and shot blocker who anchored the paint with his sheer physical presence. Strong 253-pound frame allows him to hold position against any post scorer. Offensive game is extremely limited — almost entirely reliant on putbacks, lobs, and dump-offs. Zero shooting range and rudimentary post moves. The medical concerns are significant — multiple lower-body injuries have limited his career and there are questions about long-term durability for a player carrying 253 pounds with an explosive playing style. In a different era he'd be a lottery lock; in the modern NBA his fit depends on finding a team willing to play a traditional non-shooting five. Compares to a Bismack Biyombo or a less skilled Andre Drummond. Mid-second round grade based primarily on the medical flag.",
     "attributes": {
-      "finishing": 65,
-      "shooting": 40,
-      "playmaking": 40,
-      "defense": 82,
-      "athleticism": 60,
-      "rebounding": 85
+      "身体": 85,
+      "突破": 20,
+      "篮下": 65,
+      "背身": 40,
+      "中投": 25,
+      "三分": 20,
+      "传球": 40,
+      "控运": 30,
+      "内防": 82,
+      "外防": 40,
+      "抢断": 50,
+      "盖帽": 85,
+      "篮板": 85
     },
     "tags": [
       "rim protector",
@@ -1276,8 +1610,18 @@
     "injuryFlag": true,
     "age": 20,
     "productionScore": 28,
-    "isPolished": true,
-    "nameCn": "杰登·昆坦斯"
+    "isPolished": false,
+    "nameCn": "杰登·昆坦斯",
+    "skills_13d": [
+      "Finishing",
+      "Rebounding",
+      "Rim Protection"
+    ],
+    "style": [
+      "Defensive Anchor",
+      "Small-Ball Center"
+    ],
+    "polishedReason": "20岁毛胚天赋待打磨"
   },
   {
     "id": 20,
@@ -1291,12 +1635,19 @@
     "standingReach": "8'7\"",
     "profile_text": "Andrej Stojakovic is a smooth scoring wing with deep basketball lineage — son of three-time NBA All-Star Peja Stojakovic. At California he was one of the most purely gifted scorers in the Pac-12, blending a silky shooting stroke with crafty off-the-dribble creation. Shot mechanics are near-identical to his father's — high release, quick trigger, comfortable firing off movement and from deep range. Showed significant improvement as a playmaker in his sophomore year, doubling his assist rate while cutting turnovers. The athletic testing at the combine was a pleasant surprise — posted a 41.5-inch max vertical (top-5 among wings), addressing concerns about his explosiveness. Defensively he's below average — lacks lateral quickness and defensive intensity, which was the knock on his father as well. Bulk and strength need work at 200 pounds. Projects as an offensive specialist — instant bench scorer who tilts defenses with gravity and can get hot in a hurry. Compares stylistically to a taller Buddy Hield or a poor-man's Tyler Herro. Mid-to-late first round pick.",
     "attributes": {
-      "finishing": 70,
-      "shooting": 82,
-      "playmaking": 58,
-      "defense": 55,
-      "athleticism": 78,
-      "rebounding": 48
+      "身体": 78,
+      "突破": 70,
+      "篮下": 70,
+      "背身": 50,
+      "中投": 80,
+      "三分": 85,
+      "传球": 58,
+      "控运": 75,
+      "内防": 40,
+      "外防": 55,
+      "抢断": 50,
+      "盖帽": 40,
+      "篮板": 48
     },
     "tags": [
       "shooting specialist",
@@ -1345,7 +1696,19 @@
     "age": 22,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "安德烈·斯托亚科维奇"
+    "nameCn": "安德烈·斯托亚科维奇",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Handle",
+      "Isolation",
+      "Off-ball"
+    ],
+    "style": [
+      "Shooter",
+      "ISO"
+    ],
+    "polishedReason": "大三即战力即插即用"
   },
   {
     "id": 21,
@@ -1359,12 +1722,19 @@
     "standingReach": "9'0\"",
     "profile_text": "Yaxel Lendeborg is the most pro-ready prospect in the 2026 class — a 23-year-old national champion and consensus First-Team All-American who impacts winning in every facet. At Michigan he averaged 15.1 PPG, 6.8 RPG, 3.2 APG, 1.2 BPG, and 1.1 SPG while earning Big Ten Player of the Year and All-Defensive Team honors. An elite switchable defender with a 7-foot-4 wingspan who can legitimately guard 1-through-5, using length and IQ to disrupt passing lanes and contest without fouling (98th percentile in foul efficiency). Offensively he thrives as a low-usage, high-efficiency connector — knockdown catch-and-shoot threat (37% 3PT on 4.5 attempts/game), elite short-roll passer, and efficient rim finisher (51% FG). Won NCAA Tournament MOP after leading Michigan to the national title. Previously two-time AAC Defensive Player of the Year at UAB and NJCAA all-time leading rebounder at Arizona Western. The age (24 as a rookie) is the single biggest red flag — older than Brandon Miller, Cade Cunningham, and Scottie Barnes. Lacks self-creation and elite explosiveness, projecting more as a high-floor role player than a star. Compares to OG Anunoby or Aaron Gordon as a versatile two-way forward who contributes to winning immediately.",
     "attributes": {
-      "finishing": 78,
-      "shooting": 75,
-      "playmaking": 72,
-      "defense": 85,
-      "athleticism": 68,
-      "rebounding": 58
+      "身体": 68,
+      "突破": 50,
+      "篮下": 78,
+      "背身": 60,
+      "中投": 70,
+      "三分": 75,
+      "传球": 72,
+      "控运": 60,
+      "内防": 85,
+      "外防": 80,
+      "抢断": 75,
+      "盖帽": 78,
+      "篮板": 58
     },
     "tags": [
       "national champion",
@@ -1414,7 +1784,20 @@
     "age": 20,
     "productionScore": 42,
     "isPolished": true,
-    "nameCn": "亚克塞尔·伦德伯格"
+    "nameCn": "亚克塞尔·伦德伯格",
+    "skills_13d": [
+      "Finishing",
+      "Passing Vision",
+      "POA Defense",
+      "Rim Protection",
+      "Rebounding"
+    ],
+    "style": [
+      "Two-Way",
+      "Point Forward",
+      "Defensive Anchor"
+    ],
+    "polishedReason": "即战力全能防守核心"
   },
   {
     "id": 22,
@@ -1428,12 +1811,19 @@
     "standingReach": "8'1\"",
     "profile_text": "Meleek Thomas is one of the best pure shooters in the 2026 class — a 19-year-old Arkansas freshman who drilled 41.6% from three on high volume (5.3 attempts/game) and an absurd 48.7% from three in SEC play. Averaged 15.6 PPG, 3.8 RPG, 2.5 APG, and 1.5 SPG while playing alongside high-usage guard Darius Acuff. Elite movement shooter who hit 50% of his off-screen threes and 49.2% of pull-up threes — a lethal combination for modern NBA offenses. Possesses a quick, high-release stroke with deep range and smooth mechanics. Strong complementary player with an ultra-low 6.7% turnover rate (96th percentile) and a 2.5:1 AST/TO ratio. Active defensively (1.5 SPG, 10th in SEC) with quick hands and good lateral movement. The primary concern is finishing — converted just 39.3% of drives and lacks elite explosion to finish through contact at the rim. Slender frame at 189 pounds will get pushed around early. Projects more as a scoring 2-guard than a lead playmaker. Compares stylistically to Anfernee Simons or Tyler Herro as a movement shooter with starter upside. Mid-to-late first round pick.",
     "attributes": {
-      "finishing": 68,
-      "shooting": 88,
-      "playmaking": 68,
-      "defense": 65,
-      "athleticism": 78,
-      "rebounding": 38
+      "身体": 78,
+      "突破": 68,
+      "篮下": 68,
+      "背身": 30,
+      "中投": 80,
+      "三分": 88,
+      "传球": 68,
+      "控运": 75,
+      "内防": 30,
+      "外防": 65,
+      "抢断": 60,
+      "盖帽": 25,
+      "篮板": 38
     },
     "tags": [
       "elite shooter",
@@ -1482,7 +1872,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "梅利克·托马斯"
+    "nameCn": "梅利克·托马斯",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Off-ball",
+      "Handle"
+    ],
+    "style": [
+      "Shooter",
+      "3&D"
+    ],
+    "polishedReason": "即战力精英射手"
   },
   {
     "id": 23,
@@ -1496,12 +1897,19 @@
     "standingReach": "8'5\"",
     "profile_text": "Isaiah Evans is a microwave scorer and elite perimeter shooter out of Duke who earned ACC Sixth Man of the Year honors as a sophomore. Averaged 15.0 PPG on 36.1% from three (7.4 attempts/game) with a quick-release stroke and deep NBA range. Nicknamed \"Baby Ingram\" for his 6-foot-6 frame and near-6-foot-9 wingspan reminiscent of Brandon Ingram. Thrives as an off-screen movement shooter — runs off screens effectively, squares up instantly for catch-and-shoot threes, or curls into the mid-range for pull-ups (shot 44.7% on two-point jumpers). Dramatically improved his finishing from 14 rim baskets as a freshman to 64 as a sophomore. Career 38.0% three-point shooter over two seasons. Scored 20+ points 11 times including a career-high 34 vs. Virginia Tech, and averaged 18.9 PPG during Duke's NCAA Tournament run. The primary limitations are one-dimensionality — rarely impacts games outside scoring (3.2 RPG, 0.7 SPG, 8.3% assist rate). Posted a disappointing 27-inch standing vertical and the second-slowest lane agility time at the NBA Combine. Thin 186-pound frame raises physicality concerns. Projects as a valuable floor-spacing rotation piece in the Jordan Hawkins mold — plug-and-play shooting with limited self-creation. Mid-to-late first round pick.",
     "attributes": {
-      "finishing": 70,
-      "shooting": 82,
-      "playmaking": 50,
-      "defense": 55,
-      "athleticism": 62,
-      "rebounding": 48
+      "身体": 62,
+      "突破": 70,
+      "篮下": 70,
+      "背身": 40,
+      "中投": 78,
+      "三分": 85,
+      "传球": 50,
+      "控运": 70,
+      "内防": 40,
+      "外防": 55,
+      "抢断": 50,
+      "盖帽": 35,
+      "篮板": 48
     },
     "tags": [
       "movement shooter",
@@ -1549,8 +1957,19 @@
     "injuryFlag": false,
     "age": 19,
     "productionScore": 28,
-    "isPolished": true,
-    "nameCn": "以赛亚·埃文斯"
+    "isPolished": false,
+    "nameCn": "以赛亚·埃文斯",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Off-ball",
+      "Finishing"
+    ],
+    "style": [
+      "Shooter",
+      "Sixth Man"
+    ],
+    "polishedReason": "19岁微波炉得分手"
   },
   {
     "id": 24,
@@ -1564,12 +1983,19 @@
     "standingReach": "7'10\"",
     "profile_text": "Christian Anderson Jr. is arguably the best shooter in the 2026 class — a FIBA-proven, pick-and-roll maestro out of Texas Tech with deep range and lightning-quick release. Averaged 18.5 PPG and 7.4 APG (5th in NCAA) as a sophomore while earning Third-Team All-American and Big 12 Most Improved Player honors. Shot 41.5% from three on 7.9 attempts per game and an elite 41.7% on pull-up threes. One of the most decorated international youth players ever — led Germany to four FIBA podium finishes including U18 EuroBasket gold (2024) and U19 World Cup silver (2025), earning All-Star Five honors at three tournaments. Dennis Schröder has endorsed him as his eventual successor on the German national team. Processes pick-and-roll at an advanced level — burns drop coverage with pull-ups, beats hedges with pocket passes, and makes third-level reads. Led the Big 12 in assists with excellent decision-making. The primary concern is size — at 6-foot-1 and 180 pounds, he will be targeted on defense and has no path to guarding anything but point guards. Attempted only 3.4 shots at the rim per 100 possessions (9th percentile), relying almost entirely on his jumper. Projects as a high-floor backup PG in the Payton Pritchard mold — instant offense, elite shooting, pick-and-roll command. Mid-to-late first round.",
     "attributes": {
-      "finishing": 55,
-      "shooting": 92,
-      "playmaking": 85,
-      "defense": 45,
-      "athleticism": 75,
-      "rebounding": 33
+      "身体": 75,
+      "突破": 60,
+      "篮下": 55,
+      "背身": 20,
+      "中投": 85,
+      "三分": 92,
+      "传球": 85,
+      "控运": 85,
+      "内防": 25,
+      "外防": 45,
+      "抢断": 60,
+      "盖帽": 15,
+      "篮板": 33
     },
     "tags": [
       "elite shooter",
@@ -1617,7 +2043,19 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "克里斯蒂安·安德森二世"
+    "nameCn": "克里斯蒂安·安德森二世",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Passing Vision",
+      "Handle",
+      "Tempo Control"
+    ],
+    "style": [
+      "Shooter",
+      "Primary Creator"
+    ],
+    "polishedReason": "即战力挡拆大师"
   },
   {
     "id": 25,
@@ -1631,12 +2069,19 @@
     "standingReach": "7'11\"",
     "profile_text": "Bennett Stirtz is one of the best pick-and-roll operators and toughest shot-makers in the 2026 class — a cerebral guard who climbed from Division II to Drake to Iowa, leading the Hawkeyes to the Elite Eight as a No. 9 seed. Averaged 19.8 PPG, 4.4 APG, and 1.4 SPG while playing 37.7 MPG (led nation). Elite shot-making versatility — 40.2% on all jump shots including 48.2% on catch-and-shoot opportunities. His off-the-dribble jumpers rated in the 97.4th percentile in frequency while maintaining 83.7th percentile efficiency. Graded in the 91st percentile as a pick-and-roll ball-handler per Synergy, with advanced understanding of angles, timing, and positioning. Shot an outstanding 69.9% at the rim despite athletic limitations, using crafty finishes, floaters, and body control. Excellent 2.40 AST/TO ratio. The primary red flag is athleticism — lacks blow-by explosiveness, end-to-end speed, and vertical pop, which shows against elite competition (25.6% from three in NCAA Tournament, 36.9% overall in four tournament games). Will be nearly 23 as a rookie, capping perceived upside. Defensive concerns due to athletic limitations. Compares to Payton Pritchard — an older, undersized guard who compensates with elite craft, IQ, and competitive toughness. High-floor backup PG with sixth-man potential. Mid-to-late first round.",
     "attributes": {
-      "finishing": 72,
-      "shooting": 82,
-      "playmaking": 80,
-      "defense": 55,
-      "athleticism": 58,
-      "rebounding": 33
+      "身体": 58,
+      "突破": 72,
+      "篮下": 72,
+      "背身": 30,
+      "中投": 85,
+      "三分": 82,
+      "传球": 80,
+      "控运": 82,
+      "内防": 30,
+      "外防": 55,
+      "抢断": 60,
+      "盖帽": 20,
+      "篮板": 33
     },
     "tags": [
       "pick-and-roll maestro",
@@ -1684,7 +2129,19 @@
     "age": 23,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "贝内特·斯蒂尔茨"
+    "nameCn": "贝内特·斯蒂尔茨",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Passing Vision",
+      "Handle",
+      "Tempo Control"
+    ],
+    "style": [
+      "Primary Creator",
+      "Glue Guy"
+    ],
+    "polishedReason": "大龄即战力挡拆手"
   },
   {
     "id": 26,
@@ -1698,12 +2155,19 @@
     "standingReach": "7'11\"",
     "profile_text": "Labaron Philon Jr. became the first power-conference player since 2000 to average 21+ points, 4+ assists, and shoot over 50% from the field — an absurdly efficient sophomore campaign at Alabama that earned him consensus Third-Team All-American honors. Averaged 22.0 PPG (3rd in SEC), 5.0 APG (4th in SEC), and shot 50.1% FG / 39.9% 3PT (6.3 attempts/game). Possesses a herky-jerky, unorthodox driving style with advanced ball-handling — gets to his spots at will with in-and-out dribbles, step-backs, and floaters. True three-level scorer who thrived both as an off-ball connector (freshman year) and lead creator (sophomore year). Walking good decision-maker with heads-up, team-first vision. Green room invitee projected in the late lottery to early 20s. The swing factor is physical — very slight at ~185 pounds with disappointing combine testing (35-inch max vertical is below-average for a sub-6-foot-3 lottery guard). Defensive impact waned as offensive usage spiked, raising questions about two-way balance. Below-the-rim athlete who relies on craft and change-of-pace rather than burst. Some teams see him as more scoring-focused than a natural table-setter. Compares to Dejounte Murray — a scoring-minded combo guard with length and craft. Projects as a high-floor offensive player with star upside if the frame fills out.",
     "attributes": {
-      "finishing": 82,
-      "shooting": 80,
-      "playmaking": 80,
-      "defense": 58,
-      "athleticism": 72,
-      "rebounding": 33
+      "身体": 72,
+      "突破": 82,
+      "篮下": 82,
+      "背身": 30,
+      "中投": 80,
+      "三分": 80,
+      "传球": 80,
+      "控运": 85,
+      "内防": 30,
+      "外防": 58,
+      "抢断": 60,
+      "盖帽": 20,
+      "篮板": 33
     },
     "tags": [
       "elite efficiency",
@@ -1752,7 +2216,19 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "拉巴隆·菲隆二世"
+    "nameCn": "拉巴隆·菲隆二世",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Finishing",
+      "Handle",
+      "Passing Vision"
+    ],
+    "style": [
+      "ISO",
+      "Primary Creator"
+    ],
+    "polishedReason": "即战力高效得分手"
   },
   {
     "id": 27,
@@ -1766,12 +2242,19 @@
     "standingReach": "8'8\"",
     "profile_text": "Alex Karaban is the ultimate winning role player — a four-year UConn starter who led the program to three Final Fours, two national championships, and holds all-time UConn records for wins (126), games played (151), starts (150), minutes, and three-pointers made. Averaged 13.2 PPG, 5.3 RPG, 2.4 APG on 46.4% FG / 37.4% 3PT / 85.1% FT as a senior. Elite off-ball shooter who ranked in the 99th percentile in off-screen usage per Synergy — quick trigger, high release, comfortable on catch-and-shoot, spot-ups, and movement threes. Savvy cutter who uses shooting gravity to back-door defenders with elite timing and body control. Rarely makes mistakes — just 7.4% turnover rate as a senior with connective passing and smart decision-making. Inducted into UConn's Huskies of Honor while still active. The athletic limitations are severe — lacks foot speed, lateral quickness, and explosiveness. Shot just 32.5% in transition and had only 8 drives to the basket all senior season. Scored just 8 isolation points in four years. Rival coaches anonymously criticized his defense heavily. Compares almost exactly to Sam Hauser (identical 6-foot-6.75 barefoot measurements, with Karaban slightly longer at 6-foot-11 wingspan). Late first to second round floor-spacing specialist who contributes immediately.",
     "attributes": {
-      "finishing": 60,
-      "shooting": 82,
-      "playmaking": 65,
-      "defense": 55,
-      "athleticism": 45,
-      "rebounding": 48
+      "身体": 45,
+      "突破": 50,
+      "篮下": 60,
+      "背身": 50,
+      "中投": 75,
+      "三分": 85,
+      "传球": 65,
+      "控运": 60,
+      "内防": 55,
+      "外防": 55,
+      "抢断": 50,
+      "盖帽": 50,
+      "篮板": 48
     },
     "tags": [
       "national champion x2",
@@ -1820,7 +2303,17 @@
     "age": 22,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "亚历克斯·卡拉班"
+    "nameCn": "亚历克斯·卡拉班",
+    "skills_13d": [
+      "Three Point",
+      "Off-ball",
+      "Passing Vision"
+    ],
+    "style": [
+      "Shooter",
+      "Glue Guy"
+    ],
+    "polishedReason": "大四即战力赢家"
   },
   {
     "id": 28,
@@ -1834,12 +2327,19 @@
     "standingReach": "9'1\"",
     "profile_text": "Hannes Steinbach led all of NCAA Division I in rebounding (11.8 RPG) as a true freshman at Washington, establishing himself as arguably the best pure center in the 2026 class. Averaged 18.5 PPG on 57.7% FG with 22 double-doubles (led nation), 4.2 offensive rebounds per game, and 1.2 BPG. Elite interior finisher at 67% at the rim with soft hands, excellent post footwork, and crafty finishes. Hard screen-setter who dives aggressively in pick-and-roll. Plays with an immovable 248-pound base and relentless motor — described by his coach as an elite teammate. Before Washington, he led Germany to its first-ever U18 EuroBasket gold (2024) and U19 World Cup silver (2025), earning All-Star Five honors at both tournaments. The primary concerns are rim protection (3.9% block rate is low for a center) and shooting — took only 53 total threes (34%) and form is inconsistent. Below-average vertical explosion with only 27 dunks in 30 games. Standing reach ranks just 19th percentile among NBA combine centers. Tweener concerns — undersized height for a center (57th percentile), may not have lateral quickness for full-time PF. Compares to Domantas Sabonis or Isaiah Hartenstein — high-feel, physical big who rebounds and passes at a high level. Late lottery to mid-first round.",
     "attributes": {
-      "finishing": 80,
-      "shooting": 48,
-      "playmaking": 55,
-      "defense": 68,
-      "athleticism": 65,
-      "rebounding": 85
+      "身体": 80,
+      "突破": 30,
+      "篮下": 90,
+      "背身": 80,
+      "中投": 50,
+      "三分": 30,
+      "传球": 55,
+      "控运": 40,
+      "内防": 75,
+      "外防": 40,
+      "抢断": 50,
+      "盖帽": 70,
+      "篮板": 95
     },
     "tags": [
       "NCAA rebounding leader",
@@ -1887,7 +2387,18 @@
     "age": 22,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "汉内斯·施泰因巴赫"
+    "nameCn": "汉内斯·施泰因巴赫",
+    "skills_13d": [
+      "Finishing",
+      "Post",
+      "Rebounding",
+      "Rim Protection"
+    ],
+    "style": [
+      "Playmaking Big",
+      "Defensive Anchor"
+    ],
+    "polishedReason": "NCAA篮板王即战力"
   },
   {
     "id": 29,
@@ -1901,12 +2412,19 @@
     "standingReach": "9'3\"",
     "profile_text": "Henri Veesaar is a modern stretch-five out of North Carolina who shot 42.6% from three as a junior — a massive breakout season after transferring from Arizona and more than doubling his scoring to 17.0 PPG. Averaged 8.7 RPG, 2.1 APG, and 1.2 BPG on an ultra-efficient 60.8% FG. Elite floor-spacer for a true 7-footer — hit 53% on unguarded catch-and-shoot threes and 39% on pick-and-pop attempts with clean mechanics and confident trigger. Efficient interior scorer at nearly 75% at the rim with effective mix of soft touch (hooks, floaters) and powerful finishing (58 dunks). Quick-decision passer (2.1 APG, 13.6 AST%) reflecting his Real Madrid youth academy roots. Fluid mover for his size who plays with consistent effort across 30+ minutes. The defensive concerns are significant — blocked just 1.2 shots per game (3.8% block rate), opponents shot 51% at the rim against him, and he lacks elite verticality to deter shots. Lean 227-pound frame gets moved by stronger bigs. Free throw shooting (61.5%) raises sustainability questions about the three-point percentage. Not a face-up threat or shot creator. Compares to Kelly Olynyk at best or Frank Kaminsky at worst — skilled offensive big with defensive limitations. Late first to early second round.",
     "attributes": {
-      "finishing": 78,
-      "shooting": 78,
-      "playmaking": 62,
-      "defense": 52,
-      "athleticism": 60,
-      "rebounding": 65
+      "身体": 65,
+      "突破": 40,
+      "篮下": 80,
+      "背身": 60,
+      "中投": 70,
+      "三分": 85,
+      "传球": 60,
+      "控运": 50,
+      "内防": 55,
+      "外防": 40,
+      "抢断": 50,
+      "盖帽": 65,
+      "篮板": 70
     },
     "tags": [
       "stretch five",
@@ -1955,7 +2473,18 @@
     "age": 22,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "亨利·维萨尔"
+    "nameCn": "亨利·维萨尔",
+    "skills_13d": [
+      "Three Point",
+      "Mid-range",
+      "Finishing",
+      "Passing Vision"
+    ],
+    "style": [
+      "Shooter",
+      "Playmaking Big"
+    ],
+    "polishedReason": "大三即战力空间五号位"
   },
   {
     "id": 30,
@@ -1969,12 +2498,19 @@
     "standingReach": "8'6\"",
     "profile_text": "Sergio de Larrea is a tall, high-IQ Spanish combo guard with legitimate NBA size at 6-foot-7 and a 6-foot-9 wingspan — rare dimensions for a lead ball-handler. Averaged 9.7 PPG, 3.0 RPG, and 3.7 APG in the Spanish ACB and EuroLeague for Valencia Basket, shooting 40.7% from three and 83.3% from the line across 60+ professional games. Described as having an old man's game with veteran pace — patiently manipulates pick-and-roll defenses, consistently makes the correct read, and connects offense with skip passes through tight windows. Legitimate floor-spacer who hit 47.5% on catch-and-shoot triples. Extensive EuroLeague experience (34 career appearances) lowers developmental risk. The primary concern is athletic burst — lacks a lightning first step, vertical pop, or suddenness, which limits rim finishing (54.5% on layups) and foul-drawing. Concerning 19.5% turnover rate on just 22.2% usage for a low-volume player. Under 26% on two-point jumpers. Projects more as a smart positional defender than a disruptive stopper. Compares internationally to a taller Malcolm Brogdon or Bogdan Bogdanović — steady, high-IQ guard who wins with feel and craft rather than athleticism. Candidate for draft-and-stash with late first to early second round value.",
     "attributes": {
-      "finishing": 55,
-      "shooting": 78,
-      "playmaking": 75,
-      "defense": 62,
-      "athleticism": 55,
-      "rebounding": 33
+      "身体": 55,
+      "突破": 60,
+      "篮下": 55,
+      "背身": 40,
+      "中投": 65,
+      "三分": 85,
+      "传球": 80,
+      "控运": 75,
+      "内防": 40,
+      "外防": 60,
+      "抢断": 55,
+      "盖帽": 30,
+      "篮板": 40
     },
     "tags": [
       "tall PG",
@@ -2023,7 +2559,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "塞尔吉奥·德·拉雷亚"
+    "nameCn": "塞尔吉奥·德·拉雷亚",
+    "skills_13d": [
+      "Three Point",
+      "Passing Vision",
+      "Tempo Control",
+      "Handle"
+    ],
+    "style": [
+      "Primary Creator",
+      "Point Forward"
+    ],
+    "polishedReason": "欧洲联赛即战力高球商"
   },
   {
     "id": 31,
@@ -2037,12 +2584,19 @@
     "standingReach": "8'8.5\"",
     "profile_text": "Dailyn Swain is the most efficient isolation scorer in the country among high-volume wings — a slashing savant out of Texas who scored 1.2 PPP in isolation on 54% shooting. Averaged 17.3 PPG, 7.5 RPG, 3.6 APG, and 1.6 SPG on 54.2% FG while earning All-SEC Second Team honors and leading Texas to the Sweet 16. Elite rim pressure — 61.8% shooting on drives, 63% at the rim (236 attempts), with an astonishing 82% of rim attempts unassisted (99th percentile nationally). Guard-level ball-handling for his size — strings together crossovers, spins, and change-of-pace moves to beat defenders off the dribble. Active defensive playmaker with a 6-foot-10 wingspan and strong positional rebounding (13.6% rebound rate). Operated effectively as a pick-and-roll ball-handler (0.95 PPP on 163 possessions). The swing skill is shooting — career 3PT progression improved from ~15% to ~25% to 34.4% at Texas, but still on low volume (2.6 attempts/game) with slow, stiff mechanics that may need an overhaul. Defenders routinely sag off him. Turnovers are a concern (2.7 per game, 1.3 AST/TO ratio). Defensive consistency slipped with heavier offensive workload. Compares to Herb Jones — defensive versatility, secondary creation, and emerging shooting. Mid-to-late first round with starter upside if the jumper develops.",
     "attributes": {
-      "finishing": 88,
-      "shooting": 58,
-      "playmaking": 72,
-      "defense": 75,
-      "athleticism": 82,
-      "rebounding": 48
+      "身体": 80,
+      "突破": 90,
+      "篮下": 85,
+      "背身": 50,
+      "中投": 60,
+      "三分": 55,
+      "传球": 70,
+      "控运": 80,
+      "内防": 60,
+      "外防": 75,
+      "抢断": 70,
+      "盖帽": 50,
+      "篮板": 55
     },
     "tags": [
       "elite slasher",
@@ -2091,7 +2645,19 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "戴林·斯温"
+    "nameCn": "戴林·斯温",
+    "skills_13d": [
+      "Finishing",
+      "Handle",
+      "Isolation",
+      "Off-ball",
+      "POA Defense"
+    ],
+    "style": [
+      "ISO",
+      "Two-Way"
+    ],
+    "polishedReason": "即战力单打高手"
   },
   {
     "id": 32,
@@ -2105,12 +2671,19 @@
     "standingReach": "7'11\"",
     "profile_text": "Ebuka Okorie is arguably the best driving guard in the 2026 class — a 19-year-old Stanford freshman who took an incredible 250 shots at the rim (No. 1 among guard prospects), with 50% of total shot attempts coming at the rim (99th percentile). Averaged 23.2 PPG, 3.6 RPG, 3.6 APG, and 1.6 SPG on 35.1 MPG while shooting 46.5% FG / 35.4% 3PT (5.7 attempts/game) / 83.2% FT. Elite self-creation — an astonishing 89% of rim attempts were unassisted. Possesses blistering straight-line speed, a lightning-quick first step, exceptional acceleration/deceleration, and bendy body control to slither through tight gaps. Elite ball security — just 8.7% turnover rate on a massive 31.0% usage rate (97th percentile in Creation Turnover %). Plus 6-foot-7.75 wingspan gives him a +6.5-inch differential — elite length for his height. Active defensive hands (1.6 SPG, 2.7% steal rate). The primary concerns are size (6-foot-1.25, 186 lbs makes him undersized), playmaking vision (only 3.6 APG, wired to score first), and rim finishing efficiency (just 54% at the rim despite elite volume). Stanford's weak schedule (9th in ACC, no postseason) raises competition-level questions. Compares to Dennis Schröder — lightning-quick scoring spark who can run a second unit from day one. Mid-to-late first round sleeper.",
     "attributes": {
-      "finishing": 80,
-      "shooting": 72,
-      "playmaking": 65,
-      "defense": 55,
-      "athleticism": 85,
-      "rebounding": 33
+      "身体": 75,
+      "突破": 92,
+      "篮下": 80,
+      "背身": 30,
+      "中投": 65,
+      "三分": 72,
+      "传球": 65,
+      "控运": 85,
+      "内防": 30,
+      "外防": 55,
+      "抢断": 60,
+      "盖帽": 20,
+      "篮板": 35
     },
     "tags": [
       "elite driver",
@@ -2158,7 +2731,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "埃布卡·奥科里"
+    "nameCn": "埃布卡·奥科里",
+    "skills_13d": [
+      "Finishing",
+      "Handle",
+      "Isolation",
+      "Three Point"
+    ],
+    "style": [
+      "ISO",
+      "Primary Creator"
+    ],
+    "polishedReason": "大一即战力突破机器"
   },
   {
     "id": 33,
@@ -2172,12 +2756,19 @@
     "standingReach": "8'10.5\"",
     "profile_text": "Allen Graves is the ultimate analytics darling of the 2026 class — a redshirt freshman at Santa Clara who finished 6th nationally in Box Plus-Minus behind only lottery talents Cameron Boozer, Yaxel Lendeborg, and Caleb Wilson. Averaged 11.8 PPG, 6.5 RPG (2.8 offensive), 1.9 SPG, and 0.9 BPG in just 22.6 MPG while shooting 51.2% FG / 41.3% 3PT / 75.0% FT. Won WCC Freshman of the Year, Sixth Man of the Year, and First Team All-WCC. Elite defensive instincts — often compared to a free safety reading the quarterback, with arguably the best hands in the class. No other player in men's college basketball matched his steal rate (4.9%) and block rate (4.9%) simultaneously. Advanced passing feel from his point guard roots before a late growth spurt. Shot better on guarded threes (44%) than unguarded (39%). Physical screener who averaged 11.5 rebounds per 40 minutes. The athletic testing was poor — bottom five in lane agility, shuttle run, and three-quarter sprint at the Combine. 27.5-inch standing vertical and 34-inch max vertical. Struggles finishing against length (51.7% on layups). On-ball defense graded poorly per Synergy with high foul rate. WCC competition level raises translation risk. Compares to Robert Covington — three-and-D forward with plus passing feel and defensive disruption. Mid-first to early second round.",
     "attributes": {
-      "finishing": 62,
-      "shooting": 78,
-      "playmaking": 68,
-      "defense": 78,
-      "athleticism": 52,
-      "rebounding": 58
+      "身体": 55,
+      "突破": 45,
+      "篮下": 60,
+      "背身": 50,
+      "中投": 65,
+      "三分": 80,
+      "传球": 60,
+      "控运": 55,
+      "内防": 70,
+      "外防": 65,
+      "抢断": 85,
+      "盖帽": 75,
+      "篮板": 65
     },
     "tags": [
       "analytics darling",
@@ -2226,7 +2817,18 @@
     "age": 20,
     "productionScore": 28,
     "isPolished": true,
-    "nameCn": "艾伦·格雷夫斯"
+    "nameCn": "艾伦·格雷夫斯",
+    "skills_13d": [
+      "Three Point",
+      "POA Defense",
+      "Rim Protection",
+      "Off-ball"
+    ],
+    "style": [
+      "3&D",
+      "Defensive Anchor"
+    ],
+    "polishedReason": "即战力防守万金油"
   },
   {
     "id": 34,
@@ -2240,12 +2842,19 @@
     "standingReach": "8'9\"",
     "profile_text": "[DUPLICATE — Cameron Boozer is already in the database as ID #3. This entry provides additional context.] Cameron Boozer is the most decorated prospect in the 2026 class — National Player of the Year as a Duke freshman, son of Carlos Boozer. A fundamentally flawless two-way forward who blends old-school interior scoring with modern stretch ability (39-40% from three). Elite basketball IQ processes double teams instantly, delivers pinpoint passes (4.1 APG), and was Duke's offensive hub. Four state titles, two USA gold medals, three Peach Jam titles. Concerns are athletic ceiling — not explosive, below-the-rim finisher. Between positions at 6-foot-9 — undersized for a full-time center but lacks elite verticality as a rim protector. Compares to Bam Adebayo or Al Horford — safe, high-floor starter with All-Star upside.",
     "attributes": {
-      "finishing": 85,
-      "shooting": 82,
-      "playmaking": 85,
-      "defense": 65,
-      "athleticism": 60,
-      "rebounding": 58
+      "身体": 65,
+      "突破": 60,
+      "篮下": 85,
+      "背身": 80,
+      "中投": 80,
+      "三分": 82,
+      "传球": 85,
+      "控运": 70,
+      "内防": 65,
+      "外防": 55,
+      "抢断": 50,
+      "盖帽": 55,
+      "篮板": 65
     },
     "tags": [
       "⚠️ DUPLICATE: see ID #3",
@@ -2295,7 +2904,19 @@
     "age": 19,
     "productionScore": 56,
     "isPolished": true,
-    "nameCn": "卡梅隆·布泽尔二世"
+    "nameCn": "卡梅隆·布泽尔二世",
+    "skills_13d": [
+      "Post",
+      "Mid-range",
+      "Three Point",
+      "Passing Vision",
+      "Finishing"
+    ],
+    "style": [
+      "Playmaking Big",
+      "Shooter"
+    ],
+    "polishedReason": "大一即战力全能前锋"
   },
   {
     "id": 35,
@@ -2309,12 +2930,19 @@
     "standingReach": "8'5\"",
     "profile_text": "Jaylen Harrell is a former four-star recruit and two-time Massachusetts Gatorade Player of the Year (2024, 2025) who averaged 22.1 PPG, 8.5 RPG, and 7.2 APG as a high school senior at CATS Academy. Originally committed to Providence where he played just six games before a season-ending injury (3.7 PPG in 9.7 MPG). Transferred to Washington State in April 2026. Possesses good positional size at 6-foot-5 with a plus-4-inch wingspan (6-foot-9) and a strong 210-pound frame. His mid-range pull-up game is his best offensive weapon, and he has shown flashes as a passer and off-ball cutter. The primary areas for development are foot speed/lateral quickness for NBA defense, three-point consistency (shot just 27.3% from three in limited college action, 32.6% in EYBL), and overall conditioning. Durability is a major question after the lost freshman season. Harrell is NOT a 2026 draft prospect — he will need a healthy, productive season at Washington State to build any NBA buzz, most realistically targeting the 2027 or 2028 draft. Included here as a future-prospect placeholder.",
     "attributes": {
-      "finishing": 65,
-      "shooting": 55,
-      "playmaking": 60,
-      "defense": 62,
-      "athleticism": 70,
-      "rebounding": 48
+      "身体": 70,
+      "突破": 65,
+      "篮下": 65,
+      "背身": 40,
+      "中投": 85,
+      "三分": 55,
+      "传球": 65,
+      "控运": 70,
+      "内防": 45,
+      "外防": 60,
+      "抢断": 55,
+      "盖帽": 40,
+      "篮板": 50
     },
     "tags": [
       "future prospect",
@@ -2361,8 +2989,19 @@
     "injuryFlag": true,
     "age": 20,
     "productionScore": 28,
-    "isPolished": true,
-    "nameCn": "杰伦·哈雷尔"
+    "isPolished": false,
+    "nameCn": "杰伦·哈雷尔",
+    "skills_13d": [
+      "Mid-range",
+      "Handle",
+      "Off-ball",
+      "Passing Vision"
+    ],
+    "style": [
+      "Glue Guy",
+      "Sixth Man"
+    ],
+    "polishedReason": "伤愈待证明潜力"
   },
   {
     "id": 36,
@@ -2376,12 +3015,19 @@
     "standingReach": "8'9\"",
     "profile_text": "Tyran Stokes is the consensus No. 1 high school recruit in the 2026 class and the early favorite for the No. 1 overall pick in the 2027 NBA Draft. Committed to Kansas over Kentucky and Oregon. Averaged 31.0 PPG, 13.0 RPG, 6.0 APG, and 4.0 SPG as a high school senior at Rainier Beach (Seattle) while shooting 53% FG and 41% 3PT. Physically imposing at 6-foot-7, 240 pounds — his high school coach compared his physicality to a young LeBron James, noting he was heavier and stronger than LeBron at the same age. Elite explosive athlete with a reported 7-foot wingspan who regularly throws down 7-8 dunks per game. His passing is described as Magic Johnson-esque — his coach famously called him Magic Johnson with a jump shot. Jordan Brand Classic MVP (29 pts, 8 reb, 7 ast, 3 blk). Nike Hoop Summit standout. Former football player (DE/LB) who carries that physical mentality to the court. Won gold with USA Basketball at the U19 World Cup. Areas to develop: consistent motor (can be nonchalant with the ball), decision-making (EYBL 3.8 AST to 3.6 TOV), and proving shooting consistency beyond one season. Projects as a generational two-way wing with franchise-player upside. NOT in the 2026 draft — will be a one-and-done at Kansas, targeting the 2027 NBA Draft as the presumptive No. 1 pick.",
     "attributes": {
-      "finishing": 90,
-      "shooting": 72,
-      "playmaking": 82,
-      "defense": 80,
-      "athleticism": 95,
-      "rebounding": 48
+      "身体": 95,
+      "突破": 85,
+      "篮下": 90,
+      "背身": 50,
+      "中投": 65,
+      "三分": 72,
+      "传球": 80,
+      "控运": 75,
+      "内防": 70,
+      "外防": 80,
+      "抢断": 75,
+      "盖帽": 65,
+      "篮板": 60
     },
     "tags": [
       "No. 1 recruit 2026",
@@ -2428,7 +3074,20 @@
     "injuryFlag": false,
     "age": 19,
     "productionScore": 28,
-    "isPolished": true,
-    "nameCn": "泰兰·斯托克斯"
+    "isPolished": false,
+    "nameCn": "泰兰·斯托克斯",
+    "skills_13d": [
+      "Finishing",
+      "Handle",
+      "Passing Vision",
+      "Isolation",
+      "POA Defense"
+    ],
+    "style": [
+      "ISO",
+      "Two-Way",
+      "Point Forward"
+    ],
+    "polishedReason": "19岁毛胚天赋待打磨"
   }
 ]

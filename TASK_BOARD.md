@@ -3,6 +3,7 @@
 ## 进行中
 - [ ] **用户测试**（5-10 人）— Session 9 策略输出
 - [ ] **AI PM 产出包**（策略文档/用户故事/路线图/PRD）— Session 9 策略输出
+- [ ] **端到端实测** — 启动前后端验证 13D 匹配结果
 
 ## 待办
 
@@ -46,3 +47,15 @@
 - [x] PlayerProfile Hero 重构 + 体测恢复
 - [x] 球探台移动端布局修复
 - [x] **产品策略会议**（Session 9）— 定位/痛点/路线图/行动项
+- [x] **AI 产品研发六阶段评估**（Session 10）— 已达/未达报告
+- [x] **13D 数据库重构**（Session 10-11）
+  - 球星模板库 36 人 13D（2KOL2 雷达图 + 2K26 锚点）
+  - 新秀库 36 人 13D（DeepSeek + 球探报告）
+  - 即战力/潜力股铆定新秀标签
+- [x] **三层匹配引擎 V3**（Session 10-11）
+  - 50% 13D 余弦 + 25% 位置 + 25% 身体
+  - Jaccard 标签相似度
+  - 删除 DNA polishedType 权重
+- [x] **Onboarding 精简**：删除 Step 2（即战力/潜力股）
+- [x] **UI 13D 适配**：DNAResult / PlayerProfile 融合饼图 / Recommendations
+- [x] **服务端 VECTOR_PROMPT 6D → 13D + Bug 修复**（Session 11）

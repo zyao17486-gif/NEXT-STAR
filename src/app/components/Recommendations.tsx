@@ -83,7 +83,7 @@ export function Recommendations({
             const recNames = [p.name, (p as any).nameCn].filter(Boolean) as string[];
             const isFollowed = recNames.some(n => followed.has(n));
             const recToggleKey = recNames.find(n => followed.has(n)) ?? p.name;
-            const rankLabels = ["最佳匹配", "高度推荐", "实力新秀"];
+            const rankLabels = ["最佳匹配", "高度推荐", "实力新秀", "潜力之选"];
             return (
               <motion.div
                 key={p.id}
@@ -136,22 +136,19 @@ export function Recommendations({
                   ))}
                 </div>
 
-                {/* Attribute bars — wider, taller */}
-                <div className="px-6 pb-6 space-y-4">
-                  {[
-                    ["终结能力", p.attributes.finishing],
-                    ["投篮能力", p.attributes.shooting],
-                    ["组织能力", p.attributes.playmaking],
-                    ["防守能力", p.attributes.defense],
-                    ["运动天赋", p.attributes.athleticism],
-                  ].map(([label, val]) => (
+                {/* 13D Attribute bars — compact */}
+                <div className="px-6 pb-6 space-y-1.5">
+                  {["身体","突破","篮下","背身","中投","三分","传球","控运","内防","外防","抢断","盖帽","篮板"]
+                    .map(attr => [attr, p.attributes[attr] ?? 50] as [string, number])
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([label, val]) => (
                     <div key={label}>
-                      <div className="flex justify-between mb-1.5">
-                        <span style={{ color: T.body, fontSize: FONT.base }}>{label}</span>
-                        <span style={{ color: T.body, fontSize: FONT.base, fontWeight: 500 }}>{val}</span>
+                      <div className="flex justify-between mb-0.5">
+                        <span style={{ color: T.label, fontSize: FONT.xs }}>{label}</span>
+                        <span style={{ color: val >= 80 ? T.white : T.body, fontSize: FONT.xs, fontWeight: 500 }}>{val}</span>
                       </div>
-                      <div className="h-1.5 rounded-full" style={{ background: BG.overlay }}>
-                        <div className="h-1.5 rounded-full transition-all duration-1000"
+                      <div className="h-1 rounded-full" style={{ background: BG.overlay }}>
+                        <div className="h-1 rounded-full transition-all duration-1000"
                           style={{ width: `${val}%`, background: val >= 80 ? "#fff" : "rgba(255,255,255,0.35)" }} />
                       </div>
                     </div>

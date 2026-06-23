@@ -14,6 +14,7 @@ import { generateDNA, findTopMatches } from "../utils/dna-engine";
 import { useAppStore } from "../store/app-store";
 
 import draftDB from "../data/2026-draft-database.json";
+import star13DDB from "../data/star-players-13d.json";
 
 /** Force-clean stale followed names that can't resolve in the 2026 draft DB */
 function cleanStaleFollows() {
@@ -76,15 +77,25 @@ export default function App() {
   const handleOnboardingComplete = useCallback((data: {
     selectedPosition: string;
     selectedStarPlayers: string[];
-    polishedType: "polished" | "upside";
   }) => {
+    // Build star body reference for body-layer matching
+    const selectedStars = data.selectedStarPlayers
+      .map((id: string) => (star13DDB as any[]).find((s: any) => s.id === id))
+      .filter(Boolean) as any[];
+    const starBodyRef = selectedStars.length > 0
+      ? {
+          height: Math.round(selectedStars.reduce((s: number, p: any) => s + (p.height || 200), 0) / selectedStars.length),
+          weight: Math.round(selectedStars.reduce((s: number, p: any) => s + (p.weight || 95), 0) / selectedStars.length),
+          wingspan: Math.round(selectedStars.reduce((s: number, p: any) => s + (p.wingspan || 210), 0) / selectedStars.length),
+        }
+      : undefined;
+
     const dna = generateDNA({
       selectedPosition: data.selectedPosition,
       selectedStarPlayerIds: data.selectedStarPlayers,
-      polishedType: data.polishedType,
     });
 
-    const matches = findTopMatches(dna.vector, draftDB, data.selectedPosition, 4);
+    const matches = findTopMatches(dna.vector, draftDB, data.selectedPosition, 4, starBodyRef);
 
     store.setDNA(dna, matches);
     store.setOnboardingComplete();
@@ -93,7 +104,6 @@ export default function App() {
     if (typeof window !== "undefined" && (window as any).gtag) {
       (window as any).gtag("event", "dna_generated", {
         position: data.selectedPosition,
-        polished_type: data.polishedType,
       });
     }
 

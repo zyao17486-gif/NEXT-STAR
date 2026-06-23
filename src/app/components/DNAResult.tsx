@@ -1,27 +1,26 @@
 import { motion } from "motion/react";
-import type { DNADimensions } from "../../utils/dna-engine";
+import type { DNADimension } from "../../utils/dna-engine";
+import { ATTR_13D_KEYS, ATTR_13D_LABELS } from "../../data/star-players";
 import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 interface DNAResultProps {
   onContinue: () => void;
   dnaData: {
-    dimensions: DNADimensions;
+    dimensions: Record<string, DNADimension>;
     description: string;
     positionProfile: string;
-    polishedType: "polished" | "upside";
   } | null;
 }
 
 export function DNAResult({ onContinue, dnaData }: DNAResultProps) {
-  // Build ordered dimension array for rendering
-  const DIMS = dnaData ? [
-    dnaData.dimensions.finishing,
-    dnaData.dimensions.shooting,
-    dnaData.dimensions.playmaking,
-    dnaData.dimensions.defense,
-    dnaData.dimensions.athleticism,
-    dnaData.dimensions.rebounding,
-  ] : [];
+  // Build ordered dimension array from 13D keys
+  const DIMS = dnaData
+    ? ATTR_13D_KEYS.map(k => dnaData.dimensions[k] || { label: ATTR_13D_LABELS[k], value: 50 })
+    : [];
+
+  // Loading skeleton labels
+  const LOADING_LABELS = ATTR_13D_KEYS.map(k => ATTR_13D_LABELS[k]);
+  const LOADING_WIDTHS = ["20%", "60%", "40%", "30%", "80%", "50%", "70%", "45%", "35%", "65%", "55%", "25%", "75%"];
 
   return (
     <div className="min-h-screen flex" style={{ background: BG.page, fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
@@ -37,21 +36,21 @@ export function DNAResult({ onContinue, dnaData }: DNAResultProps) {
           </h1>
 
           {/* Dynamic Dimensions */}
-          <div className="space-y-6 mb-12">
+          <div className="space-y-3 mb-12">
             {DIMS.map((d, i) => (
-              <motion.div key={d.label}
+              <motion.div key={ATTR_13D_KEYS[i]}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: "easeOut" }}>
-                <div className="flex justify-between mb-2">
-                  <span style={{ color: T.label, fontSize: FONT.base }}>{d.label}</span>
-                  <span style={{ color: T.white, fontSize: FONT.base, fontWeight: 500 }}>{d.value}</span>
+                transition={{ delay: 0.3 + i * 0.05, duration: 0.5, ease: "easeOut" }}>
+                <div className="flex justify-between mb-1.5">
+                  <span style={{ color: T.label, fontSize: FONT.xs }}>{d.label}</span>
+                  <span style={{ color: T.white, fontSize: FONT.xs, fontWeight: 500 }}>{d.value}</span>
                 </div>
                 <div className="h-px" style={{ background: BG.overlay }}>
                   <motion.div className="h-px" style={{ background: T.white }}
                     initial={{ width: 0 }}
                     animate={{ width: `${d.value}%` }}
-                    transition={{ delay: 0.5 + i * 0.1, duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }} />
+                    transition={{ delay: 0.3 + i * 0.05, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }} />
                 </div>
               </motion.div>
             ))}
@@ -59,17 +58,17 @@ export function DNAResult({ onContinue, dnaData }: DNAResultProps) {
 
           {/* Fallback if no data */}
           {!dnaData && (
-            <div className="space-y-6 mb-12">
-              {["终结能力", "投篮能力", "组织能力", "防守能力", "运动天赋", "篮板能力"].map((label, i) => (
+            <div className="space-y-3 mb-12">
+              {LOADING_LABELS.map((label, i) => (
                 <div key={label}>
-                  <div className="flex justify-between mb-2">
-                    <span style={{ color: "rgba(255,255,255,0.4)", fontSize: FONT.base }}>{label}</span>
-                    <span style={{ color: T.label, fontSize: FONT.base }}>计算中...</span>
+                  <div className="flex justify-between mb-1.5">
+                    <span style={{ color: "rgba(255,255,255,0.4)", fontSize: FONT.xs }}>{label}</span>
+                    <span style={{ color: T.label, fontSize: FONT.xs }}>计算中...</span>
                   </div>
                   <div className="h-px" style={{ background: BG.overlay }}>
                     <motion.div className="h-px" style={{ background: T.label }}
-                      animate={{ width: ["20%", "60%", "40%", "80%", "50%", "35%"][i] }}
-                      transition={{ delay: 0.3 + i * 0.15, duration: 1.5, repeat: Infinity, repeatType: "reverse" }} />
+                      animate={{ width: LOADING_WIDTHS[i % LOADING_WIDTHS.length] }}
+                      transition={{ delay: 0.3 + i * 0.08, duration: 1.5, repeat: Infinity, repeatType: "reverse" }} />
                   </div>
                 </div>
               ))}
@@ -91,7 +90,6 @@ export function DNAResult({ onContinue, dnaData }: DNAResultProps) {
           </motion.div>
         </motion.div>
       </div>
-
     </div>
   );
 }

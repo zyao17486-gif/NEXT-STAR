@@ -34,13 +34,13 @@ export const B = {
   divider:"1px solid rgba(255,255,255,0.05)" as const,
 };
 
-// ── Pie Chart ────────────────────────────────────────────────────────────
+// ── 13D Fused Pie Chart — 5 blended groups ──────────────────────────────
 export const PIE = {
-  finishing:   { light: "#2997ff", label: "终结" },
-  shooting:    { light: "#30d158", label: "投射能力" },
-  playmaking:  { light: "#ffd60a", label: "组织控运" },
-  defense:     { light: "#ff453a", label: "防守能力" },
-  rebounding:  { light: "#bf5af2", label: "篮板能力" },
+  inside:    { light: "#ff453a", label: "内线进攻" },   // 突破+篮下+背身
+  shooting:  { light: "#30d158", label: "投射" },       // 中投+三分
+  playmake:  { light: "#ffd60a", label: "组织控运" },   // 传球+控运
+  defense:   { light: "#2997ff", label: "防守" },       // 内防+外防+抢断+盖帽
+  physical:  { light: "#bf5af2", label: "身体篮板" },   // 身体+篮板
 };
 
 // ── Score Colors ─────────────────────────────────────────────────────────

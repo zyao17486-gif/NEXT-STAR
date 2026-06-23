@@ -79,17 +79,36 @@ function cosineSimilarity(a, b) {
   return denom === 0 ? 0 : dot / denom;
 }
 
+// ── 13D attribute keys (matches frontend) ──────────────────────────────────
+const ATTR_13D_KEYS = [
+  "身体", "突破", "篮下", "背身", "中投", "三分",
+  "传球", "控运", "内防", "外防", "抢断", "盖帽", "篮板",
+];
+
 /**
- * Convert attributes object → 5D number array
+ * Convert attributes object → 13D number array
+ * Supports both old 6D and new 13D attribute formats
  */
 function attrsToVector(attrs) {
+  // Primary path: new 13D Chinese keys
+  if (ATTR_13D_KEYS.some(k => k in attrs)) {
+    return ATTR_13D_KEYS.map(k => attrs[k] ?? 50);
+  }
+  // Fallback: LLM output uses English keys matching VECTOR_PROMPT
   return [
-    attrs.finishing,
-    attrs.shooting,
-    attrs.playmaking,
-    attrs.defense,
-    attrs.athleticism,
-    attrs.rebounding ?? 50,   // V2: 6D with rebounding
+    attrs.athleticism           ?? 50,  // 身体
+    attrs.driving               ?? 50,  // 突破
+    attrs.insideScoring         ?? 50,  // 篮下
+    attrs.postScoring           ?? 30,  // 背身
+    attrs.midRange              ?? 50,  // 中投
+    attrs.threePoint            ?? 50,  // 三分
+    attrs.passing               ?? 50,  // 传球
+    attrs.ballHandling          ?? 50,  // 控运
+    attrs.interiorDefense       ?? 50,  // 内防
+    attrs.perimeterDefense      ?? 50,  // 外防
+    attrs.steal                 ?? 50,  // 抢断
+    attrs.block                 ?? 50,  // 盖帽
+    attrs.rebounding            ?? 50,  // 篮板
   ];
 }
 
@@ -135,24 +154,32 @@ async function callDeepSeek(systemPrompt, userMessage, maxTokens = 1024) {
 }
 
 // ── Prompt 1: Query → 5D vector ──────────────────────────────────────────
-const VECTOR_PROMPT = `You are an NBA scouting data scientist. Convert any natural-language player query into a 6-dimensional attribute vector and a query description.
+const VECTOR_PROMPT = `You are an NBA scouting data scientist. Convert any natural-language player query into a 13-dimensional attribute vector and a query description.
 
-## The 6 dimensions (each 0–100):
-1. **finishing** — rim pressure, dunking, layup package, foul-drawing, interior scoring
-2. **shooting** — three-point range, midrange, free throws, shot mechanics, off-movement shooting
-3. **playmaking** — passing vision, pick-and-roll reads, assist generation, transition decision-making
-4. **defense** — on-ball defense, off-ball rotations, steals, blocks, defensive IQ, versatility
-5. **athleticism** — vertical explosiveness, lateral quickness, speed, strength, body control
-6. **rebounding** — offensive rebounding, defensive rebounding, box-out positioning, second-chance creation
+## The 13 dimensions (each 0-100, based on NBA 2K-style attributes):
+1. **athleticism** — 身体天赋：speed, vertical, strength, agility composite
+2. **driving** — 突破：face-up driving ability, first step, speed with ball
+3. **insideScoring** — 篮下终结：close shot, layup package, standing dunk
+4. **postScoring** — 背身进攻：post control, post fade, post hook
+5. **midRange** — 中投：mid-range shooting, pull-ups, turnaround jumpers
+6. **threePoint** — 三分：three-point shooting, off-movement shooting, range
+7. **passing** — 组织传球：pass accuracy, court vision, pick-and-roll reads
+8. **ballHandling** — 控运：ball handle, dribble moves, speed with ball
+9. **interiorDefense** — 内线防守：interior defense, rim protection help
+10. **perimeterDefense** — 外线防守：on-ball perimeter defense, screen navigation
+11. **steal** — 抢断：steals, passing lane disruption
+12. **block** — 盖帽：shot blocking, vertical contest
+13. **rebounding** — 篮板：offensive/defensive rebounding, box-out positioning
 
 ## Rules:
 - If the user mentions a specific NBA player, set the vector to match that player's known profile
 - If the user describes traits (e.g., "defensive stopper who can shoot"), translate directly
 - Be decisive — don't put everything at 50
+- 65 = NBA rotation-level (passable), 80 = elite, 90 = top-tier, 99 = all-time ceiling
 
 ## Output ONLY valid JSON (no markdown, no code fences):
 {
-  "vector": { "finishing": 85, "shooting": 70, "playmaking": 65, "defense": 75, "athleticism": 88, "rebounding": 55 },
+  "vector": { "athleticism": 82, "driving": 85, "insideScoring": 70, "postScoring": 35, "midRange": 88, "threePoint": 78, "passing": 72, "ballHandling": 80, "interiorDefense": 40, "perimeterDefense": 75, "steal": 70, "block": 30, "rebounding": 45 },
   "queryDescription": "One English sentence describing what the user is looking for",
   "comparedPlayer": "Jaylen Brown"
 }`;
@@ -216,12 +243,12 @@ app.post("/api/scout", checkRate, async (req, res) => {
     console.log(`   Description: ${queryDesc}`);
 
     // ── Blend with user DNA vector if provided ───────────────────────────
-    const hasDNA = dnaVector && Array.isArray(dnaVector) && dnaVector.length === 5;
+    const hasDNA = dnaVector && Array.isArray(dnaVector) && dnaVector.length >= 5;
     if (hasDNA) {
       console.log(`   🧬 Blending with user DNA: [${dnaVector.map(v => v.toFixed(0)).join(", ")}]`);
     }
 
-    // 70% query intent + 30% user DNA profile (when DNA is available) — 6D support
+    // 70% query intent + 30% user DNA profile (when DNA is available) — 13D support
     const finalVector = hasDNA
       ? queryVector.map((v, i) => Math.round(v * 0.7 + (dnaVector[i] ?? 50) * 0.3))
       : queryVector;
@@ -238,14 +265,8 @@ app.post("/api/scout", checkRate, async (req, res) => {
       const attrSim = cosineSimilarity(finalVector, playerVector);
 
       // Blend with embedding similarity for nuance (20% weight)
-      const embSim = cosineSimilarity(finalVector.slice(0, 6), player.embedding.slice(0, 6));
-      let combinedScore = attrSim * 0.8 + embSim * 0.2;
-
-      // V2: position-weighted bonus (15% for matching positions, was position filter)
-      const playerPositions = player.positions || [player.position];
-      const positionBonus = 0.15; // 15% boost for same-position
-      // The position is derived from the query — if the query implies a position, boost it
-      // For now, we apply a mild boost based on positional attribute patterns.
+      const embSim = cosineSimilarity(finalVector.slice(0, 10), player.embedding.slice(0, 10));
+      const combinedScore = attrSim * 0.8 + embSim * 0.2;
 
       return { player, score: Math.round(combinedScore * 100), rawScore: combinedScore };
     });
@@ -329,7 +350,7 @@ app.post("/api/scout/quick", checkRate, async (req, res) => {
 
     const scored = PLAYER_DB.map((player) => {
       const playerVector = attrsToVector(player.attributes);
-      const embSim = cosineSimilarity(finalVector.slice(0, 6), player.embedding.slice(0, 6));
+      const embSim = cosineSimilarity(finalVector.slice(0, 10), player.embedding.slice(0, 10));
       const score = Math.round((cosineSimilarity(finalVector, playerVector) * 0.8 + embSim * 0.2) * 100);
       return { id: player.id, name: player.name, position: player.position, team: player.team, score };
     });
