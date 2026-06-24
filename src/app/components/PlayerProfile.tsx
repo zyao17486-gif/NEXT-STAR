@@ -385,9 +385,18 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
   const physical = fused.find(g => g.key === "physical")!;
   const pieGroups = fused.filter(g => g.key !== "physical");
 
-  const pieData = pieGroups.map(g => ({
+  // Amplify + spread: top 3 boosted, bottom 2 suppressed for visual contrast
+  const rawAmplified = pieGroups.map(g => ({
     ...g,
     amplified: Math.pow(g.value, CONTRAST_EXPONENT),
+  }));
+  const sortedByValue = [...rawAmplified].sort((a, b) => b.value - a.value);
+  const top3Keys = new Set(sortedByValue.slice(0, 3).map(g => g.key));
+  const BOOST = 1.2;
+  const SUPPRESS = 0.75;
+  const pieData = rawAmplified.map(g => ({
+    ...g,
+    amplified: top3Keys.has(g.key) ? g.amplified * BOOST : g.amplified * SUPPRESS,
   }));
 
   const maxOrig = Math.max(...pieGroups.map(g => g.value));
