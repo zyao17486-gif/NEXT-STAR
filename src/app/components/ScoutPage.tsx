@@ -103,7 +103,7 @@ function AIResultCard({
     >
       <button
         onClick={() => onSelectPlayer(rec.name)}
-        className="w-full text-left px-6 py-5 transition-colors duration-150 hover:bg-white/[0.04]"
+        className="w-full text-left px-6 py-5 transition-colors duration-150"
         style={{ background: BG.card, borderBottom: B.divider }}
       >
         {/* Top row: info + score */}
@@ -287,10 +287,10 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
     <div style={{ fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
       {/* Header */}
       <div className="mb-10">
-        <h1 style={{ color: T.white, fontSize: "clamp(32px, 3.5vw, 52px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1, marginBottom: "6px" }}>
+        <h1 style={{ color: T.white, fontSize: "clamp(32px, 3.5vw, 52px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1, marginBottom: "8px" }}>
           球探台
         </h1>
-        <p style={{ color: T.dim, fontSize: FONT.lg }}>
+        <p style={{ color: T.label, fontSize: FONT.base }}>
           {aiMode ? "用自然语言描述你想要的球员类型，AI 为你推荐" : "搜寻 NCAA 潜力股、高中明日之星与国际新秀"}
         </p>
       </div>
@@ -299,7 +299,7 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
       <div className="flex flex-wrap gap-3 mb-5">
         {/* Search input */}
         <div
-          className="flex items-center gap-3 px-5 py-3.5 rounded-2xl flex-1 min-w-[200px]"
+          className="flex items-center gap-3 px-5 py-3 rounded-xl flex-1 min-w-[200px]"
           style={{ background: BG.card, border: aiMode ? "1px solid rgba(255,215,0,0.3)" : B.subtle, transition: "border-color 0.3s" }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -336,11 +336,12 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
         <button
           data-tour="ai-toggle"
           onClick={toggleAiMode}
-          className="shrink-0 flex items-center gap-2 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200"
+          className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-all duration-200"
           style={{
             background: aiMode ? "rgba(255,215,0,0.12)" : BG.hover,
             border: aiMode ? "1px solid rgba(255,215,0,0.35)" : B.subtle,
             color: aiMode ? T.accent : T.dim,
+            fontSize: FONT.base,
           }}
         >
           {/* Sparkle icon */}
@@ -359,8 +360,8 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
           <button
             onClick={() => runAISearch(query)}
             disabled={isSearching}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-40"
-            style={{ background: T.accent, color: BG.page }}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-40"
+            style={{ background: T.accent, color: BG.page, fontSize: FONT.base }}
           >
             {isSearching ? "分析中…" : "⚡ AI 分析"}
           </button>

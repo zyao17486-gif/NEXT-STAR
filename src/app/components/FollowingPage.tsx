@@ -42,10 +42,10 @@ export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: Foll
     <div style={{ fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
       {/* Header */}
       <div className="mb-10">
-        <h1 style={{ color: T.white, fontSize: "clamp(32px, 3.5vw, 52px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1, marginBottom: "6px" }}>
+        <h1 style={{ color: T.white, fontSize: "clamp(32px, 3.5vw, 52px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1, marginBottom: "8px" }}>
           关注
         </h1>
-        <p style={{ color: T.label, fontSize: FONT.lg }}>
+        <p style={{ color: T.label, fontSize: FONT.base }}>
           {followedList.length > 0
             ? `你正在关注 ${followedList.length} 位球员`
             : "还没有关注任何球员"}
@@ -86,20 +86,20 @@ export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: Foll
                 <button onClick={() => onSelectPlayer(p.name)} className="w-full text-left">
                   {/* Rank badge */}
                   <div className="mb-3">
-                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold"
-                      style={{ background: BG.overlay, color: T.body }}>
-                      #{p.rank}
+                    <span className="px-2.5 py-1 rounded-full font-semibold"
+                      style={{ background: BG.overlay, color: T.label, fontSize: FONT.xs, letterSpacing: "0.04em" }}>
+                      NO. {p.rank}
                     </span>
                   </div>
                   {/* Name */}
-                  <div style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, marginBottom: "4px" }}>{p.name}</div>
+                  <div style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, marginBottom: "4px", lineHeight: 1.3 }}>{p.name}</div>
                   <div style={{ color: T.hint, fontSize: FONT.sm, marginBottom: "8px", fontFamily: "'Inter', sans-serif" }}>
                     {p.en !== p.name ? p.en : ""}
                   </div>
                   {/* Meta */}
-                  <div style={{ color: T.body, fontSize: FONT.sm }}>{p.pos} · {p.school}</div>
+                  <div style={{ color: T.dim, fontSize: FONT.sm }}>{p.pos} · {p.school}</div>
                   {p.projection && p.projection !== "2026 NBA Draft" && (
-                    <div style={{ color: T.label, fontSize: FONT.sm, marginTop: "4px" }}>{p.projection}</div>
+                    <div style={{ color: T.label, fontSize: FONT.xs, marginTop: "4px" }}>{p.projection}</div>
                   )}
                 </button>
 

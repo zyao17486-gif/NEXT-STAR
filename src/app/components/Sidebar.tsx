@@ -87,23 +87,15 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
         <div className="h-px mx-3 my-3" style={{ background: "rgba(255,255,255,0.04)" }} />
 
         <button onClick={() => setShowResetConfirm(true)}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-white/[0.03] mb-3"
-          style={{ color: T.hint, fontSize: FONT.xs }}>
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-            <path d="M1.5 6.5a5 5 0 108.5-4.2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M10 2.3H8v2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-white/[0.04] mb-3"
+          style={{ border: B.subtle }}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8a6 6 0 1010-5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 3H9.5v2.5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          重置全部
+          <span style={{ color: T.label, fontSize: FONT.base }}>重置全部</span>
         </button>
 
-        {/* Profile */}
-        <div className="flex items-center gap-3">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center"
-            style={{ background: BG.overlay, border: "1px solid rgba(255,255,255,0.1)" }}>
-            <span style={{ color: T.white, fontSize: FONT.xs, fontWeight: 600 }}>我</span>
-          </div>
-          <span style={{ color: T.dim, fontSize: FONT.base }}>我的账户</span>
-        </div>
       </div>
 
       {/* ── Reset confirmation modal ── */}

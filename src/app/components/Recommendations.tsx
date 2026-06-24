@@ -49,14 +49,14 @@ export function Recommendations({
       {/* Header */}
       <div className="px-8 lg:px-20 pt-20 pb-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <p style={{ color: T.dim, fontSize: FONT.sm, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "16px" }}>
+          <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "16px" }}>
             {hasData ? "算法专属推荐" : "专属推荐"}
           </p>
           <div className="flex items-end justify-between flex-wrap gap-4">
             <div>
               <h1 style={{ color: T.white, fontSize: "clamp(40px, 5vw, 72px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1 }}>
-                {hasData ? "你的下一批" : "你的下一批"}<br />
-                <span style={{ color: T.label }}>明日之星</span>
+                {hasData ? "专属你的" : "专属你的"}<br />
+                <span style={{ color: T.white }}>球员推荐</span>
               </h1>
               {dnaData && (
                 <div className="flex items-center gap-2 mt-3">
@@ -77,7 +77,7 @@ export function Recommendations({
       </div>
 
       {/* Cards grid */}
-      <div className="px-8 lg:px-20 pb-20 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="px-8 lg:px-20 pb-20 grid grid-cols-2 lg:grid-cols-3 gap-6">
         {hasData ? (
           recommendations.map((p, i) => {
             // Check both English and Chinese name variants
@@ -91,7 +91,7 @@ export function Recommendations({
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.15, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="rounded-3xl overflow-hidden"
+                className="rounded-2xl overflow-hidden"
                 style={{ background: BG.card, border: B.card }}>
 
                 {/* Header: rank badge + polished badge */}
@@ -178,12 +178,12 @@ export function Recommendations({
             <motion.div
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="lg:col-span-3 flex flex-col items-center justify-center py-24"
-              style={{ background: BG.card, borderRadius: "24px" }}>
-              <div style={{ color: T.label, fontSize: "18px", marginBottom: "8px" }}>
+              className="lg:col-span-3 flex flex-col items-center justify-center py-24 rounded-2xl"
+              style={{ background: BG.card, border: B.card }}>
+              <div style={{ color: T.label, fontSize: FONT.lg, marginBottom: "8px" }}>
                 正在计算你的专属推荐...
               </div>
-              <div style={{ color: "rgba(255,255,255,0.15)", fontSize: "14px" }}>
+              <div style={{ color: T.ghost, fontSize: FONT.base }}>
                 请稍候，算法正在为你匹配最佳球员
               </div>
             </motion.div>

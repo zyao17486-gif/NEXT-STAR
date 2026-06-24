@@ -20,13 +20,13 @@ export function ArticlePage({ title, source, url, content, time, onBack }: Artic
       </button>
 
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-10">
         <div className="flex items-center gap-3 mb-4">
-          <span style={{ color: T.label, fontSize: FONT.base }}>{source}</span>
-          <span style={{ color: "rgba(255,255,255,0.15)", fontSize: FONT.base }}>·</span>
-          <span style={{ color: T.hint, fontSize: FONT.base }}>{time}</span>
+          <span style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.06em" }}>{source}</span>
+          <span style={{ color: T.ghost, fontSize: FONT.xs }}>·</span>
+          <span style={{ color: T.hint, fontSize: FONT.xs }}>{time}</span>
         </div>
-        <h1 style={{ color: T.white, fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.25 }}>
+        <h1 style={{ color: T.white, fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.3 }}>
           {title}
         </h1>
       </div>
@@ -34,17 +34,17 @@ export function ArticlePage({ title, source, url, content, time, onBack }: Artic
       {/* Body */}
       <div className="max-w-2xl mb-12">
         {content.split(/\n\n+/).map((para, i) => (
-          <p key={i} style={{ color: T.hero, fontSize: FONT.xl, lineHeight: 2, marginBottom: "20px" }}>
+          <p key={i} style={{ color: T.hero, fontSize: FONT.xl, lineHeight: 1.9, marginBottom: "24px" }}>
             {para.trim()}
           </p>
         ))}
-        <p style={{ color: T.label, fontSize: FONT.xl, lineHeight: 2, marginTop: "24px" }}>
+        <p style={{ color: T.label, fontSize: FONT.base, lineHeight: 1.8, marginTop: "32px" }}>
           本文翻译自 {source} 报道，内容经整理编辑。原文请查阅下方链接。
         </p>
       </div>
 
       {/* Original link */}
-      <div className="pt-6" style={{ borderTop: B.card }}>
+      <div className="pt-6" style={{ borderTop: B.divider }}>
         <a href={url} target="_blank" rel="noopener noreferrer"
           className="inline-flex items-center gap-2 transition-opacity hover:opacity-60"
           style={{ color: T.dim, fontSize: FONT.md, textDecoration: "none" }}>

@@ -64,7 +64,10 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section className="mb-16">
       <div className="flex items-center justify-between mb-6">
-        <h2 style={{ color: T.white, fontSize: "20px", fontWeight: 600, letterSpacing: "-0.01em" }}>{title}</h2>
+        <h2 className="flex items-center gap-2.5" style={{ color: T.white, fontSize: "18px", fontWeight: 600, letterSpacing: "-0.01em" }}>
+          <span className="inline-block w-0.5 h-4 rounded-full shrink-0" style={{ background: T.white }} />
+          {title}
+        </h2>
       </div>
       {children}
     </section>
@@ -91,15 +94,14 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
     <div style={{ fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
 
       {/* ── Page header ── */}
-      <div className="mb-12">
-        <p style={{ color: T.dim, fontSize: FONT.base, marginBottom: "8px" }}>{dateStr}</p>
+      <div className="mb-14">
+        <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>{dateStr}</p>
         <h1 style={{ color: T.white, fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.15 }}>
           欢迎回来
-          <br />
-          <span style={{ color: T.dim, fontSize: "clamp(16px, 1.6vw, 22px)", fontWeight: 500, letterSpacing: "-0.01em" }}>
-            距2026年NBA选秀日还有{daysLeft}天
-          </span>
         </h1>
+        <p style={{ color: T.dim, fontSize: FONT.base, marginTop: "6px" }}>
+          距2026年NBA选秀日还有{daysLeft}天
+        </p>
       </div>
 
       {/* ── My Prospects (followed only) ── */}
@@ -123,15 +125,15 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
                   transition={{ delay: i * 0.05 }}
                   onClick={() => onNavigate("player", { name: p.name })}
                   className="group shrink-0 rounded-2xl p-5 transition-all duration-200 hover:bg-white/[0.03]"
-                  style={{ width: "180px", background: BG.card, border: B.card }}>
+                  style={{ width: "200px", background: BG.card, border: B.card }}>
                   {/* Draft rank */}
                   <div className="mb-3">
-                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold"
-                      style={{ background: BG.overlay, color: T.body }}>
-                      #{p.rank}
+                    <span className="px-2.5 py-1 rounded-full text-xs font-semibold"
+                      style={{ background: BG.overlay, color: T.label, letterSpacing: "0.04em" }}>
+                      NO. {p.rank}
                     </span>
                   </div>
-                  <div style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, marginBottom: "4px" }}>
+                  <div style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, marginBottom: "4px", lineHeight: 1.3 }}>
                     {(p as any).nameCn || p.name}
                   </div>
                   <div style={{ color: T.dim, fontSize: FONT.sm, fontFamily: "'Inter', sans-serif" }}>
@@ -150,29 +152,29 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
         {/* Feed + Videos */}
         <div>
           <Section title="球员热度">
-            <div className="space-y-px" style={{ borderRadius: "16px", overflow: "hidden", border: B.card }}>
+            <div className="rounded-2xl overflow-hidden" style={{ border: B.card }}>
               {FEED.map((item, i) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.1 + i * 0.06 }}
-                  className="p-5 group transition-colors duration-150"
+                  className="p-6 group transition-colors duration-150"
                   style={{ background: BG.card, borderBottom: i < FEED.length - 1 ? B.divider : "none" }}>
                   {/* Source + time */}
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span style={{ color: T.dim, fontSize: FONT.sm }}>{item.source}</span>
-                    <span style={{ color: T.ghost, fontSize: FONT.xs, flexShrink: 0 }}>{item.time}</span>
+                  <div className="flex items-center justify-between mb-3">
+                    <span style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.06em" }}>{item.source}</span>
+                    <span style={{ color: T.hint, fontSize: FONT.xs, flexShrink: 0 }}>{item.time}</span>
                   </div>
                   {/* Article title — in-app page */}
                   <button
                     onClick={() => onNavigate("article", { title: item.title, source: item.source, url: item.url, content: item.content, time: item.time, from: "home" })}
-                    className="text-left block mb-2 transition-opacity group-hover:opacity-80"
-                    style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, lineHeight: 1.4 }}>
+                    className="text-left block mb-2.5 transition-opacity group-hover:opacity-80"
+                    style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, lineHeight: 1.45 }}>
                     {item.title}
                   </button>
                   {/* Subtitle — one-line summary */}
-                  <p style={{ color: T.body, fontSize: FONT.base, lineHeight: 1.6 }}>{(item as any).subtitle || item.content.slice(0, 60) + "…"}</p>
+                  <p style={{ color: T.body, fontSize: FONT.base, lineHeight: 1.65 }}>{(item as any).subtitle || item.content.slice(0, 60) + "…"}</p>
                   {/* Heat */}
                   <div className="mt-4" onClick={e => e.stopPropagation()}>
                     <button
@@ -181,15 +183,15 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
                         n.has(item.id) ? n.delete(item.id) : n.add(item.id);
                         return n;
                       })}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-200"
                       style={{
                         background: liked.has(item.id) ? BG.overlay : "transparent",
                         border: B.subtle,
                         color: liked.has(item.id) ? T.white : T.dim,
-                        fontSize: FONT.base,
+                        fontSize: FONT.sm,
                       }}>
                       🔥
-                      <span style={{ fontSize: FONT.sm }}>{item.likes + (liked.has(item.id) ? 1 : 0)}</span>
+                      <span style={{ fontSize: FONT.xs }}>{item.likes + (liked.has(item.id) ? 1 : 0)}</span>
                     </button>
                   </div>
                 </motion.div>

@@ -127,10 +127,10 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                         <div className="flex flex-col gap-2.5">
                           {Object.entries(POSITION_LABELS).map(([code, label]) => (
                             <button key={code} onClick={() => setSelectedPosition(code)}
-                              className="flex items-center justify-between p-5 rounded-2xl text-left transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                              className="flex items-center justify-between p-5 rounded-xl text-left transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
                               style={{
-                                background: BG.subtle,
-                                border: "1px solid rgba(255,255,255,0.07)",
+                                background: BG.card,
+                                border: B.subtle,
                               }}>
                               <div style={{ color: T.white, fontSize: "18px", fontWeight: 600 }}>{label}</div>
                               <div className="w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-200"
@@ -163,10 +163,10 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                             const sel = selectedStarPlayers.includes(p.id);
                             return (
                               <button key={p.id} onClick={() => setSelectedStarPlayers(sel ? [] : [p.id])}
-                                className="text-left p-4 rounded-2xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                className="text-left p-4 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                                 style={{
-                                  background: sel ? BG.overlay : BG.hover,
-                                  border: sel ? "1px solid rgba(255,255,255,0.4)" : B.subtle,
+                                  background: sel ? BG.overlay : BG.card,
+                                  border: sel ? B.visible : B.subtle,
                                 }}>
                                 <div style={{ color: T.label, fontSize: FONT.xs, marginBottom: "4px" }}>{p.en}</div>
                                 <div style={{ color: sel ? T.white : T.body, fontSize: FONT.md, fontWeight: 500 }}>{p.name}</div>
@@ -191,10 +191,10 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
 
                     <div className="flex flex-col gap-3">
                       <button onClick={() => setPolishedType("polished")}
-                        className="text-left p-6 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                        className="text-left p-6 rounded-xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
                         style={{
-                          background: polishedType === "polished" ? "rgba(41,151,255,0.12)" : BG.subtle,
-                          border: polishedType === "polished" ? "1px solid #2997ff" : "1px solid rgba(255,255,255,0.07)",
+                          background: polishedType === "polished" ? "rgba(41,151,255,0.12)" : BG.card,
+                          border: polishedType === "polished" ? "1px solid #2997ff" : B.subtle,
                         }}>
                         <div className="flex items-center gap-3 mb-2">
                           <span style={{ fontSize: "24px" }}>⚡</span>
@@ -206,10 +206,10 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                       </button>
 
                       <button onClick={() => setPolishedType("raw")}
-                        className="text-left p-6 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                        className="text-left p-6 rounded-xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
                         style={{
-                          background: polishedType === "raw" ? "rgba(191,90,242,0.12)" : BG.subtle,
-                          border: polishedType === "raw" ? "1px solid #bf5af2" : "1px solid rgba(255,255,255,0.07)",
+                          background: polishedType === "raw" ? "rgba(191,90,242,0.12)" : BG.card,
+                          border: polishedType === "raw" ? "1px solid #bf5af2" : B.subtle,
                         }}>
                         <div className="flex items-center gap-3 mb-2">
                           <span style={{ fontSize: "24px" }}>💎</span>

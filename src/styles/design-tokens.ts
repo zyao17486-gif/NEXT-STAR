@@ -4,12 +4,12 @@
 // ── Text ────────────────────────────────────────────────────────────────
 export const T = {
   white:   "#fff" as const,
-  hero:    "rgba(255,255,255,0.65)" as const,   // 综述正文
-  body:    "rgba(255,255,255,0.55)" as const,    // 常规文字
-  label:   "rgba(255,255,255,0.5)" as const,     // 标签、副标题
-  dim:     "rgba(255,255,255,0.35)" as const,    // 弱化文字
-  hint:    "rgba(255,255,255,0.25)" as const,    // 提示/占位
-  ghost:   "rgba(255,255,255,0.2)" as const,     // 最弱文字、空状态
+  hero:    "rgba(255,255,255,0.70)" as const,   // 综述正文
+  body:    "rgba(255,255,255,0.50)" as const,    // 常规文字
+  label:   "rgba(255,255,255,0.42)" as const,    // 标签、副标题
+  dim:     "rgba(255,255,255,0.30)" as const,    // 弱化文字
+  hint:    "rgba(255,255,255,0.22)" as const,    // 提示/占位
+  ghost:   "rgba(255,255,255,0.15)" as const,    // 最弱文字、空状态
   accent:  "#ffd60a" as const,                   // AI/高亮黄
   danger:  "#ff453a" as const,                   // 风险/删除红
   success: "#30d158" as const,                   // 优势/通过绿
@@ -27,11 +27,11 @@ export const BG = {
 
 // ── Border ───────────────────────────────────────────────────────────────
 export const B = {
-  card:   "1px solid rgba(255,255,255,0.06)" as const,
-  subtle: "1px solid rgba(255,255,255,0.08)" as const,
-  visible:"1px solid rgba(255,255,255,0.12)" as const,
+  card:   "1px solid rgba(255,255,255,0.08)" as const,
+  subtle: "1px solid rgba(255,255,255,0.10)" as const,
+  visible:"1px solid rgba(255,255,255,0.14)" as const,
   active: "1px solid rgba(255,255,255,0.35)" as const,
-  divider:"1px solid rgba(255,255,255,0.05)" as const,
+  divider:"1px solid rgba(255,255,255,0.06)" as const,
 };
 
 // ── 13D Fused Pie Chart — 5 blended groups ──────────────────────────────
@@ -54,11 +54,11 @@ export const SCORE = {
 // ── Typography Scale ─────────────────────────────────────────────────────
 export const FONT = {
   xs:   "11px" as const,
-  sm:   "12px" as const,
-  base: "13px" as const,
-  md:   "14px" as const,
-  lg:   "15px" as const,
-  xl:   "16px" as const,
+  sm:   "13px" as const,
+  base: "14px" as const,
+  md:   "15px" as const,
+  lg:   "16px" as const,
+  xl:   "18px" as const,
 };
 
 // ── Spacing ──────────────────────────────────────────────────────────────

@@ -4,63 +4,101 @@
 
 ---
 
-## 2026-06-24 — Session 12 · 端到端实测 + VECTOR_PROMPT 调优 + 中文名解析修复
+## 2026-06-24 — Session 12 · 端到端实测 + VECTOR_PROMPT 调优 + UI 全面优化
 
 ### 做了什么
-- **端到端实测**（Session 10-11 遗留待办 #1）：
-  - 启动前后端，验证完整链路：前端 Vite → 后端 Express → DeepSeek API
-  - 前端 `vite build` 编译通过（1117 modules, 2.46s）
-  - 后端 36 球员加载，DeepSeek 连接正常
-  - 13D 匹配引擎验证：测试 SGA / Giannis / Jokic / Curry / LeBron / AD / Wemby 共 7 种球员原型 → 全部产出合理匹配
-  - 三层匹配（50/25/25）在不同位置/体型间有明显区分度
-  - NaN bug（Session 11 🔴）确认已修复：36 名球员全量测试 0 个 NaN
-- **VECTOR_PROMPT 调优**（Session 10-11 遗留待办 #2）：
-  - 英文名输入：向量精准（Giannis: athleticism=99/driving=96/threePoint=40/block=88 ✅）
-  - 中文全名输入：勒布朗·詹姆斯 ≈ LeBron James ✅
-  - ❌ **中文简称识别失败**：`亚历山大` → Paul George（应为 SGA）、`扬尼斯` → 全 99 退化
-  - **根因**：DeepSeek 对中文简称的 NBA 球员识别不可靠
-  - **修复**：新增 `resolveQuery()` 预处理函数 + 31 个中文名别名映射表，将已知中文简称替换为英文全名后再发给 LLM
-  - 修复后：扬尼斯 → Giannis 级别向量（threePoint=35/block=88 ✅），约基奇 → elite passing=99/post=99 ✅
-- **.env 创建**：`VITE_API_URL=http://localhost:3001`，前端本地开发可连通后端
 
-### 测试结果汇总
+#### 1. 端到端实测 + VECTOR_PROMPT 调优
+- 前后端全链路验证：Vite build ✅ / Express + DeepSeek ✅ / 客户端匹配引擎 ✅
+- NaN bug 确认修复（36 人全量 0 NaN）
+- **中文名简称识别修复**：DeepSeek 对"亚历山大""扬尼斯"等简称识别不准
+  - 新增 `resolveQuery()` + 31 个中文名→英文名映射
+  - 修复后中文简称向量与英文直输一致（扬尼斯 threePoint=35 ✅）
+- 创建 `.env`：`VITE_API_URL=http://localhost:3001`
 
-| 输入 | 向量质量 | 匹配 Top 1 | 评分 |
-|------|---------|-----------|------|
-| Giannis EN | 99/95/97/70/55/40/… | Hannes Steinbach (C) | ✅ 完美 |
-| 扬尼斯 CN (修复后) | 99/95/95/80/60/35/… | Hannes Steinbach (C) | ✅ 完美 |
-| 亚历山大 CN (修复后) | 82/92/85/70/88/78/… | Darryn Peterson (SG) | ✅ 合理 |
-| 约基奇 CN (修复后) | 60/70/95/99/90/78/… | Cameron Boozer (PF) | ✅ 完美 |
-| 浓眉 CN (修复后) | 88/72/92/85/82/72/… | — | ✅ 合理 |
-| 库里 CN (修复后) | 75/80/65/30/95/99/… | Labaron Philon Jr. (PG) | ✅ 完美 |
+#### 2. 13D → 6 组融合展示
+- 提取共享 `fuse13Dto5()` 到 `dna-engine.ts`（PlayerProfile 去重）
+- **DNAResult**：13 条 1px 细线 → 6 组彩色柱状图，去数值去小字，颜色互换
+- **Recommendations**：13 条排序细条 → 6 组固定顺序柱状图，去匹配度%，去数值
+- **PlayerProfile**：子维度明细删除，只保留融合组数值
+- 颜色方案：终结蓝(#2997ff) / 投射绿(#30d158) / 组织黄(#ffd60a) / 防守红(#ff453a) / 身体白(#fff) / 篮板紫(#bf5af2)
 
-### 匹配引擎验证（客户端 13D 三层匹配）
+#### 3. 饼图格式定版
+- 饼图 5 组 donut（终结/投射/组织/防守/篮板）
+- **身体天赋**独立白色渐变横条 + 发光阴影，h-1.5
+- Math.pow(value, 1.8) 非线性对比度放大
+- 主导扇区发光描边
+- ⚠️ 此格式以后别改（已写入 memory）
 
-| 球星原型 | 排名 1 | 排名 2 | 排名 3 | 区分度 |
-|---------|--------|--------|--------|--------|
-| SGA (PG, 198cm) | Peterson SG 99% | de Larrea PG 97% | M. Brown PG 94% | ✅ |
-| Giannis (PF, 211cm) | Cenac C 99% | M. Johnson PF 95% | Veesaar C 95% | ✅ |
-| Jokic (C, 211cm) | Steinbach C 93% | Cenac C 92% | Veesaar C 92% | ⚠️ |
-| Curry (PG, 188cm) | Philon PG 99% | Flemings PG 98% | Anderson PG 98% | ⚠️ |
+#### 4. 即战力/潜力股恢复
+- Onboarding 恢复 3 步流程：Step 0 欢迎 → Step 1 位置+球星 → Step 2 即战力/潜力股
+- **推荐加成**：偏好匹配 +4 分（`findTopMatches` 新增 `polishedType` 参数）
+- **潜力股保底**：Top 4 至少塞 1 个 `isPolished=false` 球员
+- **推荐页标签**：卡片显示「即战力」（黄）/「潜力股」（蓝），无图标
+- 进度条去步骤标签防"乱入"
 
-⚠️ Jokic/Curry 顶层匹配分数集中在 90%+，区分度不足——因 13D 余弦相似度对同位置球员天然高度相似。身体层的 25% 是主要区分因子。
+#### 5. 主页优化
+- 关注球员卡片加 ⚡即战力 / 💎潜力股标签（后移到推荐页）
+- 最终：主页卡片干净，标签只在推荐页显示
+
+#### 6. 球星库扩展
+- +保罗·班切罗（PF, 208cm/113kg, Point Forward）
+- 36 → 37 人
 
 ### 关键决策
-- **中文名预处理优于 Prompt 调优**：DeepSeek 天然更懂英文名，在请求前替换比在 Prompt 里教它识别中文简称更可靠
-- **31 个别名映射覆盖主流球星**：PG → C 全覆盖，后续按需扩展
-- **保留原始查询在日志中**：`resolveQuery()` 返回 `{llmQuery, originalQuery}`，用户可见的描述仍用原始中文
-- **embedding 10D vs 13D 属性向量的语义错配**：暂时接受（仅 20% 权重），待 V3 重构时统一为 13D embedding
+- 用户展示 6 组融合，13D 数据库 + 匹配引擎不变
+- 即战力标签铆定新秀库，偏好只做轻量加成（+4分）
+- 饼图格式定版，身体独立展示
+- 中文名用预处理替换而非 Prompt 调优（更可靠）
 
 ### 改动文件
-- `server/index.js` — 新增 `CN_NAME_ALIASES`（31 个映射）+ `resolveQuery()`；更新 `/api/scout` 和 `/api/scout/quick` 使用解析后的查询
-- `.env` — **新建**，`VITE_API_URL=http://localhost:3001`（本地开发）
-- `SESSION_LOG.md` — 本条目
+- `src/utils/dna-engine.ts` — +`FusedGroup`、`fuse13Dto5()`、`polishedType` 参数、潜力股保底
+- `src/app/components/DNAResult.tsx` — 13D→6 组柱状图重写
+- `src/app/components/Recommendations.tsx` — 去匹配度、去数值、固定顺序、+标签
+- `src/app/components/Onboarding.tsx` — +Step 2 即战力/潜力股、进度条简化
+- `src/app/components/PlayerProfile.tsx` — 去子维度、身体独立横条、饼图定版
+- `src/app/components/HomePage.tsx` — 即战力/潜力股标签（后移走）
+- `src/app/App.tsx` — 传递 `polishedType`
+- `src/data/star-players-13d.json` — +班切罗
+- `server/index.js` — +`CN_NAME_ALIASES`(31)、+`resolveQuery()`
+- `.env` — 新建（本地开发）
+
+### 提交记录
+```
+9146cc1 fix: 身体横条收窄 h-3→h-1.5
+ecf79bd fix: 身体天赋从饼图独立，白色渐变横条+发光展示
+640cd40 fix: 球员详情能力特征去子维度明细，只保留融合组数值
+21c004b fix: 推荐页保底1潜力股 + Onboarding进度条去标签防乱入
+e846744 fix: 即战力/潜力股标签从主页移到推荐页，蓝潜力黄即战无图标
+c7328c1 Session 12: 5D展示 + 即战力/潜力股恢复 + 班切罗 + UI精简
+```
+
+### 架构
+```
+匹配引擎 (V3):
+  用户选球星 → 13D 向量平均 → DNA
+       │
+       ├── 50% 13D 余弦相似度
+       ├── 25% 位置匹配
+       ├── 25% 身体匹配
+       └── +4 分即战力/潜力股偏好加成
+       │
+       ▼
+  综合排名 + 潜力股保底(≥1)
+
+用户展示 (6 组融合):
+  终结(蓝) / 投射(绿) / 组织(黄) / 防守(红) / 身体(白·独立横条) / 篮板(紫)
+
+饼图 donut: 5 组 (不含身体)
+  身体: 独立白色渐变横条 + 发光阴影
+```
 
 ### 待办
-- [ ] 13D 匹配区分度优化：顶层候选分数过于集中（90%+），考虑引入方差放大或非线性评分
-- [ ] 10D embedding 升级为 13D：重新生成语义 embedding 与属性维度对齐
-- [ ] 属性数据库质量审计（Session 9 遗留，已在 Session 12 部分验证——13D 向量基本合理）
-- [ ] 前端 Onboarding → DNA → 匹配完整 UI 流程实测（需浏览器打开）
+- [ ] 13D 匹配区分度优化（顶层分数集中 90%+）
+- [ ] 10D embedding 升级为 13D
+- [ ] 属性数据库质量审计（7/36 已验证）
+- [ ] 用户测试（5-10 人）
+- [ ] AI PM 产出包
 
 ---
 

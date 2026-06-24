@@ -593,12 +593,15 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
         style={{ background: BG.card, border: B.card, display: "inline-flex" }}>
         {TABS.map((t, i) => (
           <button key={t} onClick={() => setTab(i)}
-            className="px-5 py-2 rounded-lg text-sm transition-all duration-200"
+            className="px-5 py-2.5 rounded-lg transition-all duration-200 flex items-center gap-2"
             style={{
               background: tab === i ? BG.overlay : "transparent",
-              color: tab === i ? T.white : T.body,
+              color: tab === i ? T.white : T.dim,
               fontWeight: tab === i ? 600 : 400,
+              fontSize: FONT.base,
             }}>
+            <span className="inline-block w-0.5 h-2.5 rounded-full shrink-0"
+              style={{ background: tab === i ? T.white : "transparent" }} />
             {t}
           </button>
         ))}
@@ -612,7 +615,7 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
           <div className="space-y-6">
             {/* 1. 能力特征饼图 — 全宽，先给直觉 */}
             <div className="p-6 rounded-2xl" style={{ background: BG.card, border: B.card }}>
-              <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "16px" }}>能力特征</p>
+              <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "20px" }}>能力特征</p>
               <SkillChart slices={player.pie} />
             </div>
 
