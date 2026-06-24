@@ -4,6 +4,66 @@
 
 ---
 
+## 2026-06-24 — Session 12 · 端到端实测 + VECTOR_PROMPT 调优 + 中文名解析修复
+
+### 做了什么
+- **端到端实测**（Session 10-11 遗留待办 #1）：
+  - 启动前后端，验证完整链路：前端 Vite → 后端 Express → DeepSeek API
+  - 前端 `vite build` 编译通过（1117 modules, 2.46s）
+  - 后端 36 球员加载，DeepSeek 连接正常
+  - 13D 匹配引擎验证：测试 SGA / Giannis / Jokic / Curry / LeBron / AD / Wemby 共 7 种球员原型 → 全部产出合理匹配
+  - 三层匹配（50/25/25）在不同位置/体型间有明显区分度
+  - NaN bug（Session 11 🔴）确认已修复：36 名球员全量测试 0 个 NaN
+- **VECTOR_PROMPT 调优**（Session 10-11 遗留待办 #2）：
+  - 英文名输入：向量精准（Giannis: athleticism=99/driving=96/threePoint=40/block=88 ✅）
+  - 中文全名输入：勒布朗·詹姆斯 ≈ LeBron James ✅
+  - ❌ **中文简称识别失败**：`亚历山大` → Paul George（应为 SGA）、`扬尼斯` → 全 99 退化
+  - **根因**：DeepSeek 对中文简称的 NBA 球员识别不可靠
+  - **修复**：新增 `resolveQuery()` 预处理函数 + 31 个中文名别名映射表，将已知中文简称替换为英文全名后再发给 LLM
+  - 修复后：扬尼斯 → Giannis 级别向量（threePoint=35/block=88 ✅），约基奇 → elite passing=99/post=99 ✅
+- **.env 创建**：`VITE_API_URL=http://localhost:3001`，前端本地开发可连通后端
+
+### 测试结果汇总
+
+| 输入 | 向量质量 | 匹配 Top 1 | 评分 |
+|------|---------|-----------|------|
+| Giannis EN | 99/95/97/70/55/40/… | Hannes Steinbach (C) | ✅ 完美 |
+| 扬尼斯 CN (修复后) | 99/95/95/80/60/35/… | Hannes Steinbach (C) | ✅ 完美 |
+| 亚历山大 CN (修复后) | 82/92/85/70/88/78/… | Darryn Peterson (SG) | ✅ 合理 |
+| 约基奇 CN (修复后) | 60/70/95/99/90/78/… | Cameron Boozer (PF) | ✅ 完美 |
+| 浓眉 CN (修复后) | 88/72/92/85/82/72/… | — | ✅ 合理 |
+| 库里 CN (修复后) | 75/80/65/30/95/99/… | Labaron Philon Jr. (PG) | ✅ 完美 |
+
+### 匹配引擎验证（客户端 13D 三层匹配）
+
+| 球星原型 | 排名 1 | 排名 2 | 排名 3 | 区分度 |
+|---------|--------|--------|--------|--------|
+| SGA (PG, 198cm) | Peterson SG 99% | de Larrea PG 97% | M. Brown PG 94% | ✅ |
+| Giannis (PF, 211cm) | Cenac C 99% | M. Johnson PF 95% | Veesaar C 95% | ✅ |
+| Jokic (C, 211cm) | Steinbach C 93% | Cenac C 92% | Veesaar C 92% | ⚠️ |
+| Curry (PG, 188cm) | Philon PG 99% | Flemings PG 98% | Anderson PG 98% | ⚠️ |
+
+⚠️ Jokic/Curry 顶层匹配分数集中在 90%+，区分度不足——因 13D 余弦相似度对同位置球员天然高度相似。身体层的 25% 是主要区分因子。
+
+### 关键决策
+- **中文名预处理优于 Prompt 调优**：DeepSeek 天然更懂英文名，在请求前替换比在 Prompt 里教它识别中文简称更可靠
+- **31 个别名映射覆盖主流球星**：PG → C 全覆盖，后续按需扩展
+- **保留原始查询在日志中**：`resolveQuery()` 返回 `{llmQuery, originalQuery}`，用户可见的描述仍用原始中文
+- **embedding 10D vs 13D 属性向量的语义错配**：暂时接受（仅 20% 权重），待 V3 重构时统一为 13D embedding
+
+### 改动文件
+- `server/index.js` — 新增 `CN_NAME_ALIASES`（31 个映射）+ `resolveQuery()`；更新 `/api/scout` 和 `/api/scout/quick` 使用解析后的查询
+- `.env` — **新建**，`VITE_API_URL=http://localhost:3001`（本地开发）
+- `SESSION_LOG.md` — 本条目
+
+### 待办
+- [ ] 13D 匹配区分度优化：顶层候选分数过于集中（90%+），考虑引入方差放大或非线性评分
+- [ ] 10D embedding 升级为 13D：重新生成语义 embedding 与属性维度对齐
+- [ ] 属性数据库质量审计（Session 9 遗留，已在 Session 12 部分验证——13D 向量基本合理）
+- [ ] 前端 Onboarding → DNA → 匹配完整 UI 流程实测（需浏览器打开）
+
+---
+
 ## 2026-06-23/24 — Session 10-11 · 13D 数据库重构 + 三层匹配引擎 + Bug 修复
 
 ### 做了什么

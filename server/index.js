@@ -153,7 +153,69 @@ async function callDeepSeek(systemPrompt, userMessage, maxTokens = 1024) {
   return JSON.parse(jsonStr);
 }
 
-// ── Prompt 1: Query → 5D vector ──────────────────────────────────────────
+// ── Chinese NBA player name aliases (abbreviation → full English) ─────────
+// DeepSeek may not recognize abbreviated Chinese names; augment queries with the
+// full English name to disambiguate before sending to the LLM.
+const CN_NAME_ALIASES = {
+  "亚历山大": "Shai Gilgeous-Alexander",
+  "扬尼斯": "Giannis Antetokounmpo",
+  "字母哥": "Giannis Antetokounmpo",
+  "勒布朗": "LeBron James",
+  "老詹": "LeBron James",
+  "库里": "Stephen Curry",
+  "杜兰特": "Kevin Durant",
+  "KD": "Kevin Durant",
+  "约基奇": "Nikola Jokic",
+  "恩比德": "Joel Embiid",
+  "东契奇": "Luka Doncic",
+  "浓眉": "Anthony Davis",
+  "哈登": "James Harden",
+  "欧文": "Kyrie Irving",
+  "塔图姆": "Jayson Tatum",
+  "巴特勒": "Jimmy Butler",
+  "伦纳德": "Kawhi Leonard",
+  "乔治": "Paul George",
+  "威少": "Russell Westbrook",
+  "保罗": "Chris Paul",
+  "韦德": "Dwyane Wade",
+  "科比": "Kobe Bryant",
+  "乔丹": "Michael Jordan",
+  "奥尼尔": "Shaquille O'Neal",
+  "邓肯": "Tim Duncan",
+  "加内特": "Kevin Garnett",
+  "诺维茨基": "Dirk Nowitzki",
+  "文班": "Victor Wembanyama",
+  "文班亚马": "Victor Wembanyama",
+  "锡安": "Zion Williamson",
+  "莫兰特": "Ja Morant",
+  "爱德华兹": "Anthony Edwards",
+  "布克": "Devin Booker",
+  "利拉德": "Damian Lillard",
+  "唐斯": "Karl-Anthony Towns",
+};
+
+/**
+ * Resolve Chinese player name abbreviations to their canonical English form
+ * for the LLM call. The LLM reliably knows NBA players by English name but
+ * struggles with abbreviated Chinese names. The original query is preserved
+ * for logging; only the LLM-facing prompt uses the resolved name.
+ *
+ * Returns { llmQuery, originalQuery } — llmQuery is what we send to DeepSeek.
+ */
+function resolveQuery(query) {
+  const trimmed = query.trim();
+  for (const [cn, en] of Object.entries(CN_NAME_ALIASES)) {
+    if (trimmed.includes(cn)) {
+      // Replace ONLY the Chinese fragment with the English name, preserving
+      // any surrounding descriptive text the user may have typed.
+      const resolved = trimmed.replace(cn, en);
+      return { llmQuery: resolved, originalQuery: trimmed };
+    }
+  }
+  return { llmQuery: trimmed, originalQuery: trimmed };
+}
+
+// ── Prompt 1: Query → 13D vector ──────────────────────────────────────────
 const VECTOR_PROMPT = `You are an NBA scouting data scientist. Convert any natural-language player query into a 13-dimensional attribute vector and a query description.
 
 ## The 13 dimensions (each 0-100, based on NBA 2K-style attributes):
@@ -227,16 +289,17 @@ app.post("/api/scout", checkRate, async (req, res) => {
 
   try {
     // ── Phase 1: Query → Vector ─────────────────────────────────────────
-    console.log(`🔍 Phase 1: Converting query to vector — "${query.trim()}"`);
+    const { llmQuery, originalQuery } = resolveQuery(query.trim());
+    console.log(`🔍 Phase 1: Converting query to vector — "${originalQuery}"${llmQuery !== originalQuery ? ` → "${llmQuery}"` : ""}`);
 
     const vectorResult = await callDeepSeek(
       VECTOR_PROMPT,
-      `User query: "${query.trim()}"`,
+      `User query: "${llmQuery}"`,
       512
     );
 
     const queryVector = attrsToVector(vectorResult.vector);
-    const queryDesc = vectorResult.queryDescription || query.trim();
+    const queryDesc = vectorResult.queryDescription || originalQuery;
     const comparedPlayer = vectorResult.comparedPlayer || "none";
 
     console.log(`   Vector: [${queryVector.map(v => v.toFixed(0)).join(", ")}]`);
@@ -339,7 +402,8 @@ app.post("/api/scout/quick", checkRate, async (req, res) => {
   if (PLAYER_DB.length === 0) return res.status(500).json({ error: "球员数据库未加载" });
 
   try {
-    const vectorResult = await callDeepSeek(VECTOR_PROMPT, `User query: "${query.trim()}"`, 512);
+    const { llmQuery } = resolveQuery(query.trim());
+    const vectorResult = await callDeepSeek(VECTOR_PROMPT, `User query: "${llmQuery}"`, 512);
     const queryVector = attrsToVector(vectorResult.vector);
 
     // Blend with user DNA vector if provided — 6D support
