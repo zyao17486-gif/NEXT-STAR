@@ -381,18 +381,22 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
   const fused = fuse13Dto5(attrs);
   const CONTRAST_EXPONENT = 1.8;
 
-  const pieData = fused.map(g => ({
+  // Separate 身体 from pie groups
+  const physical = fused.find(g => g.key === "physical")!;
+  const pieGroups = fused.filter(g => g.key !== "physical");
+
+  const pieData = pieGroups.map(g => ({
     ...g,
     amplified: Math.pow(g.value, CONTRAST_EXPONENT),
   }));
 
-  const maxOrig = Math.max(...fused.map(g => g.value));
+  const maxOrig = Math.max(...pieGroups.map(g => g.value));
 
   return (
     <div>
-      {/* 1. Fused group summary — label + value only, no sub-dimension breakdown */}
+      {/* 1. Group summary labels (no sub-dimensions) */}
       <div className="flex flex-wrap gap-x-5 gap-y-2 mb-5">
-        {fused.map(g => (
+        {pieGroups.map(g => (
           <div key={g.key} className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full shrink-0" style={{ background: g.color }} />
             <span style={{ color: T.label, fontSize: FONT.xs }}>{g.label}</span>
@@ -401,7 +405,7 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
         ))}
       </div>
 
-      {/* 2. Donut pie chart */}
+      {/* 2. Donut pie chart (5 groups, excluding 身体) */}
       <div className="flex justify-center" style={{ filter: "drop-shadow(0 2px 16px rgba(0,0,0,0.5))", outline: "none" } as React.CSSProperties}>
         <PieChart width={210} height={210} style={{ outline: "none" }}>
           <Pie
@@ -422,6 +426,27 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
             })}
           </Pie>
         </PieChart>
+      </div>
+
+      {/* 3. 身体天赋 — standalone horizontal bar */}
+      <div className="mt-5 px-2">
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-sm" style={{ background: physical.color, boxShadow: `0 0 8px ${physical.color}66` }} />
+            <span style={{ color: T.white, fontSize: FONT.sm, fontWeight: 600, letterSpacing: "0.02em" }}>{physical.label}</span>
+          </div>
+          <span style={{ color: T.white, fontSize: FONT.lg, fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{physical.value}</span>
+        </div>
+        <div className="h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)", boxShadow: "inset 0 1px 3px rgba(0,0,0,0.3)" }}>
+          <motion.div className="h-full rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${physical.value}%` }}
+            transition={{ delay: 0.6, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{
+              background: `linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.95))`,
+              boxShadow: "0 0 12px rgba(255,255,255,0.25)",
+            }} />
+        </div>
       </div>
     </div>
   );
