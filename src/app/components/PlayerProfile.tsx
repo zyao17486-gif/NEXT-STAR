@@ -207,19 +207,6 @@ function parseWeightToKg(w: string): number {
   return Math.round(parseInt(m[1]) / 2.205);
 }
 
-/** Extract template-reference sentence from overview text */
-function extractTemplate(text: string): { overview: string; template: string | null } {
-  const keywords = /(?:模板|可比拟|可比(?!赛)|对标(?!赛)|可类比|可参照|可参考|上限|下限|对比|类比|比较|式)/;
-  const sentences = text.split(/(?<=。)/);
-  let idx = -1;
-  for (let i = sentences.length - 1; i >= 0; i--) {
-    if (keywords.test(sentences[i])) { idx = i; break; }
-  }
-  if (idx === -1) return { overview: text, template: null };
-  const template = sentences[idx].trim();
-  sentences.splice(idx, 1);
-  return { overview: sentences.join("").trim() || text, template };
-}
 
 /** Adapt a 2026 Draft DB player → the shape PlayerProfile expects */
 function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
@@ -245,17 +232,17 @@ function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
     draftTeamCn: (dp as any).draftTeamCn as string | undefined,
     img: dp.imgHero || dp.img,
     overview: (dp as any).profile_text_cn || dp.profile_text,
-    strengths: dp.tags.slice(0, 3).map(t => TAG_CN[t] || t),
-    weaknesses: ["NBA 级别对抗适应", "稳定性待验证", "防守端需持续提升"],
+    strengths: (dp as any).strengths_cn || dp.tags.slice(0, 3).map(t => TAG_CN[t] || t),
+    weaknesses: (dp as any).weaknesses_cn || ["NBA 级别对抗适应", "稳定性待验证", "防守端需持续提升"],
     seasonStats: [],
     pie: ATTR_13D_KEYS.map(k => ({ key: k, value: attrs[k] ?? 50 })),
     bestTemplate: {
-      name: "AI 分析中",
-      desc: "使用球探台 AI 球探功能，输入\"谁最像" + dp.name + "\"获取详细模板对比。",
+      name: (dp as any).ceilingTemplate?.name || "AI 分析中",
+      desc: (dp as any).ceilingTemplate?.desc || "使用球探台 AI 球探功能，输入\"谁最像" + dp.name + "\"获取详细模板对比。",
     },
     worstTemplate: {
-      name: "AI 分析中",
-      desc: "使用球探台 AI 球探功能获取风险模板分析。",
+      name: (dp as any).floorTemplate?.name || "AI 分析中",
+      desc: (dp as any).floorTemplate?.desc || "使用球探台 AI 球探功能获取风险模板分析。",
     },
     devPlan: [
       ["第一年", "适应 NBA 节奏，发挥核心优势。"],
@@ -547,7 +534,7 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
   // Find the exact stored name (for correct unfollow), fallback to en for follow
   const toggleKey = playerNames.find(n => followed.has(n)) ?? player.en;
 
-  const { overview: cleanOverview, template: templateRef } = extractTemplate(player.overview);
+  const hasTemplateData = player.bestTemplate.name !== "AI 分析中" || player.worstTemplate.name !== "AI 分析中";
 
   return (
     <div style={{ fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
@@ -642,42 +629,51 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
               <SkillChart slices={player.pie} />
             </div>
 
-            {/* 2. 球员综述 + 模板参考 | 优势/待观察 */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
-              <div className="lg:col-span-2 p-6 rounded-2xl" style={{ background: BG.card, border: B.card }}>
-                <p style={{ color: T.label, fontSize: FONT.sm, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>球员综述</p>
-                <p style={{ color: T.hero, fontSize: FONT.lg, lineHeight: 1.75 }}>{cleanOverview}</p>
-                {templateRef && (
-                  <div className="mt-4 p-4 rounded-xl"
-                    style={{ background: BG.subtle, border: B.subtle }}>
-                    <span style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.1em", marginRight: "8px" }}>模板参考</span>
-                    <span style={{ color: "rgba(255,255,255,0.75)", fontSize: FONT.base, lineHeight: 1.65 }}>{templateRef}</span>
+            {/* 2. 球员综述 — 客观叙述 + 上下限模板 */}
+            <div className="p-6 rounded-2xl" style={{ background: BG.card, border: B.card }}>
+              <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px" }}>球员综述</p>
+              <p style={{ color: "rgba(255,255,255,0.65)", fontSize: FONT.base, lineHeight: 1.85 }}>{player.overview}</p>
+
+              {/* 上下限模板 */}
+              {hasTemplateData && (
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}>
+                    <span style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.1em" }}>上限模板</span>
+                    <div style={{ color: T.white, fontSize: FONT.md, fontWeight: 600, marginTop: "4px" }}>{player.bestTemplate.name}</div>
+                    <p style={{ color: "rgba(255,255,255,0.50)", fontSize: FONT.sm, lineHeight: 1.65, marginTop: "2px" }}>{player.bestTemplate.desc}</p>
                   </div>
-                )}
+                  <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}>
+                    <span style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.1em" }}>下限模板</span>
+                    <div style={{ color: T.white, fontSize: FONT.md, fontWeight: 600, marginTop: "4px" }}>{player.worstTemplate.name}</div>
+                    <p style={{ color: "rgba(255,255,255,0.50)", fontSize: FONT.sm, lineHeight: 1.65, marginTop: "2px" }}>{player.worstTemplate.desc}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3. 优势 + 待观察 — 客观叙述 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="p-5 rounded-2xl" style={{ background: BG.card, border: B.card }}>
+                <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px" }}>优势</p>
+                <ul className="space-y-3">
+                  {player.strengths.map((s, i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <div className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ background: T.white }} />
+                      <span style={{ color: "rgba(255,255,255,0.60)", fontSize: FONT.sm, lineHeight: 1.65 }}>{s}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="grid grid-cols-1 gap-4">
-                <div className="p-5 rounded-2xl" style={{ background: BG.card, border: B.card }}>
-                  <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px" }}>优势</p>
-                  <ul className="space-y-2.5">
-                    {player.strengths.map(s => (
-                      <li key={s} className="flex items-start gap-2.5">
-                        <div className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ background: T.white }} />
-                        <span style={{ color: T.body, fontSize: FONT.base, lineHeight: 1.5 }}>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="p-5 rounded-2xl" style={{ background: BG.card, border: B.card }}>
-                  <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px" }}>待观察</p>
-                  <ul className="space-y-2.5">
-                    {player.weaknesses.map(w => (
-                      <li key={w} className="flex items-start gap-2.5">
-                        <div className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ background: T.label }} />
-                        <span style={{ color: T.body, fontSize: FONT.base, lineHeight: 1.5 }}>{w}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <div className="p-5 rounded-2xl" style={{ background: BG.card, border: B.card }}>
+                <p style={{ color: T.label, fontSize: FONT.xs, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px" }}>待观察</p>
+                <ul className="space-y-3">
+                  {player.weaknesses.map((w, i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <div className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ background: T.label }} />
+                      <span style={{ color: "rgba(255,255,255,0.50)", fontSize: FONT.sm, lineHeight: 1.65 }}>{w}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
