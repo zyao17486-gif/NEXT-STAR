@@ -390,24 +390,13 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
 
   return (
     <div>
-      {/* 1. 13D detailed bars — compact sub-dimension breakdown */}
-      <div className="grid grid-cols-5 gap-x-2 gap-y-0.5 mb-5">
+      {/* 1. Fused group summary — label + value only, no sub-dimension breakdown */}
+      <div className="flex flex-wrap gap-x-5 gap-y-2 mb-5">
         {fused.map(g => (
-          <div key={g.key} className="space-y-0.5">
-            <div className="flex items-center gap-1 mb-1">
-              <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: g.color }} />
-              <span style={{ color: T.label, fontSize: FONT.xs, fontWeight: 500 }}>{g.label}</span>
-              <span style={{ color: T.white, fontSize: FONT.xs, fontWeight: 600, marginLeft: "auto" }}>{g.value}</span>
-            </div>
-            {g.subKeys.map(sk => {
-              const sv = slices.find(s => s.key === sk)?.value ?? 50;
-              return (
-                <div key={sk} className="flex justify-between">
-                  <span style={{ color: T.hint, fontSize: "10px" }}>{sk}</span>
-                  <span style={{ color: sv >= 80 ? T.body : T.hint, fontSize: "10px" }}>{sv}</span>
-                </div>
-              );
-            })}
+          <div key={g.key} className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full shrink-0" style={{ background: g.color }} />
+            <span style={{ color: T.label, fontSize: FONT.xs }}>{g.label}</span>
+            <span style={{ color: T.white, fontSize: FONT.xs, fontWeight: 600 }}>{g.value}</span>
           </div>
         ))}
       </div>
