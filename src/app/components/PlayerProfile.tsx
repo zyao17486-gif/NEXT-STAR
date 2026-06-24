@@ -411,7 +411,7 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
           <Pie
             data={pieData} dataKey="amplified"
             cx={105} cy={105} outerRadius={92} innerRadius={54}
-            paddingAngle={0} stroke="rgba(0,0,0,0.6)" strokeWidth={1.5}
+            paddingAngle={0} stroke="rgba(0,0,0,0.55)" strokeWidth={1.2}
             startAngle={90} endAngle={-270}
             isAnimationActive animationBegin={80} animationDuration={900} animationEasing="ease-out"
           >
@@ -419,8 +419,8 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
               const isDominant = d.value === maxOrig;
               return (
                 <Cell key={i} fill={d.color}
-                  stroke={isDominant ? d.color : "rgba(0,0,0,0.25)"}
-                  strokeWidth={isDominant ? 2 : 1}
+                  stroke="rgba(0,0,0,0.55)"
+                  strokeWidth={1.2}
                   style={isDominant ? { filter: `drop-shadow(0 0 6px ${d.color}88)` } : undefined} />
               );
             })}
