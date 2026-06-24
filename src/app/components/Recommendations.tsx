@@ -94,7 +94,7 @@ export function Recommendations({
                 className="rounded-2xl overflow-hidden"
                 style={{ background: BG.card, border: B.card }}>
 
-                {/* Header: rank badge + polished badge */}
+                {/* Header: rank badge + draft pick + polished badge */}
                 <div className="px-6 pt-6 pb-4 flex items-center gap-2">
                   <span className="px-3 py-1.5 rounded-full text-sm font-medium"
                     style={{
@@ -104,6 +104,17 @@ export function Recommendations({
                     }}>
                     {rankLabels[i] || "实力新秀"}
                   </span>
+                  {(p as any).draftPick && (
+                    <span className="px-3 py-1.5 rounded-full text-sm font-semibold"
+                      style={{
+                        background: BG.overlay,
+                        color: T.label,
+                        fontSize: FONT.xs,
+                        letterSpacing: "0.04em",
+                      }}>
+                      #{(p as any).draftPick} 2026
+                    </span>
+                  )}
                   {(p as any).isPolished !== undefined && (
                     <span className="px-3 py-1.5 rounded-full text-sm font-semibold"
                       style={{

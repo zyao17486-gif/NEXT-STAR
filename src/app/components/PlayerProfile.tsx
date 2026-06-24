@@ -241,6 +241,8 @@ function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
     weightMetric: `${wtKg} kg`,
     birthday: "—",
     projection: "2026 NBA Draft",
+    draftPick: (dp as any).draftPick as number | undefined,
+    draftTeamCn: (dp as any).draftTeamCn as string | undefined,
     img: dp.imgHero || dp.img,
     overview: (dp as any).profile_text_cn || dp.profile_text,
     strengths: dp.tags.slice(0, 3).map(t => TAG_CN[t] || t),
@@ -356,6 +358,7 @@ type PlayerData = {
   birthday: string; projection: string; img: string;
   overview: string; strengths: string[]; weaknesses: string[];
   seasonStats: SeasonStat[];
+  draftPick?: number; draftTeamCn?: string;
   pie: { key: string; value: number }[];
   bestTemplate: { name: string; desc: string };
   worstTemplate: { name: string; desc: string };
@@ -557,11 +560,17 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
           ← 返回
         </button>
 
-        {/* Row: Pos + School + Follow */}
+        {/* Row: Pos + School + Draft Pick + Follow */}
         <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span style={{ color: T.body, fontSize: FONT.md, fontWeight: 500 }}>{player.pos}</span>
             <span style={{ color: T.dim, fontSize: FONT.md }}>/ {player.school}</span>
+            {player.draftPick && (
+              <span className="px-2.5 py-0.5 rounded-full font-semibold"
+                style={{ background: BG.overlay, color: T.label, fontSize: FONT.xs, letterSpacing: "0.04em" }}>
+                #{player.draftPick} 2026 · {player.draftTeamCn}
+              </span>
+            )}
           </div>
           <button
             onClick={() => onToggleFollow(toggleKey)}
@@ -684,12 +693,17 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
                   <span style={{ color: T.label, fontSize: FONT.sm }}>球队</span>
                   <div style={{ color: T.white, fontSize: FONT.base, fontWeight: 500, marginTop: "4px" }}>{player.school}</div>
                 </div>
-                {player.projection && player.projection !== "2026 NBA Draft" && (
+                {player.draftPick ? (
+                  <div>
+                    <span style={{ color: T.label, fontSize: FONT.sm }}>选秀顺位</span>
+                    <div style={{ color: T.white, fontSize: FONT.base, fontWeight: 500, marginTop: "4px" }}>#{player.draftPick} · {player.draftTeamCn}</div>
+                  </div>
+                ) : (player.projection && player.projection !== "2026 NBA Draft" && (
                   <div>
                     <span style={{ color: T.label, fontSize: FONT.sm }}>预测顺位</span>
                     <div style={{ color: T.white, fontSize: FONT.base, fontWeight: 500, marginTop: "4px" }}>{player.projection.split("—")[0].trim()}</div>
                   </div>
-                )}
+                ))}
                 {player.seasonStats.length > 0 && (
                   <div>
                     <span style={{ color: T.label, fontSize: FONT.sm }}>最近赛季</span>

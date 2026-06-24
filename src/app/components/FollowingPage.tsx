@@ -17,9 +17,10 @@ export function lookupPlayerCard(name: string) {
       en: dbp.name,
       pos: POS_MAP_FOLLOW[dbp.position] ?? dbp.position,
       school: dbp.team,
-      rank: dbp.id,
+      draftPick: (dbp as any).draftPick as number | undefined,
+      draftTeamCn: (dbp as any).draftTeamCn as string | undefined,
       projection: "2026 NBA Draft",
-      img: dbp.img,
+      img: (dbp as any).img,
     };
   }
   return null;
@@ -84,13 +85,15 @@ export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: Foll
                 style={{ background: BG.card, border: B.card }}
               >
                 <button onClick={() => onSelectPlayer(p.name)} className="w-full text-left">
-                  {/* Rank badge */}
-                  <div className="mb-3">
-                    <span className="px-2.5 py-1 rounded-full font-semibold"
-                      style={{ background: BG.overlay, color: T.label, fontSize: FONT.xs, letterSpacing: "0.04em" }}>
-                      NO. {p.rank}
-                    </span>
-                  </div>
+                  {/* Draft pick badge */}
+                  {p.draftPick && (
+                    <div className="mb-3">
+                      <span className="px-2.5 py-1 rounded-full font-semibold"
+                        style={{ background: BG.overlay, color: T.label, fontSize: FONT.xs, letterSpacing: "0.04em" }}>
+                        #{p.draftPick} 2026
+                      </span>
+                    </div>
+                  )}
                   {/* Name */}
                   <div style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, marginBottom: "4px", lineHeight: 1.3 }}>{p.name}</div>
                   <div style={{ color: T.hint, fontSize: FONT.sm, marginBottom: "8px", fontFamily: "'Inter', sans-serif" }}>
