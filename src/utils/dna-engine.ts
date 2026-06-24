@@ -474,6 +474,17 @@ export function findTopMatches(
     }
   }
 
+  // Diversity: ensure at least 1 raw/upside prospect (潜力股) when available
+  if (topN >= 4 && results.length >= topN) {
+    const hasRaw = results.some(r => (r as any).isPolished === false);
+    if (!hasRaw) {
+      const bestRaw = scored.find(s => (s.match as any).isPolished === false && !results.find(r => r.id === s.match.id));
+      if (bestRaw) {
+        results[results.length - 1] = bestRaw.match; // swap last slot
+      }
+    }
+  }
+
   return results.slice(0, topN);
 }
 

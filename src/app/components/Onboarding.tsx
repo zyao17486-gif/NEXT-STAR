@@ -57,7 +57,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
           )}
         </div>
 
-        {/* Progress bar */}
+        {/* Progress bar — line only, no step labels */}
         {step > 0 && (
           <div className="absolute top-28 left-0 right-0 px-8 lg:px-20">
             <div className="max-w-md mx-auto lg:mx-0">
@@ -65,10 +65,6 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                 <motion.div className="h-0.5 rounded-full bg-white"
                   animate={{ width: `${progressPct}%` }}
                   transition={{ duration: 0.5, ease: "easeOut" }} />
-              </div>
-              <div className="flex justify-between mt-2">
-                <span style={{ color: step >= 1 ? T.white : T.dim, fontSize: FONT.xs }}>位置 · 球星</span>
-                <span style={{ color: step >= 2 ? T.white : T.dim, fontSize: FONT.xs }}>即战力 / 潜力股</span>
               </div>
             </div>
           </div>
