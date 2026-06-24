@@ -86,7 +86,10 @@
       "Dunk Finisher",
       "Two-Way"
     ],
-    "polishedReason": "19岁毛胚天赋待打磨"
+    "polishedReason": "19岁毛胚天赋待打磨",
+    "draftPick": 1,
+    "draftTeam": "WAS",
+    "draftTeamCn": "奇才"
   },
   {
     "id": 2,
@@ -175,7 +178,10 @@
       "ISO",
       "Primary Creator"
     ],
-    "polishedReason": "大三即战力即插即用"
+    "polishedReason": "大三即战力即插即用",
+    "draftPick": 2,
+    "draftTeam": "UTA",
+    "draftTeamCn": "爵士"
   },
   {
     "id": 3,
@@ -263,7 +269,10 @@
       "Two-Way",
       "Glue Guy"
     ],
-    "polishedReason": "大三即战力即插即用"
+    "polishedReason": "大三即战力即插即用",
+    "draftPick": 3,
+    "draftTeam": "MEM",
+    "draftTeamCn": "灰熊"
   },
   {
     "id": 4,
@@ -350,7 +359,10 @@
       "Two-Way",
       "Defensive Anchor"
     ],
-    "polishedReason": "19岁毛胚天赋待打磨"
+    "polishedReason": "19岁毛胚天赋待打磨",
+    "draftPick": 4,
+    "draftTeam": "CHI",
+    "draftTeamCn": "公牛"
   },
   {
     "id": 5,
@@ -437,7 +449,10 @@
       "3&D",
       "Two-Way"
     ],
-    "polishedReason": "19岁毛胚天赋待打磨"
+    "polishedReason": "19岁毛胚天赋待打磨",
+    "draftPick": 13,
+    "draftTeam": "MIL",
+    "draftTeamCn": "雄鹿"
   },
   {
     "id": 6,
@@ -522,7 +537,10 @@
       "Primary Creator",
       "Glue Guy"
     ],
-    "polishedReason": "大三即战力即插即用"
+    "polishedReason": "大三即战力即插即用",
+    "draftPick": 6,
+    "draftTeam": "BKN",
+    "draftTeamCn": "篮网"
   },
   {
     "id": 7,
@@ -606,7 +624,10 @@
       "Primary Creator",
       "Sixth Man"
     ],
-    "polishedReason": "19岁毛胚天赋待打磨"
+    "polishedReason": "19岁毛胚天赋待打磨",
+    "draftPick": 7,
+    "draftTeam": "SAC",
+    "draftTeamCn": "国王"
   },
   {
     "id": 8,
@@ -689,7 +710,10 @@
       "Two-Way",
       "Glue Guy"
     ],
-    "polishedReason": "大三即战力即插即用"
+    "polishedReason": "大三即战力即插即用",
+    "draftPick": 8,
+    "draftTeam": "ATL",
+    "draftTeamCn": "老鹰"
   },
   {
     "id": 9,
@@ -773,7 +797,10 @@
       "Shooter",
       "3&D"
     ],
-    "polishedReason": "大三即战力即插即用"
+    "polishedReason": "大三即战力即插即用",
+    "draftPick": 5,
+    "draftTeam": "LAC",
+    "draftTeamCn": "快船"
   },
   {
     "id": 10,
@@ -859,7 +886,10 @@
       "Playmaking Big",
       "Glue Guy"
     ],
-    "polishedReason": "大三即战力即插即用"
+    "polishedReason": "大三即战力即插即用",
+    "draftPick": 30,
+    "draftTeam": "PHX",
+    "draftTeamCn": "太阳"
   },
   {
     "id": 11,
@@ -944,7 +974,10 @@
       "Dunk Finisher",
       "Small-Ball Center"
     ],
-    "polishedReason": "毛胚天赋待打磨"
+    "polishedReason": "毛胚天赋待打磨",
+    "draftPick": 27,
+    "draftTeam": "BOS",
+    "draftTeamCn": "凯尔特人"
   },
   {
     "id": 12,
@@ -1029,7 +1062,10 @@
       "Two-Way",
       "ISO"
     ],
-    "polishedReason": "即战力双能卫"
+    "polishedReason": "即战力双能卫",
+    "draftPick": 10,
+    "draftTeam": "MIL",
+    "draftTeamCn": "雄鹿"
   },
   {
     "id": 13,
@@ -1115,7 +1151,10 @@
       "3&D",
       "Two-Way"
     ],
-    "polishedReason": "毛胚天赋待打磨"
+    "polishedReason": "毛胚天赋待打磨",
+    "draftPick": 24,
+    "draftTeam": "LAL",
+    "draftTeamCn": "湖人"
   },
   {
     "id": 14,
@@ -1285,7 +1324,10 @@
       "Defensive Anchor",
       "Glue Guy"
     ],
-    "polishedReason": "即战力冠军拼图"
+    "polishedReason": "即战力冠军拼图",
+    "draftPick": 9,
+    "draftTeam": "DAL",
+    "draftTeamCn": "独行侠"
   },
   {
     "id": 16,
@@ -1370,7 +1412,10 @@
       "Point Forward",
       "Shooter"
     ],
-    "polishedReason": "即战力国际侧翼"
+    "polishedReason": "即战力国际侧翼",
+    "draftPick": 21,
+    "draftTeam": "MEM",
+    "draftTeamCn": "灰熊"
   },
   {
     "id": 17,
@@ -1537,7 +1582,10 @@
       "Defensive Anchor",
       "Small-Ball Center"
     ],
-    "polishedReason": "即战力护框巨塔"
+    "polishedReason": "即战力护框巨塔",
+    "draftPick": 12,
+    "draftTeam": "OKC",
+    "draftTeamCn": "雷霆"
   },
   {
     "id": 19,
@@ -1621,7 +1669,10 @@
       "Defensive Anchor",
       "Small-Ball Center"
     ],
-    "polishedReason": "20岁毛胚天赋待打磨"
+    "polishedReason": "20岁毛胚天赋待打磨",
+    "draftPick": 20,
+    "draftTeam": "SAS",
+    "draftTeamCn": "马刺"
   },
   {
     "id": 20,
@@ -1797,7 +1848,10 @@
       "Point Forward",
       "Defensive Anchor"
     ],
-    "polishedReason": "即战力全能防守核心"
+    "polishedReason": "即战力全能防守核心",
+    "draftPick": 11,
+    "draftTeam": "GSW",
+    "draftTeamCn": "勇士"
   },
   {
     "id": 22,
@@ -2055,7 +2109,10 @@
       "Shooter",
       "Primary Creator"
     ],
-    "polishedReason": "即战力挡拆大师"
+    "polishedReason": "即战力挡拆大师",
+    "draftPick": 18,
+    "draftTeam": "CHA",
+    "draftTeamCn": "黄蜂"
   },
   {
     "id": 25,
@@ -2141,7 +2198,10 @@
       "Primary Creator",
       "Glue Guy"
     ],
-    "polishedReason": "大龄即战力挡拆手"
+    "polishedReason": "大龄即战力挡拆手",
+    "draftPick": 16,
+    "draftTeam": "OKC",
+    "draftTeamCn": "雷霆"
   },
   {
     "id": 26,
@@ -2228,7 +2288,10 @@
       "ISO",
       "Primary Creator"
     ],
-    "polishedReason": "即战力高效得分手"
+    "polishedReason": "即战力高效得分手",
+    "draftPick": 22,
+    "draftTeam": "PHI",
+    "draftTeamCn": "76人"
   },
   {
     "id": 27,
@@ -2313,7 +2376,10 @@
       "Shooter",
       "Glue Guy"
     ],
-    "polishedReason": "大四即战力赢家"
+    "polishedReason": "大四即战力赢家",
+    "draftPick": 29,
+    "draftTeam": "SAC",
+    "draftTeamCn": "国王"
   },
   {
     "id": 28,
@@ -2398,7 +2464,10 @@
       "Playmaking Big",
       "Defensive Anchor"
     ],
-    "polishedReason": "NCAA篮板王即战力"
+    "polishedReason": "NCAA篮板王即战力",
+    "draftPick": 14,
+    "draftTeam": "CHA",
+    "draftTeamCn": "黄蜂"
   },
   {
     "id": 29,
@@ -2570,7 +2639,10 @@
       "Primary Creator",
       "Point Forward"
     ],
-    "polishedReason": "欧洲联赛即战力高球商"
+    "polishedReason": "欧洲联赛即战力高球商",
+    "draftPick": 25,
+    "draftTeam": "DAL",
+    "draftTeamCn": "独行侠"
   },
   {
     "id": 31,
@@ -2657,7 +2729,10 @@
       "ISO",
       "Two-Way"
     ],
-    "polishedReason": "即战力单打高手"
+    "polishedReason": "即战力单打高手",
+    "draftPick": 15,
+    "draftTeam": "CHI",
+    "draftTeamCn": "公牛"
   },
   {
     "id": 32,
@@ -2742,7 +2817,10 @@
       "ISO",
       "Primary Creator"
     ],
-    "polishedReason": "大一即战力突破机器"
+    "polishedReason": "大一即战力突破机器",
+    "draftPick": 17,
+    "draftTeam": "DET",
+    "draftTeamCn": "活塞"
   },
   {
     "id": 33,
@@ -2828,98 +2906,13 @@
       "3&D",
       "Defensive Anchor"
     ],
-    "polishedReason": "即战力防守万金油"
+    "polishedReason": "即战力防守万金油",
+    "draftPick": 19,
+    "draftTeam": "TOR",
+    "draftTeamCn": "猛龙"
   },
   {
     "id": 34,
-    "name": "Cameron Boozer Jr.",
-    "position": "PF",
-    "team": "Duke",
-    "height": "6'9\"",
-    "heightInches": 81,
-    "weight": "253 lbs",
-    "wingspan": "7'1.5\"",
-    "standingReach": "8'9\"",
-    "profile_text": "[DUPLICATE — Cameron Boozer is already in the database as ID #3. This entry provides additional context.] Cameron Boozer is the most decorated prospect in the 2026 class — National Player of the Year as a Duke freshman, son of Carlos Boozer. A fundamentally flawless two-way forward who blends old-school interior scoring with modern stretch ability (39-40% from three). Elite basketball IQ processes double teams instantly, delivers pinpoint passes (4.1 APG), and was Duke's offensive hub. Four state titles, two USA gold medals, three Peach Jam titles. Concerns are athletic ceiling — not explosive, below-the-rim finisher. Between positions at 6-foot-9 — undersized for a full-time center but lacks elite verticality as a rim protector. Compares to Bam Adebayo or Al Horford — safe, high-floor starter with All-Star upside.",
-    "attributes": {
-      "身体": 65,
-      "突破": 60,
-      "篮下": 85,
-      "背身": 80,
-      "中投": 80,
-      "三分": 82,
-      "传球": 85,
-      "控运": 70,
-      "内防": 65,
-      "外防": 55,
-      "抢断": 50,
-      "盖帽": 55,
-      "篮板": 65
-    },
-    "tags": [
-      "⚠️ DUPLICATE: see ID #3",
-      "high IQ",
-      "stretch big",
-      "passing hub",
-      "polished",
-      "winner",
-      "safe pick"
-    ],
-    "combine": {
-      "standingReach": "8'9\"",
-      "laneAgility": 11.06,
-      "shuttleRun": 2.99,
-      "threeQuarterSprint": 3.31,
-      "standingVert": 28.5,
-      "maxVert": 35,
-      "laneAgilityRank": null,
-      "shuttleRank": null,
-      "sprintRank": null,
-      "standingVertRank": null,
-      "maxVertRank": null
-    },
-    "embedding": [
-      0.41,
-      0.63,
-      -0.22,
-      0.79,
-      0.35,
-      -0.51,
-      0.17,
-      -0.88,
-      0.62,
-      -0.04
-    ],
-    "img": "https://images.unsplash.com/photo-1546519638-68e109498eeb?w=400&h=500&fit=crop&auto=format&q=80",
-    "imgHero": "https://images.unsplash.com/photo-1546519638-68e109498eeb?w=1200&h=800&fit=crop&auto=format&q=90",
-    "profile_text_cn": "[重复说明——卡梅隆·布泽尔已作为3号球员收录于数据库。本条内容提供额外背景信息。] 卡梅隆·布泽尔是2026届选秀中荣誉最丰厚的潜力新星——杜克大学大一赛季便荣膺全美年度最佳球员，其父为卡洛斯·布泽尔。作为一名技术全面无短板的锋线球员，他将传统内线得分技巧与现代空间型打法完美融合（三分命中率39-40%）。拥有精英级篮球智商，能瞬间识破包夹战术并送出精准传球（场均4.1次助攻），是杜克大学的进攻核心。生涯斩获四座州冠军、两枚美国男篮金牌及三届桃木邀请赛冠军。隐患在于运动天赋上限——缺乏爆发力，属于低于篮筐的终结者。身高6英尺9英寸（约2.06米）的定位略显尴尬：担任全职中锋体型不足，作为护框者又缺乏顶级弹跳。模板可参照巴姆·阿德巴约或艾尔·霍福德——安全系数高、下限有保障的首发级别球员，具备全明星潜力。",
-    "positions": [
-      "PF",
-      "SF"
-    ],
-    "bbiq": 60,
-    "motor": 40,
-    "physicalScore": 65,
-    "injuryFlag": false,
-    "age": 19,
-    "productionScore": 56,
-    "isPolished": true,
-    "nameCn": "卡梅隆·布泽尔二世",
-    "skills_13d": [
-      "Post",
-      "Mid-range",
-      "Three Point",
-      "Passing Vision",
-      "Finishing"
-    ],
-    "style": [
-      "Playmaking Big",
-      "Shooter"
-    ],
-    "polishedReason": "大一即战力全能前锋"
-  },
-  {
-    "id": 35,
     "name": "Jaylen Harrell",
     "position": "SF",
     "team": "Washington State",
@@ -3004,7 +2997,7 @@
     "polishedReason": "伤愈待证明潜力"
   },
   {
-    "id": 36,
+    "id": 35,
     "name": "Tyran Stokes",
     "position": "SF",
     "team": "Kansas",
@@ -3089,5 +3082,217 @@
       "Point Forward"
     ],
     "polishedReason": "19岁毛胚天赋待打磨"
+  },
+  {
+    "name": "Zuby Ejiofor",
+    "nameCn": "祖比·埃吉奥福",
+    "position": "PF",
+    "team": "St. John's",
+    "height": "6'8\"",
+    "heightInches": 80,
+    "weight": "245 lbs",
+    "wingspan": "7'2\"",
+    "standingReach": "8'11\"",
+    "positions": [
+      "PF",
+      "C"
+    ],
+    "age": 22,
+    "isPolished": true,
+    "draftPick": 23,
+    "draftTeam": "ATL",
+    "draftTeamCn": "老鹰",
+    "profile_text_cn": "祖比·埃吉奥福是一名高能量、防守优先的内线球员。身高6尺8寸、臂展7尺2寸，凭借精英级的拼劲和身体对抗能力，能换防1到5号位。大四赛季在圣约翰大学场均16.3分7.3篮板3.5助攻2.2盖帽，当选大东联盟年度最佳球员兼最佳防守球员。进攻端以攻框和进攻篮板为主，生涯场均2.7个前场篮板，传球能力从1.6次提升至3.5次助攻。三分投射偏弱（生涯27.7%），但作为即插即用型替补内线，其防守多功能性和高下限使其成为安全的选择。",
+    "attributes": {
+      "身体": 75,
+      "突破": 40,
+      "篮下": 70,
+      "背身": 65,
+      "中投": 45,
+      "三分": 35,
+      "传球": 55,
+      "控运": 40,
+      "内防": 78,
+      "外防": 65,
+      "抢断": 55,
+      "盖帽": 78,
+      "篮板": 80
+    },
+    "tags": [
+      "high motor",
+      "defensive versatility",
+      "dirty work",
+      "rotation piece",
+      "rebounding motor"
+    ],
+    "combine": {
+      "standingReach": "8'11\"",
+      "laneAgility": null,
+      "shuttleRun": null,
+      "threeQuarterSprint": null,
+      "standingVert": null,
+      "maxVert": null
+    },
+    "embedding": [
+      0.5,
+      -0.2,
+      0.6,
+      0.1,
+      -0.3,
+      0.7,
+      -0.1,
+      0.4,
+      -0.5,
+      0.1
+    ],
+    "bbiq": 40,
+    "motor": 85,
+    "physicalScore": 70,
+    "injuryFlag": false,
+    "productionScore": 35,
+    "id": 36,
+    "img": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=400&h=500&fit=crop&auto=format&q=80",
+    "imgHero": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=1200&h=800&fit=crop&auto=format&q=90"
+  },
+  {
+    "name": "Tarris Reed Jr.",
+    "nameCn": "塔里斯·里德二世",
+    "position": "C",
+    "team": "UConn",
+    "height": "6'10\"",
+    "heightInches": 82,
+    "weight": "264 lbs",
+    "wingspan": "7'4.25\"",
+    "standingReach": "9'2\"",
+    "positions": [
+      "C"
+    ],
+    "age": 22,
+    "isPolished": true,
+    "draftPick": 26,
+    "draftTeam": "SAS",
+    "draftTeamCn": "马刺",
+    "profile_text_cn": "塔里斯·里德二世是本届选秀最全面的传统中锋。身高6尺10寸、体重264磅、臂展7尺4.25寸，具备NBA级别的内线体型。大四赛季在康涅狄格大学场均14.7分9.0篮板2.0盖帽，投篮命中率60.7%。在NCAA锦标赛中打出31分27篮板的历史级表现——自1968年埃尔文·海耶斯以来首场30+25的锦标赛数据。精英级篮板手和护框者，7尺4寸臂展位列本届前十。传球能力被低估（2.3助攻），能担任高位策应枢纽。红标：完全无三分投射，罚球仅62%，进攻端局限于禁区。适合作为传统内线轮换，提供篮板保护和禁区终结。",
+    "attributes": {
+      "身体": 85,
+      "突破": 30,
+      "篮下": 82,
+      "背身": 75,
+      "中投": 40,
+      "三分": 15,
+      "传球": 50,
+      "控运": 30,
+      "内防": 80,
+      "外防": 35,
+      "抢断": 40,
+      "盖帽": 80,
+      "篮板": 88
+    },
+    "tags": [
+      "rebounding motor",
+      "rim protector",
+      "traditional center",
+      "double-double machine",
+      "physical big"
+    ],
+    "combine": {
+      "standingReach": "9'2\"",
+      "standingVert": 29.5,
+      "maxVert": 33,
+      "laneAgility": null,
+      "shuttleRun": null,
+      "threeQuarterSprint": null
+    },
+    "embedding": [
+      0.7,
+      -0.4,
+      0.5,
+      0.1,
+      -0.2,
+      0.8,
+      -0.1,
+      0.3,
+      -0.4,
+      0.1
+    ],
+    "bbiq": 35,
+    "motor": 40,
+    "physicalScore": 82,
+    "injuryFlag": false,
+    "productionScore": 32,
+    "id": 37,
+    "img": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=400&h=500&fit=crop&auto=format&q=80",
+    "imgHero": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=1200&h=800&fit=crop&auto=format&q=90"
+  },
+  {
+    "name": "Joshua Jefferson",
+    "nameCn": "约书亚·杰弗森",
+    "position": "PF",
+    "team": "Iowa State",
+    "height": "6'9\"",
+    "heightInches": 81,
+    "weight": "246 lbs",
+    "wingspan": "6'10.75\"",
+    "standingReach": "8'8.5\"",
+    "positions": [
+      "PF",
+      "SF"
+    ],
+    "age": 22,
+    "isPolished": true,
+    "draftPick": 28,
+    "draftTeam": "BKN",
+    "draftTeamCn": "篮网",
+    "profile_text_cn": "约书亚·杰弗森是2026届最独特全面的前锋之一。身高6尺9寸、体重246磅，大四赛季在爱荷华州立场均16.4分7.4篮板4.8助攻1.6抢断，三分命中率34.5%。入选全美最佳阵容——爱荷华州立自2016年乔治斯·尼昂以来首人。大十二联盟历史上首位在单赛季多次砍下三双的球员，也是首位单赛季450+分250+篮板100+助攻70+抢断的球员。前锋中助攻率排名全国第三（28%），篮球智商极高。运动能力非精英级别，臂展6尺10.75寸在NBA四号位偏短，但投射、传球、篮板三位一体的技能包使其成为高下限的安全选择。",
+    "attributes": {
+      "身体": 70,
+      "突破": 55,
+      "篮下": 60,
+      "背身": 55,
+      "中投": 65,
+      "三分": 62,
+      "传球": 72,
+      "控运": 60,
+      "内防": 55,
+      "外防": 55,
+      "抢断": 60,
+      "盖帽": 45,
+      "篮板": 68
+    },
+    "tags": [
+      "high IQ",
+      "high feel",
+      "passing hub",
+      "stretch forward",
+      "safe pick"
+    ],
+    "combine": {
+      "standingReach": "8'8.5\"",
+      "standingVert": 27,
+      "maxVert": 33,
+      "laneAgility": null,
+      "shuttleRun": null,
+      "threeQuarterSprint": null
+    },
+    "embedding": [
+      0.3,
+      -0.1,
+      0.5,
+      0.2,
+      -0.2,
+      0.6,
+      0.1,
+      0.4,
+      -0.3,
+      0.2
+    ],
+    "bbiq": 78,
+    "motor": 40,
+    "physicalScore": 55,
+    "injuryFlag": false,
+    "productionScore": 38,
+    "id": 38,
+    "img": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=400&h=500&fit=crop&auto=format&q=80",
+    "imgHero": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=1200&h=800&fit=crop&auto=format&q=90"
   }
 ]
