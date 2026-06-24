@@ -411,7 +411,7 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
           <Pie
             data={pieData} dataKey="amplified"
             cx={105} cy={105} outerRadius={92} innerRadius={54}
-            paddingAngle={2} stroke="rgba(0,0,0,0.25)" strokeWidth={1}
+            paddingAngle={0} stroke="rgba(0,0,0,0.6)" strokeWidth={1.5}
             startAngle={90} endAngle={-270}
             isAnimationActive animationBegin={80} animationDuration={900} animationEasing="ease-out"
           >
