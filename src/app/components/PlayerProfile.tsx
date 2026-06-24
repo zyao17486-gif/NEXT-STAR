@@ -561,8 +561,8 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
         </button>
 
         {/* Row: Pos + School + Draft Pick + Follow */}
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <span style={{ color: T.body, fontSize: FONT.md, fontWeight: 500 }}>{player.pos}</span>
             <span style={{ color: T.dim, fontSize: FONT.md }}>/ {player.school}</span>
             {player.draftPick && (

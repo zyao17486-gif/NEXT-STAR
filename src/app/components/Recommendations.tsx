@@ -95,7 +95,7 @@ export function Recommendations({
                 style={{ background: BG.card, border: B.card }}>
 
                 {/* Header: rank badge + draft pick + polished badge */}
-                <div className="px-6 pt-6 pb-4 flex items-center gap-2">
+                <div className="px-6 pt-6 pb-5 flex flex-wrap items-center gap-2.5">
                   <span className="px-3 py-1.5 rounded-full text-sm font-medium"
                     style={{
                       background: i === 0 ? "rgba(255,200,100,0.12)" : BG.overlay,

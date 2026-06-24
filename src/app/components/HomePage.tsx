@@ -128,8 +128,8 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
                   style={{ width: "200px", background: BG.card, border: B.card }}>
                   {/* Draft pick */}
                   {p.draftPick && (
-                    <div className="mb-3">
-                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold"
+                    <div className="mb-4">
+                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
                         style={{ background: BG.overlay, color: T.label, letterSpacing: "0.04em" }}>
                         #{p.draftPick} {p.draftTeamCn} · 2026
                       </span>

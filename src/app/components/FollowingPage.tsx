@@ -87,8 +87,8 @@ export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: Foll
                 <button onClick={() => onSelectPlayer(p.name)} className="w-full text-left">
                   {/* Draft pick badge */}
                   {p.draftPick && (
-                    <div className="mb-3">
-                      <span className="px-2.5 py-1 rounded-full font-semibold"
+                    <div className="mb-4">
+                      <span className="px-2.5 py-1 rounded-full font-semibold whitespace-nowrap"
                         style={{ background: BG.overlay, color: T.label, fontSize: FONT.xs, letterSpacing: "0.04em" }}>
                         #{p.draftPick} {p.draftTeamCn} · 2026
                       </span>
