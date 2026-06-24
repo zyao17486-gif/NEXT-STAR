@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import draftDB from "../../data/2026-draft-database.json";
-import { T, BG, B, FONT, PIE, SCORE } from "../../styles/design-tokens";
+import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 const POS_CN: Record<string, string> = {
   PG: "控卫", SG: "得分后卫", SF: "小前锋", PF: "大前锋", C: "中锋",
@@ -180,7 +180,7 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
                     <button
                       onClick={() => setLiked(prev => {
                         const n = new Set(prev);
-                        n.has(item.id) ? n.delete(item.id) : n.add(item.id);
+                        if (n.has(item.id)) n.delete(item.id); else n.add(item.id);
                         return n;
                       })}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-200"

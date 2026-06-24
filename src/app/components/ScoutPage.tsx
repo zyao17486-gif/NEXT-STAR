@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useScoutAI } from "../../services/use-scout-ai";
 // V2: 20-player 2026 draft database (used for image lookup and local fallback)
 import draftDB from "../../data/2026-draft-database.json";
-import { T, BG, B, FONT, PIE, SCORE } from "../../styles/design-tokens";
+import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 type DraftPlayer = typeof draftDB[number];
 
@@ -234,7 +234,8 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
 
   // ── Local keyword search across all 36 draft prospects (limit 5) ──────────
   const localFiltered = ALL_PLAYERS.filter((p) => {
-    return p.name.includes(query) || p.school.toLowerCase().includes(query.toLowerCase());
+    const cn = (p as any).nameCn as string | undefined;
+    return p.name.includes(query) || (cn || "").includes(query) || p.school.toLowerCase().includes(query.toLowerCase());
   }).slice(0, 5);
 
   // ── Trigger AI Search via TanStack Query ──────────────────────────────────

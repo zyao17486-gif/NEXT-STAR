@@ -285,12 +285,17 @@ const COMBINE_LABELS: { key: keyof DraftPlayer["combine"]; label: string; format
   { key: "threeQuarterSprint", label: "3/4 场地冲刺", format: (v) => `${v}s` },
 ];
 
+const COMBINE_RANK_KEY: Record<string, string> = {
+  shuttleRun: "shuttleRank",
+  threeQuarterSprint: "sprintRank",
+};
+
 function DraftCombineTable({ dp }: { dp: DraftPlayer }) {
   const c = dp.combine;
   const rows = COMBINE_LABELS.map(({ key, label, format }) => {
     const val = c[key as keyof typeof c];
     if (val === null || val === undefined) return null;
-    const rankKey = (key + "Rank") as keyof typeof c;
+    const rankKey = (COMBINE_RANK_KEY[key] ?? key + "Rank") as keyof typeof c;
     const rank = c[rankKey] as number | null;
     return { label, value: format(val), rank };
   }).filter(Boolean) as { label: string; value: string; rank: number | null }[];
