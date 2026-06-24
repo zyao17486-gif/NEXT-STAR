@@ -437,7 +437,7 @@ function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
           </div>
           <span style={{ color: T.white, fontSize: FONT.lg, fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{physical.value}</span>
         </div>
-        <div className="h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)", boxShadow: "inset 0 1px 3px rgba(0,0,0,0.3)" }}>
+        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)", boxShadow: "inset 0 1px 3px rgba(0,0,0,0.3)" }}>
           <motion.div className="h-full rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${physical.value}%` }}
