@@ -61,6 +61,32 @@ export interface ProspectMatch {
   nameCn?: string;
 }
 
+// ── 5-Group Fused Display (13D → 5D for user-facing UI) ──────────────────
+
+export interface FusedGroup {
+  key: string;
+  label: string;
+  value: number;
+  subKeys: string[];
+  color: string;
+}
+
+/** 13D attribute values → 6 fused groups for clean user display.
+ *  Groups: 终结(突破+篮下+背身) / 投射(中投+三分) / 组织(传球+控运)
+ *          / 防守(内防+外防+抢断+盖帽) / 身体(身体) / 篮板(篮板)
+ *  Each group = average of its sub-dimensions (single dim for 身体/篮板). */
+export function fuse13Dto5(attrs: Record<string, number>): FusedGroup[] {
+  const get = (k: string) => attrs[k] ?? 50;
+  return [
+    { key: "finish",   label: "终结", value: Math.round((get("突破") + get("篮下") + get("背身")) / 3), subKeys: ["突破","篮下","背身"], color: "#2997ff" },
+    { key: "shooting", label: "投射", value: Math.round((get("中投") + get("三分")) / 2),           subKeys: ["中投","三分"],       color: "#30d158" },
+    { key: "playmake", label: "组织", value: Math.round((get("传球") + get("控运")) / 2),           subKeys: ["传球","控运"],       color: "#ffd60a" },
+    { key: "defense",  label: "防守", value: Math.round((get("内防") + get("外防") + get("抢断") + get("盖帽")) / 4), subKeys: ["内防","外防","抢断","盖帽"], color: "#ff453a" },
+    { key: "physical", label: "身体", value: get("身体"),                                          subKeys: ["身体"],             color: "#ffffff" },
+    { key: "rebound",  label: "篮板", value: get("篮板"),                                          subKeys: ["篮板"],             color: "#bf5af2" },
+  ];
+}
+
 // ── 13D Position Archetype Baselines ──────────────────────────────────────
 // When user selects position but no star players, use these baselines
 // Index order: 身体/突破/篮下/背身/中投/三分/传球/控运/内防/外防/抢断/盖帽/篮板
@@ -356,7 +382,8 @@ export function findTopMatches(
   prospects: any[],
   selectedPosition: string,
   topN: number = 4,
-  starBodyRef?: { height: number; weight: number; wingspan: number }
+  starBodyRef?: { height: number; weight: number; wingspan: number },
+  polishedType?: "polished" | "raw" | null
 ): ProspectMatch[] {
   const scored = prospects.map(p => {
     // Layer 1: 13D cosine similarity
@@ -379,8 +406,13 @@ export function findTopMatches(
       bodyScore = bodyMatchScore(pH, pW, pWS, starBodyRef.height, starBodyRef.weight, starBodyRef.wingspan);
     }
 
-    // Combined: 50% attributes + 25% position + 25% body
-    const combinedScore = Math.round(attrScore * 0.50 + posScore * 100 * 0.25 + bodyScore * 100 * 0.25);
+    // PolishedType bonus: +4 points when prospect matches user's preference
+    let polishBonus = 0;
+    if (polishedType === "polished" && (p as any).isPolished === true) polishBonus = 4;
+    if (polishedType === "raw" && (p as any).isPolished === false) polishBonus = 4;
+
+    // Combined: 50% attributes + 25% position + 25% body + polish bonus
+    const combinedScore = Math.round(attrScore * 0.50 + posScore * 100 * 0.25 + bodyScore * 100 * 0.25) + polishBonus;
 
     const match: ProspectMatch = {
       id: p.id,

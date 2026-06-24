@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import type { ProspectMatch } from "../../utils/dna-engine";
+import { fuse13Dto5 } from "../../utils/dna-engine";
 import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 interface RecommendationsProps {
@@ -93,8 +94,8 @@ export function Recommendations({
                 className="rounded-3xl overflow-hidden"
                 style={{ background: BG.card, border: B.card }}>
 
-                {/* Header: rank badge + match score */}
-                <div className="px-6 pt-6 pb-4 flex items-center justify-between">
+                {/* Header: rank badge only */}
+                <div className="px-6 pt-6 pb-4">
                   <span className="px-3 py-1.5 rounded-full text-sm font-medium"
                     style={{
                       background: i === 0 ? "rgba(255,200,100,0.12)" : BG.overlay,
@@ -102,14 +103,6 @@ export function Recommendations({
                       fontSize: FONT.base,
                     }}>
                     {rankLabels[i] || "实力新秀"}
-                  </span>
-                  <span style={{
-                    color: i === 0 ? "#ffc864" : T.label,
-                    fontSize: FONT.lg,
-                    fontWeight: 700,
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    匹配度 {p.matchScore}%
                   </span>
                 </div>
 
@@ -136,20 +129,17 @@ export function Recommendations({
                   ))}
                 </div>
 
-                {/* 13D Attribute bars — compact */}
+                {/* 5D Fused attribute bars — compact, no values */}
                 <div className="px-6 pb-6 space-y-1.5">
-                  {["身体","突破","篮下","背身","中投","三分","传球","控运","内防","外防","抢断","盖帽","篮板"]
-                    .map(attr => [attr, p.attributes[attr] ?? 50] as [string, number])
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([label, val]) => (
-                    <div key={label}>
-                      <div className="flex justify-between mb-0.5">
-                        <span style={{ color: T.label, fontSize: FONT.xs }}>{label}</span>
-                        <span style={{ color: val >= 80 ? T.white : T.body, fontSize: FONT.xs, fontWeight: 500 }}>{val}</span>
+                  {fuse13Dto5(p.attributes)
+                    .map(g => (
+                    <div key={g.key}>
+                      <div className="mb-0.5">
+                        <span style={{ color: T.label, fontSize: FONT.xs }}>{g.label}</span>
                       </div>
                       <div className="h-1 rounded-full" style={{ background: BG.overlay }}>
                         <div className="h-1 rounded-full transition-all duration-1000"
-                          style={{ width: `${val}%`, background: val >= 80 ? "#fff" : "rgba(255,255,255,0.35)" }} />
+                          style={{ width: `${g.value}%`, background: g.color }} />
                       </div>
                     </div>
                   ))}

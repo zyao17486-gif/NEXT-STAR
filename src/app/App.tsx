@@ -77,6 +77,7 @@ export default function App() {
   const handleOnboardingComplete = useCallback((data: {
     selectedPosition: string;
     selectedStarPlayers: string[];
+    polishedType?: "polished" | "raw" | null;
   }) => {
     // Build star body reference for body-layer matching
     const selectedStars = data.selectedStarPlayers
@@ -95,7 +96,7 @@ export default function App() {
       selectedStarPlayerIds: data.selectedStarPlayers,
     });
 
-    const matches = findTopMatches(dna.vector, draftDB, data.selectedPosition, 4, starBodyRef);
+    const matches = findTopMatches(dna.vector, draftDB, data.selectedPosition, 4, starBodyRef, data.polishedType);
 
     store.setDNA(dna, matches);
     store.setOnboardingComplete();

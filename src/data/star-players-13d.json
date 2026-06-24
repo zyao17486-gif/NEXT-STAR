@@ -981,6 +981,42 @@
     ]
   },
   {
+    "id": "paolo-banchero",
+    "name": "保罗·班切罗",
+    "en": "Paolo Banchero",
+    "position": "PF",
+    "positions": ["PF", "SF"],
+    "height": 208,
+    "wingspan": 213,
+    "weight": 113,
+    "attributes": {
+      "身体": 85,
+      "突破": 88,
+      "篮下": 90,
+      "背身": 82,
+      "中投": 88,
+      "三分": 78,
+      "传球": 82,
+      "控运": 84,
+      "内防": 65,
+      "外防": 68,
+      "抢断": 60,
+      "盖帽": 62,
+      "篮板": 82
+    },
+    "skills": [
+      "Mid-range",
+      "Finishing",
+      "Isolation",
+      "Passing Vision"
+    ],
+    "style": [
+      "Primary Creator",
+      "Point Forward",
+      "ISO"
+    ]
+  },
+  {
     "id": "nikola-jokic",
     "name": "尼古拉·约基奇",
     "en": "Nikola Jokic",

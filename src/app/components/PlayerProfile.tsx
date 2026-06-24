@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell } from "recharts";
 
 // V2: 20-player 2026 draft database for AI Scout result profiles
 import draftDB from "../../data/2026-draft-database.json";
+import { fuse13Dto5 } from "../../utils/dna-engine";
 import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 type DraftPlayer = typeof draftDB[number];
@@ -373,21 +374,11 @@ function SchoolIcon({ size = "1em" }: { size?: string }) {
   );
 }
 
-// ── 13D → 5-group fused donut pie ──────────────────────────────────────────
-// Fuse 13 Chinese-keyed dimensions into 5 logical groups for the pie chart
-function fuse13Dto5(slices: { key: string; value: number }[]) {
-  const get = (k: string) => slices.find(s => s.key === k)?.value ?? 50;
-  return [
-    { key: "inside",   label: "内线进攻", value: Math.round((get("突破") + get("篮下") + get("背身")) / 3), subKeys: ["突破","篮下","背身"], color: "#ff453a" },
-    { key: "shooting", label: "投射",     value: Math.round((get("中投") + get("三分")) / 2),           subKeys: ["中投","三分"],       color: "#30d158" },
-    { key: "playmake", label: "组织控运", value: Math.round((get("传球") + get("控运")) / 2),           subKeys: ["传球","控运"],       color: "#ffd60a" },
-    { key: "defense",  label: "防守",     value: Math.round((get("内防") + get("外防") + get("抢断") + get("盖帽")) / 4), subKeys: ["内防","外防","抢断","盖帽"], color: "#2997ff" },
-    { key: "physical", label: "身体篮板", value: Math.round((get("身体") + get("篮板")) / 2),           subKeys: ["身体","篮板"],       color: "#bf5af2" },
-  ];
-}
-
 function SkillChart({ slices }: { slices: { key: string; value: number }[] }) {
-  const fused = fuse13Dto5(slices);
+  // Convert slices array → Record for shared fuse13Dto5
+  const attrs: Record<string, number> = {};
+  for (const s of slices) attrs[s.key] = s.value;
+  const fused = fuse13Dto5(attrs);
   const CONTRAST_EXPONENT = 1.8;
 
   const pieData = fused.map(g => ({

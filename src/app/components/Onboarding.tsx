@@ -7,6 +7,7 @@ interface OnboardingProps {
   onComplete: (data: {
     selectedPosition: string;
     selectedStarPlayers: string[];
+    polishedType: "polished" | "raw" | null;
   }) => void;
   onSkip: () => void;
 }
@@ -24,10 +25,16 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
   const [step, setStep] = useState(0);
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedStarPlayers, setSelectedStarPlayers] = useState<string[]>([]);
+  const [polishedType, setPolishedType] = useState<"polished" | "raw" | null>(null);
+
   const canNext = [
     true,                                                       // Step 0: Welcome
-    selectedPosition !== "" && selectedStarPlayers.length > 0,  // Step 1: Position + Stars → Generate
+    selectedPosition !== "" && selectedStarPlayers.length > 0,  // Step 1: Position + Stars
+    polishedType !== null,                                      // Step 2: Polished type
   ][step];
+
+  const totalSteps = 2; // Step 0 welcome, Step 1 position+stars, Step 2 polished
+  const progressPct = step === 0 ? 0 : step === 1 ? 50 : 100;
 
   return (
     <div className="min-h-screen flex" style={{ background: BG.page, fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
@@ -49,6 +56,23 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
             </button>
           )}
         </div>
+
+        {/* Progress bar */}
+        {step > 0 && (
+          <div className="absolute top-28 left-0 right-0 px-8 lg:px-20">
+            <div className="max-w-md mx-auto lg:mx-0">
+              <div className="h-0.5 rounded-full" style={{ background: BG.overlay }}>
+                <motion.div className="h-0.5 rounded-full bg-white"
+                  animate={{ width: `${progressPct}%` }}
+                  transition={{ duration: 0.5, ease: "easeOut" }} />
+              </div>
+              <div className="flex justify-between mt-2">
+                <span style={{ color: step >= 1 ? T.white : T.dim, fontSize: FONT.xs }}>位置 · 球星</span>
+                <span style={{ color: step >= 2 ? T.white : T.dim, fontSize: FONT.xs }}>即战力 / 潜力股</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Content area */}
         <div className="flex-1 flex flex-col justify-center">
@@ -98,7 +122,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                 {/* ── Step 1 — Position → Star Players ── */}
                 {step === 1 && (
                   <div>
-                    {/* Phase A: Position Selection (no descriptions) */}
+                    {/* Phase A: Position Selection */}
                     {!selectedPosition && (
                       <div>
                         <h2 style={{ color: T.white, fontSize: "36px", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: "28px" }}>
@@ -125,7 +149,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                       </div>
                     )}
 
-                    {/* Phase B: Star Player Selection for the chosen position */}
+                    {/* Phase B: Star Player Selection */}
                     {selectedPosition && (
                       <div>
                         <button onClick={() => { setSelectedPosition(""); setSelectedStarPlayers([]); }}
@@ -154,9 +178,52 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                             );
                           })}
                         </div>
-
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* ── Step 2 — Polished vs Raw ── */}
+                {step === 2 && (
+                  <div>
+                    <h2 style={{ color: T.white, fontSize: "36px", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: "12px" }}>
+                      你更看重哪种特质？
+                    </h2>
+                    <p style={{ color: T.label, fontSize: FONT.sm, marginBottom: "32px", lineHeight: 1.6 }}>
+                      这会影响算法推荐——即战力偏向成熟度高、即插即用的球员，潜力股偏向天花板高、仍需打磨的新星
+                    </p>
+
+                    <div className="flex flex-col gap-3">
+                      <button onClick={() => setPolishedType("polished")}
+                        className="text-left p-6 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                        style={{
+                          background: polishedType === "polished" ? "rgba(41,151,255,0.12)" : BG.subtle,
+                          border: polishedType === "polished" ? "1px solid #2997ff" : "1px solid rgba(255,255,255,0.07)",
+                        }}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <span style={{ fontSize: "24px" }}>⚡</span>
+                          <span style={{ color: T.white, fontSize: "20px", fontWeight: 600 }}>即战力</span>
+                        </div>
+                        <p style={{ color: T.label, fontSize: FONT.sm, lineHeight: 1.5 }}>
+                          技术成熟、比赛阅读能力强，进入联盟即可做出贡献
+                        </p>
+                      </button>
+
+                      <button onClick={() => setPolishedType("raw")}
+                        className="text-left p-6 rounded-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                        style={{
+                          background: polishedType === "raw" ? "rgba(191,90,242,0.12)" : BG.subtle,
+                          border: polishedType === "raw" ? "1px solid #bf5af2" : "1px solid rgba(255,255,255,0.07)",
+                        }}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <span style={{ fontSize: "24px" }}>💎</span>
+                          <span style={{ color: T.white, fontSize: "20px", fontWeight: 600 }}>潜力股</span>
+                        </div>
+                        <p style={{ color: T.label, fontSize: FONT.sm, lineHeight: 1.5 }}>
+                          身体天赋出众、发展空间巨大，上限可能更高但需要时间打磨
+                        </p>
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -166,17 +233,18 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
             {/* Navigation */}
             {step > 0 && (
               <div className="flex items-center justify-between mt-12">
-                <button onClick={() => setStep(s => s - 1)}
+                <button onClick={() => { setStep(s => s - 1); if (step === 2) setPolishedType(null); }}
                   style={{ color: T.dim, fontSize: FONT.md }}
                   className="hover:text-white transition-colors duration-200">
                   ← 返回
                 </button>
                 <button
                   onClick={() => {
-                    if (step < 1) setStep(s => s + 1);
+                    if (step < 2) setStep(s => s + 1);
                     else onComplete({
                       selectedPosition,
                       selectedStarPlayers,
+                      polishedType,
                     });
                   }}
                   disabled={!canNext}
@@ -187,7 +255,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                     fontSize: FONT.md,
                     fontWeight: 600,
                   }}>
-                  {step === 1 ? "生成篮球DNA" : "继续"}
+                  {step === 2 ? "生成篮球DNA" : "继续"}
                 </button>
               </div>
             )}
