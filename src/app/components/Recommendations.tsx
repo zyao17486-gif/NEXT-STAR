@@ -112,7 +112,7 @@ export function Recommendations({
                         fontSize: FONT.xs,
                         letterSpacing: "0.04em",
                       }}>
-                      #{(p as any).draftPick} 2026
+                      #{(p as any).draftPick} {(p as any).draftTeamCn} · 2026
                     </span>
                   )}
                   {(p as any).isPolished !== undefined && (

@@ -568,7 +568,7 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
             {player.draftPick && (
               <span className="px-2.5 py-0.5 rounded-full font-semibold"
                 style={{ background: BG.overlay, color: T.label, fontSize: FONT.xs, letterSpacing: "0.04em" }}>
-                #{player.draftPick} 2026 · {player.draftTeamCn}
+                #{player.draftPick} {player.draftTeamCn} · 2026
               </span>
             )}
           </div>
@@ -696,7 +696,7 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
                 {player.draftPick ? (
                   <div>
                     <span style={{ color: T.label, fontSize: FONT.sm }}>选秀顺位</span>
-                    <div style={{ color: T.white, fontSize: FONT.base, fontWeight: 500, marginTop: "4px" }}>#{player.draftPick} · {player.draftTeamCn}</div>
+                    <div style={{ color: T.white, fontSize: FONT.base, fontWeight: 500, marginTop: "4px" }}>#{player.draftPick} {player.draftTeamCn} · 2026</div>
                   </div>
                 ) : (player.projection && player.projection !== "2026 NBA Draft" && (
                   <div>

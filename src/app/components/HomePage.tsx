@@ -131,7 +131,7 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
                     <div className="mb-3">
                       <span className="px-2.5 py-1 rounded-full text-xs font-semibold"
                         style={{ background: BG.overlay, color: T.label, letterSpacing: "0.04em" }}>
-                        #{p.draftPick} 2026
+                        #{p.draftPick} {p.draftTeamCn} · 2026
                       </span>
                     </div>
                   )}
