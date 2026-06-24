@@ -124,22 +124,12 @@ export function HomePage({ onNavigate, followed }: HomePageProps) {
                   onClick={() => onNavigate("player", { name: p.name })}
                   className="group shrink-0 rounded-2xl p-5 transition-all duration-200 hover:bg-white/[0.03]"
                   style={{ width: "180px", background: BG.card, border: B.card }}>
-                  {/* Draft rank + polished badge */}
-                  <div className="mb-3 flex items-center gap-2">
+                  {/* Draft rank */}
+                  <div className="mb-3">
                     <span className="px-2 py-0.5 rounded-full text-xs font-semibold"
                       style={{ background: BG.overlay, color: T.body }}>
                       #{p.rank}
                     </span>
-                    {(p as any).isPolished !== undefined && (
-                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold"
-                        style={{
-                          background: (p as any).isPolished ? "rgba(41,151,255,0.18)" : "rgba(191,90,242,0.18)",
-                          color: (p as any).isPolished ? "#2997ff" : "#bf5af2",
-                          border: (p as any).isPolished ? "1px solid rgba(41,151,255,0.35)" : "1px solid rgba(191,90,242,0.35)",
-                        }}>
-                        {(p as any).isPolished ? "⚡ 即战力" : "💎 潜力股"}
-                      </span>
-                    )}
                   </div>
                   <div style={{ color: T.white, fontSize: FONT.lg, fontWeight: 600, marginBottom: "4px" }}>
                     {(p as any).nameCn || p.name}

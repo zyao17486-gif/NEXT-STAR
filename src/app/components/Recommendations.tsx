@@ -94,8 +94,8 @@ export function Recommendations({
                 className="rounded-3xl overflow-hidden"
                 style={{ background: BG.card, border: B.card }}>
 
-                {/* Header: rank badge only */}
-                <div className="px-6 pt-6 pb-4">
+                {/* Header: rank badge + polished badge */}
+                <div className="px-6 pt-6 pb-4 flex items-center gap-2">
                   <span className="px-3 py-1.5 rounded-full text-sm font-medium"
                     style={{
                       background: i === 0 ? "rgba(255,200,100,0.12)" : BG.overlay,
@@ -104,6 +104,16 @@ export function Recommendations({
                     }}>
                     {rankLabels[i] || "实力新秀"}
                   </span>
+                  {(p as any).isPolished !== undefined && (
+                    <span className="px-3 py-1.5 rounded-full text-sm font-semibold"
+                      style={{
+                        background: (p as any).isPolished ? "rgba(255,214,10,0.15)" : "rgba(41,151,255,0.15)",
+                        color: (p as any).isPolished ? "#ffd60a" : "#2997ff",
+                        border: (p as any).isPolished ? "1px solid rgba(255,214,10,0.3)" : "1px solid rgba(41,151,255,0.3)",
+                      }}>
+                      {(p as any).isPolished ? "即战力" : "潜力股"}
+                    </span>
+                  )}
                 </div>
 
                 {/* Position + School + Player name */}
