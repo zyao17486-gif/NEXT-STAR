@@ -1,20 +1,40 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { lazy, Suspense, useState, useCallback, useMemo, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Onboarding } from "./components/Onboarding";
 import { DNAResult } from "./components/DNAResult";
 import { Recommendations } from "./components/Recommendations";
 import { HomePage } from "./components/HomePage";
-import { PlayerProfile } from "./components/PlayerProfile";
-import { ScoutPage } from "./components/ScoutPage";
-import { FollowingPage } from "./components/FollowingPage";
 import { Sidebar } from "./components/Sidebar";
-import { ArticlePage } from "./components/ArticlePage";
 import { TourGuide } from "./components/TourGuide";
 import { generateDNA, findTopMatches } from "../utils/dna-engine";
 import { useAppStore } from "../store/app-store";
 
 import draftDB from "../data/2026-draft-database.json";
 import star13DDB from "../data/star-players-13d.json";
+
+const PlayerProfile = lazy(() =>
+  import("./components/PlayerProfile").then((module) => ({ default: module.PlayerProfile }))
+);
+const ScoutPage = lazy(() =>
+  import("./components/ScoutPage").then((module) => ({ default: module.ScoutPage }))
+);
+const FollowingPage = lazy(() =>
+  import("./components/FollowingPage").then((module) => ({ default: module.FollowingPage }))
+);
+const ArticlePage = lazy(() =>
+  import("./components/ArticlePage").then((module) => ({ default: module.ArticlePage }))
+);
+
+function PageLoadingFallback() {
+  return (
+    <div role="status" aria-live="polite" className="space-y-4 py-4">
+      <span className="sr-only">页面加载中</span>
+      <div className="h-10 w-40 rounded-xl animate-pulse" style={{ background: "rgba(255,255,255,0.08)" }} />
+      <div className="h-24 w-full max-w-2xl rounded-2xl animate-pulse" style={{ background: "rgba(255,255,255,0.05)" }} />
+      <div className="h-24 w-full max-w-2xl rounded-2xl animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+    </div>
+  );
+}
 
 /** Force-clean stale followed names that can't resolve in the 2026 draft DB */
 function cleanStaleFollows() {
@@ -328,7 +348,9 @@ export default function App() {
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
-                  {mainContent()}
+                  <Suspense fallback={<PageLoadingFallback />}>
+                    {mainContent()}
+                  </Suspense>
                 </motion.div>
               </AnimatePresence>
             </div>
