@@ -562,6 +562,8 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
           <button
             onClick={() => onToggleFollow(toggleKey)}
             disabled={!playerFound}
+            aria-pressed={isFollowed}
+            aria-label={`${isFollowed ? "取消关注" : "关注"} ${player.name}`}
             className="px-5 py-2 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
               background: isFollowed ? BG.overlay : T.white,
@@ -599,10 +601,11 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
       </div>
 
       {/* ── Tabs ── */}
-      <div className="flex gap-1 mb-8 p-1 rounded-xl"
+      <div className="flex gap-1 mb-8 p-1 rounded-xl" role="tablist" aria-label="球员详情分类"
         style={{ background: BG.card, border: B.card, display: "inline-flex" }}>
         {TABS.map((t, i) => (
           <button key={t} onClick={() => setTab(i)}
+            role="tab" aria-selected={tab === i} aria-controls={`player-tab-panel-${i}`}
             className="px-5 py-2.5 rounded-lg transition-all duration-200 flex items-center gap-2"
             style={{
               background: tab === i ? BG.overlay : "transparent",
@@ -618,7 +621,7 @@ export function PlayerProfile({ playerName, onBack, followed, onToggleFollow }: 
       </div>
 
       {/* ── Tab content ── */}
-      <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <motion.div id={`player-tab-panel-${tab}`} role="tabpanel" key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
 
         {/* ── 概览 ── */}
         {tab === 0 && (

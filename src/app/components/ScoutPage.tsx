@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useScoutAI } from "../../services/use-scout-ai";
+import { ScoutAIError, useScoutAI } from "../../services/use-scout-ai";
 // V2: 20-player 2026 draft database (used for image lookup and local fallback)
 import draftDB from "../../data/2026-draft-database.json";
 import { T, BG, B, FONT } from "../../styles/design-tokens";
@@ -103,6 +103,7 @@ function AIResultCard({
     >
       <button
         onClick={() => onSelectPlayer(rec.name)}
+        aria-label={`查看 ${rec.name} 的球员详情`}
         className="w-full text-left px-6 py-5 transition-colors duration-150"
         style={{ background: BG.card, borderBottom: B.divider }}
       >
@@ -133,18 +134,6 @@ function AIResultCard({
               {rec.matchScore}%
             </div>
             <div style={{ color: T.ghost, fontSize: FONT.xs, marginTop: "3px" }}>匹配度</div>
-            {/* Follow button for AI results */}
-            <button
-              onClick={(e) => { e.stopPropagation(); onToggleFollow(toggleKey); }}
-              className="mt-2 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
-              style={{
-                background: isFollowed ? BG.overlay : T.white,
-                border: isFollowed ? B.visible : "1px solid transparent",
-                color: isFollowed ? T.body : BG.page,
-              }}
-            >
-              {isFollowed ? "已关注" : "关注"}
-            </button>
           </div>
         </div>
 
@@ -154,10 +143,27 @@ function AIResultCard({
         </p>
       </button>
 
+      <div className="flex justify-end px-6 pb-3" style={{ background: BG.card, borderBottom: B.divider }}>
+        <button
+          onClick={() => onToggleFollow(toggleKey)}
+          aria-pressed={isFollowed}
+          aria-label={`${isFollowed ? "取消关注" : "关注"} ${rec.name}`}
+          className="min-h-11 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
+          style={{
+            background: isFollowed ? BG.overlay : T.white,
+            border: isFollowed ? B.visible : "1px solid transparent",
+            color: isFollowed ? T.body : BG.page,
+          }}
+        >
+          {isFollowed ? "已关注" : "关注"}
+        </button>
+      </div>
+
       {/* Expandable strengths & risks */}
       <div style={{ background: BG.card, borderBottom: B.divider }}>
         <button
           onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+          aria-expanded={expanded}
           className="w-full flex items-center justify-between px-6 py-2.5 transition-colors hover:bg-white/[0.02]"
           style={{ color: T.dim, fontSize: FONT.sm }}
         >
@@ -224,11 +230,17 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
 
   // AI states — TanStack Query managed
   const [aiSearchQuery, setAiSearchQuery] = useState("");
-  const { data: aiResult, isLoading: isSearching, error: aiQueryError } = useScoutAI(
+  const { data: aiResult, isFetching: isSearching, error: aiQueryError, refetch } = useScoutAI(
     aiSearchQuery,
     aiSearchQuery.trim().length > 0
   );
-  const [aiError, setAiError] = useState<string | null>(null);
+  const [errorDismissed, setErrorDismissed] = useState(false);
+
+  const aiError = !errorDismissed && aiQueryError
+    ? aiQueryError instanceof ScoutAIError
+      ? aiQueryError
+      : new ScoutAIError("server", "AI 服务暂时不可用，请稍后重试。", true)
+    : null;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -240,23 +252,21 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
 
   // ── Trigger AI Search via TanStack Query ──────────────────────────────────
   const runAISearch = useCallback((searchQuery: string) => {
-    if (!searchQuery.trim()) return;
-    setAiError(null);
-    setAiSearchQuery(searchQuery.trim());
+    const nextQuery = searchQuery.trim();
+    if (!nextQuery) return;
+    setErrorDismissed(false);
+    if (nextQuery === aiSearchQuery) {
+      refetch();
+    } else {
+      setAiSearchQuery(nextQuery);
+    }
     // GA: AI 搜索
     if (typeof window !== "undefined" && (window as any).gtag) {
       (window as any).gtag("event", "ai_search", {
-        query: searchQuery.trim(),
+        query: nextQuery,
       });
     }
-  }, []);
-
-  // Sync TanStack Query error to local error display
-  useEffect(() => {
-    if (aiQueryError && !aiError) {
-      setAiError(aiQueryError instanceof Error ? aiQueryError.message : "AI 服务暂不可用");
-    }
-  }, [aiQueryError]);
+  }, [aiSearchQuery, refetch]);
 
   // ── Handle Enter key ─────────────────────────────────────────────────────
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -272,7 +282,7 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
     const next = !aiMode;
     setAiMode(next);
     setAiSearchQuery("");
-    setAiError(null);
+    setErrorDismissed(false);
     if (next) {
       // Focus the input when switching to AI mode
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -281,7 +291,7 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
 
   // ── Dismiss AI error ─────────────────────────────────────────────────────
   const dismissError = () => {
-    setAiError(null);
+    setErrorDismissed(true);
   };
 
   return (
@@ -310,11 +320,14 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
           <input
             ref={inputRef}
             value={query}
+            type="search"
+            enterKeyHint="search"
+            aria-label={aiMode ? "描述想寻找的球员类型" : "搜索球员姓名或球队"}
             onChange={(e) => {
-              setQuery(e.target.value);
-              if (!aiMode) {
-                setAiSearchQuery("");
-                setAiError(null);
+                setQuery(e.target.value);
+                if (!aiMode) {
+                  setAiSearchQuery("");
+                  setErrorDismissed(false);
               }
             }}
             onKeyDown={handleKeyDown}
@@ -327,7 +340,8 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
             style={{ color: T.white, fontSize: FONT.lg }}
           />
           {query && (
-            <button onClick={() => { setQuery(""); setAiSearchQuery(""); setAiError(null); }} style={{ color: T.dim, fontSize: "18px" }}>
+            <button onClick={() => { setQuery(""); setAiSearchQuery(""); setErrorDismissed(false); }}
+              aria-label="清空搜索" className="w-11 h-11 flex items-center justify-center" style={{ color: T.dim, fontSize: "18px" }}>
               ×
             </button>
           )}
@@ -337,6 +351,7 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
         <button
           data-tour="ai-toggle"
           onClick={toggleAiMode}
+          aria-pressed={aiMode}
           className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-all duration-200"
           style={{
             background: aiMode ? "rgba(255,215,0,0.12)" : BG.hover,
@@ -378,18 +393,35 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden mb-5"
           >
-            <div
-              className="flex items-center justify-between px-4 py-3 rounded-xl"
+            <div role="alert"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 rounded-xl"
               style={{ background: "rgba(255,69,58,0.08)", border: "1px solid rgba(255,69,58,0.2)" }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-3">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <circle cx="7" cy="7" r="6" stroke="#ff453a" strokeWidth="1.2" />
                   <path d="M7 4v3.5M7 10v.5" stroke="#ff453a" strokeWidth="1.3" strokeLinecap="round" />
                 </svg>
-                <span style={{ color: T.body, fontSize: FONT.base }}>{aiError}</span>
+                <div>
+                  <div style={{ color: T.body, fontSize: FONT.base, fontWeight: 600, marginBottom: "2px" }}>
+                    {aiError.code === "timeout" ? "分析超时" : aiError.code === "network" ? "网络连接失败" : aiError.code === "rate-limit" ? "请求太频繁" : aiError.code === "configuration" ? "服务配置异常" : "AI 服务异常"}
+                  </div>
+                  <div style={{ color: T.label, fontSize: FONT.sm }}>{aiError.message}</div>
+                </div>
               </div>
-              <button onClick={dismissError} style={{ color: T.dim, fontSize: "16px" }}>×</button>
+              <div className="flex items-center gap-3 self-end sm:self-auto">
+                {aiError.retryable && (
+                  <button
+                    onClick={() => { setErrorDismissed(false); refetch(); }}
+                    disabled={isSearching}
+                    className="px-3 py-1.5 rounded-lg font-semibold disabled:opacity-40"
+                    style={{ color: T.white, background: "rgba(255,255,255,0.08)", fontSize: FONT.sm }}
+                  >
+                    {isSearching ? "重试中…" : "重新尝试"}
+                  </button>
+                )}
+                <button onClick={dismissError} aria-label="关闭错误提示" style={{ color: T.dim, fontSize: "18px" }}>×</button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -476,6 +508,7 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
                     >
                       <button
                         onClick={() => onSelectPlayer(p.name)}
+                        aria-label={`查看 ${p.nameCn || p.name} 的球员详情`}
                         className="flex-1 flex items-center gap-4 text-left min-w-0 bg-transparent border-none outline-none cursor-pointer"
                         style={{ padding: 0 }}
                       >
@@ -495,7 +528,9 @@ export function ScoutPage({ onSelectPlayer, followed, onToggleFollow }: ScoutPag
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); onToggleFollow(toggleKey); }}
-                        className="px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shrink-0"
+                        aria-pressed={isFollowed}
+                        aria-label={`${isFollowed ? "取消关注" : "关注"} ${p.nameCn || p.name}`}
+                        className="min-h-11 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shrink-0"
                         style={{
                           background: isFollowed ? BG.overlay : T.white,
                           border: isFollowed ? B.visible : "1px solid transparent",

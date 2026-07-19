@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { T, BG, B, FONT } from "../../styles/design-tokens";
 
 interface SidebarProps {
@@ -16,6 +16,22 @@ const NAV = [
 export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const cancelResetRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!showResetConfirm) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const focusTimer = window.setTimeout(() => cancelResetRef.current?.focus(), 0);
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowResetConfirm(false);
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", handleEscape);
+      previousFocus?.focus();
+    };
+  }, [showResetConfirm]);
 
   const handleNav = (page: string) => {
     onNavigate(page);
@@ -28,7 +44,11 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 py-3"
         style={{ background: BG.page, borderBottom: B.card }}>
         <span style={{ color: T.white, fontSize: FONT.md, fontWeight: 700, letterSpacing: "0.15em" }}>NEXT STAR</span>
-        <button data-tour="hamburger" onClick={() => setMobileOpen(!mobileOpen)} style={{ color: T.white, fontSize: "20px", lineHeight: 1 }}>
+        <button data-tour="hamburger" onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? "关闭导航菜单" : "打开导航菜单"}
+          aria-expanded={mobileOpen} aria-controls="primary-navigation"
+          className="w-11 h-11 flex items-center justify-center rounded-lg"
+          style={{ color: T.white, fontSize: "20px", lineHeight: 1 }}>
           {mobileOpen ? "✕" : "☰"}
         </button>
       </div>
@@ -40,7 +60,7 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
       )}
 
       {/* ── Sidebar (desktop fixed + mobile slide-in) ── */}
-      <div className={[
+      <div id="primary-navigation" className={[
         "fixed left-0 top-0 bottom-0 z-40 flex flex-col px-6 py-8 w-52 transition-transform duration-300",
         "max-lg:translate-x-[-100%]",
         mobileOpen ? "max-lg:!translate-x-0" : "",
@@ -59,6 +79,7 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
         <nav className="flex flex-col gap-1 flex-1">
           {NAV.map(n => (
             <button key={n.id} onClick={() => handleNav(n.id)}
+              aria-current={active === n.id ? "page" : undefined}
               data-tour={n.id === "scout" ? "scout-nav" : undefined}
               className="text-left px-3 py-2.5 rounded-xl transition-all duration-200"
               style={{
@@ -111,15 +132,17 @@ export function Sidebar({ active, onNavigate, onReset }: SidebarProps) {
               className="pointer-events-auto mx-5 p-6 rounded-2xl max-w-[300px] w-full"
               style={{ background: BG.card, border: B.card }}
               onClick={(e) => e.stopPropagation()}
+              role="dialog" aria-modal="true" aria-labelledby="reset-dialog-title" aria-describedby="reset-dialog-description"
             >
-              <h3 style={{ color: T.white, fontSize: FONT.md, fontWeight: 600, marginBottom: "6px" }}>
+              <h3 id="reset-dialog-title" style={{ color: T.white, fontSize: FONT.md, fontWeight: 600, marginBottom: "6px" }}>
                 确认重置全部数据？
               </h3>
-              <p style={{ color: T.dim, fontSize: FONT.sm, lineHeight: 1.6, marginBottom: "20px" }}>
+              <p id="reset-dialog-description" style={{ color: T.dim, fontSize: FONT.sm, lineHeight: 1.6, marginBottom: "20px" }}>
                 这将清除你的 DNA 测评结果、球员关注列表和偏好设置。此操作无法撤销。
               </p>
               <div className="flex gap-2.5 justify-end">
                 <button
+                  ref={cancelResetRef}
                   onClick={() => setShowResetConfirm(false)}
                   className="px-4 py-2 rounded-lg transition-all duration-200 hover:bg-white/[0.04]"
                   style={{ color: T.body, fontSize: FONT.sm, border: B.subtle }}

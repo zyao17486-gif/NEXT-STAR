@@ -52,6 +52,52 @@ type Screen =
 
 const MAIN_SCREENS = ["home", "scout", "following", "player", "article"];
 
+const VALID_RETURN_SCREENS = new Set(["home", "scout", "following"]);
+
+function isKnownPlayer(name?: string): boolean {
+  return !!name && (draftDB as any[]).some(
+    (player: any) => player.name === name || player.nameCn === name
+  );
+}
+
+function screenFromHash(): Screen | null {
+  const route = window.location.hash.replace(/^#\/?/, "");
+  if (!route) return null;
+
+  const [path, query = ""] = route.split("?");
+  if (path === "home" || path === "scout" || path === "following") {
+    return { id: path };
+  }
+
+  if (path === "player") {
+    const params = new URLSearchParams(query);
+    const name = params.get("name") || undefined;
+    const requestedFrom = params.get("from") || "home";
+    if (!isKnownPlayer(name)) return { id: "home" };
+    return {
+      id: "player",
+      name,
+      from: VALID_RETURN_SCREENS.has(requestedFrom) ? requestedFrom : "home",
+    };
+  }
+
+  return { id: "home" };
+}
+
+function hashForScreen(screen: Screen): string | null {
+  if (screen.id === "home" || screen.id === "scout" || screen.id === "following") {
+    return `#/${screen.id}`;
+  }
+  if (screen.id === "player" && isKnownPlayer(screen.name)) {
+    const params = new URLSearchParams({
+      name: screen.name!,
+      from: VALID_RETURN_SCREENS.has(screen.from) ? screen.from : "home",
+    });
+    return `#/player?${params.toString()}`;
+  }
+  return null;
+}
+
 export default function App() {
   const store = useAppStore();
   // Derive Set for components that expect it
@@ -67,12 +113,40 @@ export default function App() {
       if (raw) {
         const data = JSON.parse(raw);
         if (data?.state?.hasCompletedOnboarding) {
-          return { id: "home" };
+          return screenFromHash() || { id: "home" };
         }
       }
     } catch {}
     return { id: "onboarding" };
   });
+
+  const goToScreen = useCallback((next: Screen, replace = false) => {
+    const hash = hashForScreen(next);
+    if (hash && window.location.hash !== hash) {
+      window.history[replace ? "replaceState" : "pushState"](null, "", hash);
+    }
+    setScreen(next);
+  }, []);
+
+  // Restore app navigation when users use the browser back/forward controls.
+  useEffect(() => {
+    const handleHistoryNavigation = () => {
+      setScreen(screenFromHash() || { id: "home" });
+    };
+    window.addEventListener("popstate", handleHistoryNavigation);
+    return () => window.removeEventListener("popstate", handleHistoryNavigation);
+  }, []);
+
+  // Player profile analytics must run once per actual navigation, not per render.
+  useEffect(() => {
+    if (screen.id !== "player" || !screen.name) return;
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "player_profile_view", {
+        player_name: screen.name,
+        from: screen.from,
+      });
+    }
+  }, [screen.id, screen.id === "player" ? screen.name : null, screen.id === "player" ? screen.from : null]);
 
   const handleOnboardingComplete = useCallback((data: {
     selectedPosition: string;
@@ -113,11 +187,12 @@ export default function App() {
 
   const handleOnboardingSkip = useCallback(() => {
     store.setOnboardingComplete();
-    setScreen({ id: "home" });
-  }, [store]);
+    goToScreen({ id: "home" }, true);
+  }, [store, goToScreen]);
 
   const handleReset = useCallback(() => {
     store.fullReset();
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
     setScreen({ id: "onboarding" });
   }, [store]);
 
@@ -138,11 +213,12 @@ export default function App() {
       MAIN_SCREENS.includes(screen.id) ? screen.id : "home";
 
     if (page === "player") {
-      setScreen({ id: "player", name: data?.name, from: currentMain });
+      const next = { id: "player", name: data?.name, from: currentMain } as Screen;
+      goToScreen(isKnownPlayer(data?.name) ? next : { id: "home" });
     } else if (page === "article") {
       setScreen({ id: "article", ...data } as unknown as Screen);
     } else {
-      setScreen({ id: page as Screen["id"] } as Screen);
+      goToScreen({ id: page as Screen["id"] } as Screen);
     }
   };
 
@@ -159,26 +235,19 @@ export default function App() {
     }
     if (screen.id === "player") {
       const ps = screen as { id: "player"; name?: string; from: string };
-      // GA: 球员详情浏览
-      if (typeof window !== "undefined" && (window as any).gtag) {
-        (window as any).gtag("event", "player_profile_view", {
-          player_name: ps.name,
-          from: ps.from,
-        });
-      }
       return (
         <PlayerProfile
           playerName={ps.name}
           followed={followedSet}
           onToggleFollow={store.toggleFollow}
-          onBack={() => setScreen({ id: ps.from as Screen["id"] } as Screen)}
+          onBack={() => goToScreen({ id: ps.from as Screen["id"] } as Screen)}
         />
       );
     }
     if (screen.id === "scout") {
       return (
         <ScoutPage
-          onSelectPlayer={(name) => setScreen({ id: "player", name, from: "scout" })}
+          onSelectPlayer={(name) => goToScreen({ id: "player", name, from: "scout" })}
           followed={followedSet}
           onToggleFollow={store.toggleFollow}
         />
@@ -190,7 +259,7 @@ export default function App() {
           followed={followedSet}
           onToggleFollow={store.toggleFollow}
           onSelectPlayer={(name) =>
-            setScreen({ id: "player", name, from: "following" })
+            goToScreen({ id: "player", name, from: "following" })
           }
         />
       );
@@ -204,7 +273,7 @@ export default function App() {
           url={s.url}
           content={s.content}
           time={s.time}
-          onBack={() => setScreen({ id: "home" })}
+          onBack={() => goToScreen({ id: "home" })}
         />
       );
     }
@@ -240,7 +309,7 @@ export default function App() {
               dnaData={store.dnaData}
               followed={followedSet}
               onToggleFollow={store.toggleFollow}
-              onContinue={() => setScreen({ id: "home" })}
+              onContinue={() => goToScreen({ id: "home" }, true)}
             />
           </motion.div>
         )}

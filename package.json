@@ -6,11 +6,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "dev:server": "cd server && node --watch index.js",
-    "dev:all": "start \"\" cmd /c \"cd server && node --watch index.js\" && vite"
+    "dev:server": "npm --prefix server run dev",
+    "dev:all": "start \"\" cmd /c \"npm --prefix server run dev\" && vite"
   },
   "dependencies": {
-    "@balldontlie/sdk": "^1.2.2",
     "@tanstack/react-query": "^5.101.0",
     "motion": "12.23.24",
     "recharts": "2.15.2",

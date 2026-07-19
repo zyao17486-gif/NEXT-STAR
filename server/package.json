@@ -4,7 +4,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "sync:data": "node ../scripts/sync-server-db.mjs",
+    "prestart": "npm run sync:data",
     "start": "node index.js",
+    "predev": "npm run sync:data",
     "dev": "node --watch index.js"
   },
   "dependencies": {

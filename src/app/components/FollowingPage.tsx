@@ -84,7 +84,8 @@ export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: Foll
                 className="group relative rounded-2xl p-5 transition-all duration-200 hover:bg-white/[0.03]"
                 style={{ background: BG.card, border: B.card }}
               >
-                <button onClick={() => onSelectPlayer(p.name)} className="w-full text-left">
+                <button onClick={() => onSelectPlayer(p.name)} className="w-full text-left"
+                  aria-label={`查看 ${p.name} 的球员详情`}>
                   {/* Draft pick badge */}
                   {p.draftPick && (
                     <div className="mb-4">
@@ -113,7 +114,8 @@ export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: Foll
                     const stored = [p.en, p.name].find(n => followed.has(n));
                     onToggleFollow(stored || p.en);
                   }}
-                  className="absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+                  aria-label={`取消关注 ${p.name}`}
+                  className="absolute top-3 right-3 w-11 h-11 rounded-full flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 transition-all duration-200 hover:scale-110"
                   style={{ background: BG.overlay, border: "1px solid rgba(255,255,255,0.15)" }}
                   title="取消关注"
                 >

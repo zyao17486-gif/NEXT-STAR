@@ -5,3 +5,9 @@ dist/
 .DS_Store
 *.log
 .claude/
+
+# Regenerable AI data pipeline outputs
+src/data/prospects-13d.json
+src/data/prospects-13d-raw.json
+src/data/star-players-13d-raw.json
+src/data/star-players-13d-report.md
