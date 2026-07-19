@@ -6,8 +6,9 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "dev:server": "npm --prefix server run dev",
-    "dev:all": "start \"\" cmd /c \"npm --prefix server run dev\" && vite"
+    "sync:data": "node scripts/sync-server-db.mjs",
+    "dev:server": "npm run sync:data && cd server && node --watch index.js",
+    "dev:all": "start \"\" cmd /c \"npm run dev:server\" && vite"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
