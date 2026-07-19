@@ -1,16 +1,21 @@
 import { lazy, Suspense, useState, useCallback, useMemo, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Onboarding } from "./components/Onboarding";
-import { DNAResult } from "./components/DNAResult";
-import { Recommendations } from "./components/Recommendations";
 import { HomePage } from "./components/HomePage";
 import { Sidebar } from "./components/Sidebar";
 import { TourGuide } from "./components/TourGuide";
-import { generateDNA, findTopMatches } from "../utils/dna-engine";
 import { useAppStore } from "../store/app-store";
 
 import draftDB from "../data/2026-draft-database.json";
-import star13DDB from "../data/star-players-13d.json";
+
+const Onboarding = lazy(() =>
+  import("./components/Onboarding").then((module) => ({ default: module.Onboarding }))
+);
+const DNAResult = lazy(() =>
+  import("./components/DNAResult").then((module) => ({ default: module.DNAResult }))
+);
+const Recommendations = lazy(() =>
+  import("./components/Recommendations").then((module) => ({ default: module.Recommendations }))
+);
 
 const PlayerProfile = lazy(() =>
   import("./components/PlayerProfile").then((module) => ({ default: module.PlayerProfile }))
@@ -168,11 +173,16 @@ export default function App() {
     }
   }, [screen.id, screen.id === "player" ? screen.name : null, screen.id === "player" ? screen.from : null]);
 
-  const handleOnboardingComplete = useCallback((data: {
+  const handleOnboardingComplete = useCallback(async (data: {
     selectedPosition: string;
     selectedStarPlayers: string[];
     polishedType?: "polished" | "raw" | null;
   }) => {
+    const [{ generateDNA, findTopMatches }, { default: star13DDB }] = await Promise.all([
+      import("../utils/dna-engine"),
+      import("../data/star-players-13d.json"),
+    ]);
+
     // Build star body reference for body-layer matching
     const selectedStars = data.selectedStarPlayers
       .map((id: string) => (star13DDB as any[]).find((s: any) => s.id === id))
@@ -302,7 +312,12 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100dvh", background: "#000", fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
-      <AnimatePresence mode="wait">
+      <Suspense fallback={
+        <div style={{ position: "fixed", inset: 0, zIndex: 50, background: "#000", padding: "64px 24px" }}>
+          <PageLoadingFallback />
+        </div>
+      }>
+        <AnimatePresence mode="wait">
         {screen.id === "onboarding" && (
           <motion.div key="onboarding" initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.4 } }}
             style={{ position: "fixed", inset: 0, zIndex: 50 }}>
@@ -333,7 +348,8 @@ export default function App() {
             />
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </Suspense>
 
       {isMain && (
         <div className="flex" style={{ minHeight: "100dvh" }}>
