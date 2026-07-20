@@ -9,38 +9,75 @@ dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+
+const PRODUCTION_ORIGIN = "https://next-star-5s9.pages.dev";
+const LOCAL_ORIGIN = "http://localhost:5173";
+const PREVIEW_ORIGIN = /^https:\/\/[a-z0-9-]+\.next-star-5s9\.pages\.dev$/;
+
 app.use(cors({
-  origin: ["https://next-star-5s9.pages.dev", "http://localhost:5173"],
+  origin(origin, callback) {
+    if (!origin || origin === PRODUCTION_ORIGIN || origin === LOCAL_ORIGIN || PREVIEW_ORIGIN.test(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error("Origin not allowed"));
+  },
 }));
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "32kb", strict: true }));
+app.use((_req, res, next) => {
+  res.set({
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Cache-Control": "no-store",
+  });
+  next();
+});
 
-// ── Rate limiter — 10 AI searches per minute per IP ─────────────────────
-const rateLimit = new Map(); // IP → { count, resetAt }
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of rateLimit) {
-    if (entry.resetAt < now) rateLimit.delete(ip);
-  }
-}, 60_000);
+// ── In-memory rate limiters (per trusted proxy IP) ───────────────────────
+const limiterStores = [];
 
-function checkRate(req, res, next) {
-  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.ip;
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (entry && entry.resetAt > now) {
-    if (entry.count >= 10) {
+function createRateLimiter(limit, windowMs) {
+  const store = new Map();
+  limiterStores.push(store);
+
+  return (req, res, next) => {
+    const key = req.ip;
+    const now = Date.now();
+    const current = store.get(key);
+    const entry = current?.resetAt > now
+      ? current
+      : { count: 0, resetAt: now + windowMs };
+
+    if (entry.count >= limit) {
+      const retryAfter = Math.max(1, Math.ceil((entry.resetAt - now) / 1000));
+      res.set("Retry-After", String(retryAfter));
       return res.status(429).json({ error: "请求过于频繁，请稍后再试" });
     }
     entry.count++;
-  } else {
-    rateLimit.set(ip, { count: 1, resetAt: now + 60_000 });
-  }
-  next();
+    store.set(key, entry);
+    next();
+  };
 }
+
+const scoutRateLimit = createRateLimiter(10, 60_000);
+const translateRateLimit = createRateLimiter(3, 60 * 60_000);
+
+const cleanupTimer = setInterval(() => {
+  const now = Date.now();
+  for (const store of limiterStores) {
+    for (const [key, entry] of store) {
+      if (entry.resetAt <= now) store.delete(key);
+    }
+  }
+}, 60_000);
+cleanupTimer.unref();
 
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
 const PORT = process.env.PORT || 3001;
+const MAX_QUERY_LENGTH = 300;
+const MAX_TRANSLATION_LENGTH = 8_000;
 
 // ── Load 20-player 2026 draft database ────────────────────────────────────
 const DB_PATH = join(__dirname, "data", "2026-draft-database.json");
@@ -112,38 +149,53 @@ function attrsToVector(attrs) {
   ];
 }
 
-// ── LLM helper ────────────────────────────────────────────────────────────
-async function callDeepSeek(systemPrompt, userMessage, maxTokens = 1024) {
+// ── LLM helpers ───────────────────────────────────────────────────────────
+class UpstreamAIError extends Error {
+  constructor(status) {
+    super(`DeepSeek request failed with status ${status}`);
+    this.name = "UpstreamAIError";
+    this.status = status;
+  }
+}
+
+async function requestDeepSeek(systemPrompt, userMessage, maxTokens = 1024, temperature = 0.5) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20000);
 
-  const response = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "deepseek-chat",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage },
-      ],
-      temperature: 0.5,
-      max_tokens: maxTokens,
-    }),
-    signal: controller.signal,
-  });
+  try {
+    const response = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage },
+        ],
+        temperature,
+        max_tokens: maxTokens,
+      }),
+      signal: controller.signal,
+    });
 
-  clearTimeout(timeout);
+    if (!response.ok) throw new UpstreamAIError(response.status);
 
-  if (!response.ok) {
-    const errText = await response.text().catch(() => "");
-    throw new Error(`DeepSeek API ${response.status}: ${errText.slice(0, 200)}`);
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (typeof content !== "string" || content.trim().length === 0) {
+      throw new UpstreamAIError(502);
+    }
+    return content;
+  } finally {
+    clearTimeout(timeout);
   }
+}
 
-  const data = await response.json();
-  const raw = data.choices?.[0]?.message?.content || "";
+async function callDeepSeek(systemPrompt, userMessage, maxTokens = 1024) {
+  const raw = await requestDeepSeek(systemPrompt, userMessage, maxTokens);
 
   // Strip markdown code fences
   let jsonStr = raw.trim();
@@ -151,6 +203,27 @@ async function callDeepSeek(systemPrompt, userMessage, maxTokens = 1024) {
   if (fence) jsonStr = fence[1].trim();
 
   return JSON.parse(jsonStr);
+}
+
+function sendAIError(res, error, operation) {
+  if (error?.name === "AbortError") {
+    console.error(`${operation} timed out`);
+    return res.status(504).json({ error: "AI 响应超时，请稍后重试" });
+  }
+  if (error instanceof UpstreamAIError) {
+    console.error(`${operation} upstream failure:`, error.status);
+    return res.status(502).json({ error: "AI 服务暂时不可用，请稍后重试" });
+  }
+  console.error(`${operation} failed:`, error?.message || error);
+  return res.status(500).json({ error: "AI 服务处理失败，请稍后重试" });
+}
+
+function validateDnaVector(value) {
+  return value === undefined || (
+    Array.isArray(value) &&
+    value.length === ATTR_13D_KEYS.length &&
+    value.every(item => Number.isFinite(item) && item >= 0 && item <= 100)
+  );
 }
 
 // ── Chinese NBA player name aliases (abbreviation → full English) ─────────
@@ -272,11 +345,17 @@ The ranking is already determined by statistical cosine similarity — you just 
 - All text in Chinese except player English names`;
 
 // ── POST /api/scout (V2) ──────────────────────────────────────────────────
-app.post("/api/scout", checkRate, async (req, res) => {
-  const { query, dnaVector } = req.body;
+app.post("/api/scout", scoutRateLimit, async (req, res) => {
+  const { query, dnaVector } = req.body || {};
 
   if (!query || typeof query !== "string" || query.trim().length === 0) {
     return res.status(400).json({ error: "请提供搜索问题" });
+  }
+  if (query.trim().length > MAX_QUERY_LENGTH) {
+    return res.status(400).json({ error: `搜索问题不能超过 ${MAX_QUERY_LENGTH} 个字符` });
+  }
+  if (!validateDnaVector(dnaVector)) {
+    return res.status(400).json({ error: "DNA 数据格式无效" });
   }
 
   if (!DEEPSEEK_API_KEY) {
@@ -386,19 +465,23 @@ Generate explanations for why each prospect matches the query.`,
     console.log(`✅ Scout complete — returned ${recommendations.length} recommendations`);
     res.json(result);
   } catch (err) {
-    if (err.name === "AbortError") {
-      console.error("⏱ LLM timeout");
-      return res.status(504).json({ error: "AI 响应超时" });
-    }
-    console.error("❌ Scout error:", err.message);
-    res.status(500).json({ error: err.message || "AI 分析失败" });
+    return sendAIError(res, err, "Scout request");
   }
 });
 
 // ── POST /api/scout/quick (fast mode — vector only, no explanation) ───────
-app.post("/api/scout/quick", checkRate, async (req, res) => {
-  const { query, dnaVector } = req.body;
-  if (!query) return res.status(400).json({ error: "请提供搜索问题" });
+app.post("/api/scout/quick", scoutRateLimit, async (req, res) => {
+  const { query, dnaVector } = req.body || {};
+  if (!query || typeof query !== "string" || query.trim().length === 0) {
+    return res.status(400).json({ error: "请提供搜索问题" });
+  }
+  if (query.trim().length > MAX_QUERY_LENGTH) {
+    return res.status(400).json({ error: `搜索问题不能超过 ${MAX_QUERY_LENGTH} 个字符` });
+  }
+  if (!validateDnaVector(dnaVector)) {
+    return res.status(400).json({ error: "DNA 数据格式无效" });
+  }
+  if (!DEEPSEEK_API_KEY) return res.status(500).json({ error: "AI 服务未配置" });
   if (PLAYER_DB.length === 0) return res.status(500).json({ error: "球员数据库未加载" });
 
   try {
@@ -422,7 +505,7 @@ app.post("/api/scout/quick", checkRate, async (req, res) => {
     scored.sort((a, b) => b.score - a.score);
     res.json({ recommendations: scored.slice(0, 5), queryVector: vectorResult.vector });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendAIError(res, err, "Quick scout request");
   }
 });
 
@@ -446,11 +529,14 @@ Rules:
 - Output ONLY the Chinese translation, no explanations or notes
 - Make it read like a professional Chinese sports article`;
 
-app.post("/api/translate", checkRate, async (req, res) => {
-  const { text } = req.body;
+app.post("/api/translate", translateRateLimit, async (req, res) => {
+  const { text } = req.body || {};
 
   if (!text || typeof text !== "string" || text.trim().length === 0) {
     return res.status(400).json({ error: "请提供要翻译的文本" });
+  }
+  if (text.trim().length > MAX_TRANSLATION_LENGTH) {
+    return res.status(400).json({ error: `翻译文本不能超过 ${MAX_TRANSLATION_LENGTH} 个字符` });
   }
 
   if (!DEEPSEEK_API_KEY) {
@@ -460,117 +546,31 @@ app.post("/api/translate", checkRate, async (req, res) => {
   try {
     console.log(`🌐 Translating profile (${text.length} chars)...`);
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
-
-    const response = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: [
-          { role: "system", content: TRANSLATE_PROMPT },
-          { role: "user", content: text },
-        ],
-        temperature: 0.3,
-        max_tokens: 2048,
-      }),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      const errText = await response.text().catch(() => "");
-      throw new Error(`DeepSeek API ${response.status}: ${errText.slice(0, 200)}`);
-    }
-
-    const data = await response.json();
-    const translated = data.choices?.[0]?.message?.content || text;
+    const translated = await requestDeepSeek(TRANSLATE_PROMPT, text.trim(), 2048, 0.3);
 
     console.log(`   Translated (${translated.length} chars)`);
     res.json({ translated });
   } catch (err) {
-    if (err.name === "AbortError") {
-      return res.status(504).json({ error: "翻译超时" });
-    }
-    console.error("❌ Translation error:", err.message);
-    res.status(500).json({ error: err.message || "翻译失败" });
+    return sendAIError(res, err, "Translation request");
   }
 });
 
-// ── Batch pre-translate all profiles & save to DB ──────────────────────────
-app.post("/api/translate/batch", checkRate, async (_req, res) => {
-  if (!DEEPSEEK_API_KEY) {
-    return res.status(500).json({ error: "AI 服务未配置" });
+app.use("/api", (_req, res) => {
+  res.status(404).json({ error: "接口不存在" });
+});
+
+app.use((error, _req, res, _next) => {
+  if (error?.type === "entity.too.large") {
+    return res.status(413).json({ error: "请求内容过大" });
   }
-
-  if (PLAYER_DB.length === 0) {
-    return res.status(500).json({ error: "球员数据库未加载" });
+  if (error instanceof SyntaxError && "body" in error) {
+    return res.status(400).json({ error: "JSON 格式无效" });
   }
-
-  try {
-    const results = [];
-    for (const player of PLAYER_DB) {
-      // Skip if already translated
-      if (player.profile_text_cn) {
-        console.log(`⏭ ${player.name}: already translated`);
-        results.push({ name: player.name, status: "skipped" });
-        continue;
-      }
-
-      console.log(`🌐 Translating ${player.name}...`);
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30000);
-
-        const response = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-          },
-          body: JSON.stringify({
-            model: "deepseek-chat",
-            messages: [
-              { role: "system", content: TRANSLATE_PROMPT },
-              { role: "user", content: player.profile_text },
-            ],
-            temperature: 0.3,
-            max_tokens: 2048,
-          }),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeout);
-
-        if (!response.ok) {
-          throw new Error(`API ${response.status}`);
-        }
-
-        const data = await response.json();
-        player.profile_text_cn = data.choices?.[0]?.message?.content || "";
-        console.log(`   ✓ ${player.name}: ${player.profile_text_cn.length} chars`);
-        results.push({ name: player.name, status: "translated" });
-      } catch (err) {
-        console.error(`   ✗ ${player.name}: ${err.message}`);
-        results.push({ name: player.name, status: "failed", error: err.message });
-      }
-    }
-
-    // Save updated database back to disk
-    const { writeFileSync } = await import("fs");
-    writeFileSync(DB_PATH, JSON.stringify(PLAYER_DB, null, 2), "utf-8");
-    console.log(`💾 Database saved with ${PLAYER_DB.filter(p => p.profile_text_cn).length} translations`);
-
-    res.json({ results, totalTranslated: PLAYER_DB.filter(p => p.profile_text_cn).length });
-  } catch (err) {
-    console.error("❌ Batch translation error:", err.message);
-    res.status(500).json({ error: err.message });
+  if (error?.message === "Origin not allowed") {
+    return res.status(403).json({ error: "来源不允许" });
   }
+  console.error("Unhandled server error:", error?.message || error);
+  return res.status(500).json({ error: "服务器处理失败" });
 });
 
 app.listen(PORT, () => {
