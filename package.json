@@ -10,9 +10,10 @@
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "audit:dependencies": "npm audit --audit-level=high --registry=https://registry.npmjs.org/ && npm audit --prefix server --audit-level=high --registry=https://registry.npmjs.org/",
     "check:data": "node scripts/check-data-sync.mjs",
-    "check:server": "node --check server/index.js && node --check server/validation.js",
-    "check": "npm run check:data && npm run typecheck && npm run test && npm run check:server && npm run build",
+    "check:server": "node --check server/index.js && node --check server/validation.js && node --check server/observability.js",
+    "check": "npm run audit:dependencies && npm run check:data && npm run typecheck && npm run test && npm run check:server && npm run build",
     "dev": "vite",
     "sync:data": "node scripts/sync-server-db.mjs",
     "dev:server": "npm run sync:data && cd server && node --watch index.js",
@@ -33,7 +34,7 @@
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",
     "typescript": "^5.9.3",
-    "vite": "6.3.5",
+    "vite": "^6.4.3",
     "vitest": "^4.1.10"
   },
   "peerDependencies": {

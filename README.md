@@ -111,7 +111,7 @@ npm run sync:data
 npm run check
 ```
 
-该命令依次检查数据库一致性、TypeScript、核心单元测试、服务端语法和生产构建。
+该命令依次检查前后端依赖高危漏洞、数据库一致性、TypeScript、核心单元测试、服务端语法和生产构建。安全审计固定使用 npm 官方公告接口，避免本地镜像源缺少审计能力。
 
 GitHub Actions 会在质量分支、`main` 推送和面向 `main` 的 Pull Request 上自动运行同一套检查。
 
@@ -119,5 +119,7 @@ GitHub Actions 会在质量分支、`main` 推送和面向 `main` 的 Pull Reque
 
 - `/` 返回前端页面
 - `/api/visitor` 可由 Cloudflare Function 响应
-- Railway `/api/health` 返回 `status: ok` 和 `playersLoaded: 38`
+- Railway `/api/health` 返回 `status: ok`、`ready: true`、`playersLoaded: 38`，并携带 `release` 与 `uptimeSeconds`
 - 正式站域名通过后端 CORS 预检
+
+Railway 日志采用单行 JSON：每个请求包含 `requestId`、方法、路径、状态码和耗时，响应同步返回 `X-Request-ID`。AI 失败及核心任务完成事件使用同一请求 ID 串联；日志不会记录用户搜索原文、翻译正文或内部向量。

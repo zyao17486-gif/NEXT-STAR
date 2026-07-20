@@ -5,6 +5,7 @@ import { readFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { validateDnaVector, validateRequiredText } from "./validation.js";
+import { logEvent, requestLogger } from "./observability.js";
 
 dotenv.config();
 
@@ -16,7 +17,9 @@ app.set("trust proxy", 1);
 const PRODUCTION_ORIGIN = "https://next-star-5s9.pages.dev";
 const LOCAL_ORIGIN = "http://localhost:5173";
 const PREVIEW_ORIGIN = /^https:\/\/[a-z0-9-]+\.next-star-5s9\.pages\.dev$/;
+const RELEASE_SHA = (process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GITHUB_SHA || "unknown").slice(0, 12);
 
+app.use(requestLogger);
 app.use(cors({
   origin(origin, callback) {
     if (!origin || origin === PRODUCTION_ORIGIN || origin === LOCAL_ORIGIN || PREVIEW_ORIGIN.test(origin)) {
@@ -88,14 +91,14 @@ let PLAYER_DB = [];
 
 function loadDatabase() {
   if (!existsSync(DB_PATH)) {
-    console.error(`⚠ Database not found at ${DB_PATH}`);
+    logEvent("error", "database_missing", { path: DB_PATH });
     return;
   }
   try {
     PLAYER_DB = JSON.parse(readFileSync(DB_PATH, "utf-8"));
-    console.log(`📋 Loaded ${PLAYER_DB.length} players from 2026 draft database`);
+    logEvent("info", "database_loaded", { playersLoaded: PLAYER_DB.length });
   } catch (err) {
-    console.error("Failed to load player database:", err.message);
+    logEvent("error", "database_load_failed", { message: err.message });
   }
 }
 loadDatabase();
@@ -208,14 +211,14 @@ async function callDeepSeek(systemPrompt, userMessage, maxTokens = 1024) {
 
 function sendAIError(res, error, operation) {
   if (error?.name === "AbortError") {
-    console.error(`${operation} timed out`);
+    logEvent("error", "ai_request_failed", { requestId: res.req.requestId, operation, reason: "timeout" });
     return res.status(504).json({ error: "AI 响应超时，请稍后重试" });
   }
   if (error instanceof UpstreamAIError) {
-    console.error(`${operation} upstream failure:`, error.status);
+    logEvent("error", "ai_request_failed", { requestId: res.req.requestId, operation, reason: "upstream", upstreamStatus: error.status });
     return res.status(502).json({ error: "AI 服务暂时不可用，请稍后重试" });
   }
-  console.error(`${operation} failed:`, error?.message || error);
+  logEvent("error", "ai_request_failed", { requestId: res.req.requestId, operation, reason: "internal" });
   return res.status(500).json({ error: "AI 服务处理失败，请稍后重试" });
 }
 
@@ -363,8 +366,6 @@ app.post("/api/scout", scoutRateLimit, async (req, res) => {
   try {
     // ── Phase 1: Query → Vector ─────────────────────────────────────────
     const { llmQuery, originalQuery } = resolveQuery(query.trim());
-    console.log(`🔍 Phase 1: Converting query to vector — "${originalQuery}"${llmQuery !== originalQuery ? ` → "${llmQuery}"` : ""}`);
-
     const vectorResult = await callDeepSeek(
       VECTOR_PROMPT,
       `User query: "${llmQuery}"`,
@@ -375,27 +376,15 @@ app.post("/api/scout", scoutRateLimit, async (req, res) => {
     const queryDesc = vectorResult.queryDescription || originalQuery;
     const comparedPlayer = vectorResult.comparedPlayer || "none";
 
-    console.log(`   Vector: [${queryVector.map(v => v.toFixed(0)).join(", ")}]`);
-    console.log(`   Description: ${queryDesc}`);
-
     // ── Blend with user DNA vector if provided ───────────────────────────
     const hasDNA = dnaVector && Array.isArray(dnaVector) && dnaVector.length >= 5;
-    if (hasDNA) {
-      console.log(`   🧬 Blending with user DNA: [${dnaVector.map(v => v.toFixed(0)).join(", ")}]`);
-    }
 
     // 70% query intent + 30% user DNA profile (when DNA is available) — 13D support
     const finalVector = hasDNA
       ? queryVector.map((v, i) => Math.round(v * 0.7 + (dnaVector[i] ?? 50) * 0.3))
       : queryVector;
 
-    if (hasDNA) {
-      console.log(`   Blended vector: [${finalVector.map(v => v.toFixed(0)).join(", ")}]`);
-    }
-
     // ── Phase 2: Cosine similarity ranking ───────────────────────────────
-    console.log("📊 Phase 2: Computing cosine similarity...");
-
     const scored = PLAYER_DB.map((player) => {
       const playerVector = attrsToVector(player.attributes);
       const attrSim = cosineSimilarity(finalVector, playerVector);
@@ -410,11 +399,7 @@ app.post("/api/scout", scoutRateLimit, async (req, res) => {
     scored.sort((a, b) => b.rawScore - a.rawScore);
     const top3 = scored.slice(0, 3);
 
-    console.log(`   Top 3: ${top3.map(s => `${s.player.name} (${s.score}%)`).join(", ")}`);
-
     // ── Phase 3: LLM explains the top 3 ─────────────────────────────────
-    console.log("💬 Phase 3: Generating explanations...");
-
     const top3Context = top3.map((s, i) => ({
       rank: i + 1,
       name: s.player.name,
@@ -456,7 +441,7 @@ Generate explanations for why each prospect matches the query.`,
       },
     };
 
-    console.log(`✅ Scout complete — returned ${recommendations.length} recommendations`);
+    logEvent("info", "scout_completed", { requestId: req.requestId, recommendations: recommendations.length, usedDna: hasDNA });
     res.json(result);
   } catch (err) {
     return sendAIError(res, err, "Scout request");
@@ -508,9 +493,12 @@ app.post("/api/scout/quick", scoutRateLimit, async (req, res) => {
 app.get("/api/health", (_req, res) => {
   res.json({
     status: "ok",
+    ready: !!DEEPSEEK_API_KEY && PLAYER_DB.length > 0,
     hasApiKey: !!DEEPSEEK_API_KEY,
     playersLoaded: PLAYER_DB.length,
     algorithm: "cosine-similarity-v2",
+    release: RELEASE_SHA,
+    uptimeSeconds: Math.floor(process.uptime()),
   });
 });
 
@@ -540,11 +528,8 @@ app.post("/api/translate", translateRateLimit, async (req, res) => {
   }
 
   try {
-    console.log(`🌐 Translating profile (${text.length} chars)...`);
-
     const translated = await requestDeepSeek(TRANSLATE_PROMPT, text.trim(), 2048, 0.3);
-
-    console.log(`   Translated (${translated.length} chars)`);
+    logEvent("info", "translation_completed", { requestId: req.requestId, inputLength: text.length, outputLength: translated.length });
     res.json({ translated });
   } catch (err) {
     return sendAIError(res, err, "Translation request");
@@ -565,13 +550,15 @@ app.use((error, _req, res, _next) => {
   if (error?.message === "Origin not allowed") {
     return res.status(403).json({ error: "来源不允许" });
   }
-  console.error("Unhandled server error:", error?.message || error);
+  logEvent("error", "unhandled_error", { requestId: res.req.requestId });
   return res.status(500).json({ error: "服务器处理失败" });
 });
 
 app.listen(PORT, () => {
-  console.log(`🏀 Scout Agent V2 running on http://localhost:${PORT}`);
-  console.log(`   DeepSeek API: ${DEEPSEEK_API_KEY ? "✓ configured" : "✗ NOT configured"}`);
-  console.log(`   Player DB:    ${PLAYER_DB.length} prospects loaded`);
-  console.log(`   Algorithm:    cosine similarity (LLM explains, math ranks)`);
+  logEvent("info", "server_started", {
+    port: Number(PORT),
+    apiConfigured: !!DEEPSEEK_API_KEY,
+    playersLoaded: PLAYER_DB.length,
+    release: RELEASE_SHA,
+  });
 });
