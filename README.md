@@ -124,4 +124,4 @@ GitHub Actions 会在质量分支、`main` 推送和面向 `main` 的 Pull Reque
 
 Railway 日志采用单行 JSON：每个请求包含 `requestId`、方法、路径、状态码和耗时，响应同步返回 `X-Request-ID`。AI 失败及核心任务完成事件使用同一请求 ID 串联；日志不会记录用户搜索原文、翻译正文或内部向量。
 
-`/api/visitor` 是基于 Cloudflare Cache API 的轻量访问趋势指标：同一浏览器标签页会话只计一次，并拒绝跨域写入。它不具备数据库级强一致性，不应作为结算或精确 UV 数据源。
+`/api/visitor` 由 `public/_worker.js` 提供，Vite 会将 Advanced Mode Worker 复制进 `dist`，因此静态资源部署也会同步边缘逻辑。它是基于 Cloudflare Cache API 的轻量访问趋势指标：同一浏览器标签页会话只计一次，并拒绝跨域写入；它不具备数据库级强一致性，不应作为结算或精确 UV 数据源。

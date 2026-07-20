@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { handleVisitorRequest } from "../functions/api/visitor.js";
+// @ts-expect-error The advanced-mode Worker is deployed as plain JavaScript.
+import { handleVisitorRequest } from "../public/_worker.js";
 
 function createCache(initial = 0) {
   let value = initial;
@@ -24,7 +25,7 @@ async function call(method: string, origin?: string) {
   const response = await handleVisitorRequest({
     request,
     cache,
-    waitUntil: (promise) => pending.push(promise),
+    waitUntil: (promise: Promise<unknown>) => pending.push(promise),
   });
   await Promise.all(pending);
   return { response, cache };

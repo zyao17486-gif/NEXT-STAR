@@ -1,5 +1,5 @@
-// Cloudflare Pages Function — lightweight, cache-backed visit trend counter.
-// This is intentionally an approximate metric, not a strongly consistent database.
+// Cloudflare Pages advanced-mode Worker. Keeping this file in public/ makes
+// Vite copy it into dist so asset-only deployments include the edge logic.
 
 const CACHE_KEY = "https://nextstar-visitor-counter.local/count";
 const SUPPORTED_METHODS = new Set(["GET", "POST", "OPTIONS"]);
@@ -48,10 +48,16 @@ export async function handleVisitorRequest({ request, cache, waitUntil }) {
   return new Response(JSON.stringify({ count, method: request.method }), { headers });
 }
 
-export async function onRequest(context) {
-  return handleVisitorRequest({
-    request: context.request,
-    cache: caches.default,
-    waitUntil: context.waitUntil.bind(context),
-  });
-}
+export default {
+  async fetch(request, env, context) {
+    const url = new URL(request.url);
+    if (url.pathname === "/api/visitor") {
+      return handleVisitorRequest({
+        request,
+        cache: caches.default,
+        waitUntil: context.waitUntil.bind(context),
+      });
+    }
+    return env.ASSETS.fetch(request);
+  },
+};
