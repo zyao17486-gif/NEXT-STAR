@@ -111,7 +111,7 @@ npm run sync:data
 npm run check
 ```
 
-该命令依次检查前后端依赖高危漏洞、数据库一致性、TypeScript、核心单元测试、服务端语法和生产构建。安全审计固定使用 npm 官方公告接口，避免本地镜像源缺少审计能力。
+该命令依次检查前后端依赖高危漏洞、数据库一致性、TypeScript、核心单元测试、服务端语法、生产构建和入口包体积。入口 JavaScript 的 gzip 预算为 185 KiB；安全审计固定使用 npm 官方公告接口，避免本地镜像源缺少审计能力。
 
 GitHub Actions 会在质量分支、`main` 推送和面向 `main` 的 Pull Request 上自动运行同一套检查。
 

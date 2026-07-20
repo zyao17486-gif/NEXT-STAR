@@ -55,10 +55,6 @@ function cleanStaleFollows() {
       )
     );
     if (valid.length !== followed.length) {
-      console.log(
-        `🧹 Cleaned ${followed.length - valid.length} stale follows:`,
-        followed.filter((n: string) => !valid.includes(n))
-      );
       data.state.followed = valid;
       localStorage.setItem("basketball-app-store", JSON.stringify(data));
     }
