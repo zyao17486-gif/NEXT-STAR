@@ -210,8 +210,8 @@ function parseWeightToKg(w: string): number {
 
 /** Adapt a 2026 Draft DB player → the shape PlayerProfile expects */
 function adaptDraftPlayer(dp: DraftPlayer): PlayerData {
-  const ATTR_13D_KEYS = ["身体","突破","篮下","背身","中投","三分","传球","控运","内防","外防","抢断","盖帽","篮板"];
   const attrs = dp.attributes;
+  const ATTR_13D_KEYS: Array<keyof typeof attrs> = ["身体","突破","篮下","背身","中投","三分","传球","控运","内防","外防","抢断","盖帽","篮板"];
   const wsInches = parseHeightToInches(dp.wingspan);
   const wtKg = parseWeightToKg(dp.weight);
   return {

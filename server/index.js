@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { readFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { validateDnaVector, validateRequiredText } from "./validation.js";
 
 dotenv.config();
 
@@ -218,14 +219,6 @@ function sendAIError(res, error, operation) {
   return res.status(500).json({ error: "AI 服务处理失败，请稍后重试" });
 }
 
-function validateDnaVector(value) {
-  return value === undefined || (
-    Array.isArray(value) &&
-    value.length === ATTR_13D_KEYS.length &&
-    value.every(item => Number.isFinite(item) && item >= 0 && item <= 100)
-  );
-}
-
 // ── Chinese NBA player name aliases (abbreviation → full English) ─────────
 // DeepSeek may not recognize abbreviated Chinese names; augment queries with the
 // full English name to disambiguate before sending to the LLM.
@@ -348,10 +341,11 @@ The ranking is already determined by statistical cosine similarity — you just 
 app.post("/api/scout", scoutRateLimit, async (req, res) => {
   const { query, dnaVector } = req.body || {};
 
-  if (!query || typeof query !== "string" || query.trim().length === 0) {
+  const queryError = validateRequiredText(query, MAX_QUERY_LENGTH);
+  if (queryError === "required") {
     return res.status(400).json({ error: "请提供搜索问题" });
   }
-  if (query.trim().length > MAX_QUERY_LENGTH) {
+  if (queryError === "too_long") {
     return res.status(400).json({ error: `搜索问题不能超过 ${MAX_QUERY_LENGTH} 个字符` });
   }
   if (!validateDnaVector(dnaVector)) {
@@ -472,10 +466,11 @@ Generate explanations for why each prospect matches the query.`,
 // ── POST /api/scout/quick (fast mode — vector only, no explanation) ───────
 app.post("/api/scout/quick", scoutRateLimit, async (req, res) => {
   const { query, dnaVector } = req.body || {};
-  if (!query || typeof query !== "string" || query.trim().length === 0) {
+  const queryError = validateRequiredText(query, MAX_QUERY_LENGTH);
+  if (queryError === "required") {
     return res.status(400).json({ error: "请提供搜索问题" });
   }
-  if (query.trim().length > MAX_QUERY_LENGTH) {
+  if (queryError === "too_long") {
     return res.status(400).json({ error: `搜索问题不能超过 ${MAX_QUERY_LENGTH} 个字符` });
   }
   if (!validateDnaVector(dnaVector)) {
@@ -532,10 +527,11 @@ Rules:
 app.post("/api/translate", translateRateLimit, async (req, res) => {
   const { text } = req.body || {};
 
-  if (!text || typeof text !== "string" || text.trim().length === 0) {
+  const textError = validateRequiredText(text, MAX_TRANSLATION_LENGTH);
+  if (textError === "required") {
     return res.status(400).json({ error: "请提供要翻译的文本" });
   }
-  if (text.trim().length > MAX_TRANSLATION_LENGTH) {
+  if (textError === "too_long") {
     return res.status(400).json({ error: `翻译文本不能超过 ${MAX_TRANSLATION_LENGTH} 个字符` });
   }
 

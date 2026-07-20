@@ -71,6 +71,9 @@ npm run dev          # 启动前端
 npm run dev:server   # 同步数据并启动后端
 npm run dev:all      # Windows：同时启动前后端
 npm run sync:data    # 将前端主数据库同步到 server/data
+npm run typecheck    # TypeScript 静态检查
+npm test             # 运行核心单元测试
+npm run check        # 执行完整交付检查
 npm run build        # 生成生产构建
 ```
 
@@ -105,10 +108,12 @@ npm run sync:data
 ## 交付检查
 
 ```bash
-npm run sync:data
-npm run build
-node --check server/index.js
+npm run check
 ```
+
+该命令依次检查数据库一致性、TypeScript、核心单元测试、服务端语法和生产构建。
+
+GitHub Actions 会在质量分支、`main` 推送和面向 `main` 的 Pull Request 上自动运行同一套检查。
 
 上线后检查：
 
@@ -116,4 +121,3 @@ node --check server/index.js
 - `/api/visitor` 可由 Cloudflare Function 响应
 - Railway `/api/health` 返回 `status: ok` 和 `playersLoaded: 38`
 - 正式站域名通过后端 CORS 预检
-

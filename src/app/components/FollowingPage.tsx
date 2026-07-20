@@ -35,9 +35,9 @@ interface FollowingPageProps {
 export function FollowingPage({ followed, onToggleFollow, onSelectPlayer }: FollowingPageProps) {
   const followedList = [...followed]
     .map(name => lookupPlayerCard(name))
-    .filter(Boolean)
+    .filter((player): player is NonNullable<ReturnType<typeof lookupPlayerCard>> => player !== null)
     // Deduplicate by English name — two stored keys may resolve to the same player
-    .filter((p, i, arr) => arr.findIndex(x => x!.en === p!.en) === i);
+    .filter((player, index, players) => players.findIndex(item => item.en === player.en) === index);
 
   return (
     <div style={{ fontFamily: "'Noto Sans SC', 'Inter', sans-serif" }}>
