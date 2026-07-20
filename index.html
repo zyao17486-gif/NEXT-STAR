@@ -22,9 +22,20 @@
       
       <div id="root"></div>
       <script type="module" src="/src/main.tsx"></script>
-      <!-- Global page view counter — pings own Cloudflare Function -->
+      <!-- Lightweight visit trend counter — once per browser tab session -->
       <script async>
-        fetch('/api/visitor', { method: 'POST' }).catch(() => {});
+        try {
+          const visitKey = 'next-star-visit-counted';
+          if (!sessionStorage.getItem(visitKey)) {
+            sessionStorage.setItem(visitKey, 'pending');
+            fetch('/api/visitor', { method: 'POST', keepalive: true })
+              .then((response) => {
+                if (response.ok) sessionStorage.setItem(visitKey, '1');
+                else sessionStorage.removeItem(visitKey);
+              })
+              .catch(() => sessionStorage.removeItem(visitKey));
+          }
+        } catch { /* storage may be unavailable in privacy modes */ }
       </script>
       
     </body>
